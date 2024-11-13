@@ -1,0 +1,303 @@
+@import "../../scss/index";
+
+.contenidoLogin {
+  color: $font-dark;
+  overflow-x: hidden;
+  height: 100%;
+  background-size: 100% 100%;
+
+  .footer--principal {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+  }
+
+  footer {
+    background-color: $tonalidad-azul !important;
+  }
+
+  p {
+    margin: 0;
+    font-size: 18px !important;
+    color: $font-light !important;
+  }
+
+  .logos {
+    //margin: 0 auto;
+    margin-top: 40px;
+    // margin-left: 10px;
+
+
+    .Condumex {
+      margin: 0 auto;
+      width: 100% !important;
+    }
+  }
+
+  .card1 {
+    margin-top: 60px !important;
+    margin-left: 0px !important;
+    //width: 100%;
+    border-radius: 30px;
+    box-shadow: 0 2px 2px $border-dark inset, 0 0 8px $border-dark;
+    //Trasparencia
+    opacity: 1;
+    background-color: $background-transparente;
+    //Termina estilos de transparencia
+    //background-image: linear-gradient(to left, $marron_suave2, $beige);
+
+    .card-header {
+      color: $font-dark !important;
+      background-color: $background-transparente;
+
+      border-bottom: $background-transparente;
+      //font-weight: bold !important;
+    }
+
+    .card-body {
+      text-align: left !important;
+      font-size: larger;
+      .rounded {
+        width: 100px;
+        height: 100px;
+      }
+
+      .sign-in-form{
+        margin-top: 35px !important;
+
+        .form-label {
+          color: $font-dark !important;
+          font-weight: bold !important;
+        }
+        input.form-control, textarea.form-control{
+          margin-top: -5px !important;
+          background-color: $background-light !important;
+
+          border-color: $border-dark;
+          box-shadow: 0 1px 1px $border-dark inset, 0 0 8px $border-dark;
+          border-radius: 30px !important;
+          //border-bottom: 1px solid $border-dark;
+          color: $font-dark !important;
+
+          &:focus{
+            background-color: $marron_suave4 !important;
+            border-color: $border-dark;
+            color: $font-dark !important;
+          }
+        }
+
+        .campoPassword {
+          margin-top: 10px !important;
+          svg {
+            position: absolute !important;
+            top: 67% !important;
+            right: 11% !important;
+            color: $font-dark !important;
+            font-weight: bold !important;
+          }
+        }
+        h2{
+          font-weight: bold;
+          padding-bottom: 30px;
+        }
+
+        .form-group{
+          padding-bottom: 20px;
+        }
+
+        .campoCorreo {
+          margin-top: -20px !important;
+        }
+
+        input{
+          font-size: 25px;
+        }
+
+        .botonLogin {
+          margin-top: 45px !important;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          button{
+            width: 50%;
+            color: $font-light !important;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 30px !important;
+
+            .spinner-border{
+              width: 25px;
+              height: 25px;
+            }
+
+
+            &:hover{
+              color: $font-light;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /*@media only screen and (max-width: 980px) {
+      .card2 {
+          display: none !important;
+      }
+  }*/
+
+  .card2 {
+    display: block;
+    left: 480px !important;
+    //bottom: 40px !important;
+    top: -160px !important;
+    background-color: $background-transparente2;
+    border: $background-transparente;
+    .datosAtencion1 {
+      font-size: 20px !important;
+      color: $font-dark !important;
+    }
+    .datosAtencion2 {
+      font-size: 20px !important;
+      color: $font-dark !important;
+    }
+  }
+
+  //Estilos para el footer
+  /* START FOOTER PINNING CODE */
+  @media only screen and (max-width: 980px) {
+    .footer--pin {
+      display: none !important;
+    }
+  }
+
+  .footer--pin {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+
+    /*width: 100%;
+    height: 40px;
+    position: fixed;
+    z-index: 250;
+    bottom: 0;*/
+
+    //overflow: none;
+    //color: white;
+    //text-align: center;
+    //font-size: 30px;
+    //line-height: 80px;
+
+    /*-moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;*/
+  }
+  /* END FOOTER PINNING CODE */
+
+  /*nav {
+      background-color: #e3c893;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 10px;
+      border-bottom: 1px solid #df9f23;
+  }
+
+  nav div {
+      background-color: #df9f23;
+      border-radius: 30px;
+      width: 15px;
+      height: 15px;
+  }*/
+
+  ul {
+    display: grid;
+    grid-column-gap: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style: none;
+    //background-color: #df9f23;
+    border-radius: 30px;
+    //width: 40px;
+    //height: 10px;
+  }
+
+  h1 {
+    /*font-family: Montserrat, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;*/
+    font-size: 1.6rem;
+    color: $primary-light;
+    //margin-top: 5px;
+    //margin-bottom: 5px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 20px;
+    color: $font-light !important;
+  }
+
+  main {
+    //padding: 10px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  footer {
+    background-color: $background-dark-light !important;
+    padding: 30px 30px;
+    //margin-top: -100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer div {
+    background-color: $primary-dark;
+    border-radius: 30px;
+    width: 65px;
+    height: 10px;
+  }
+
+  footer p {
+    color: $font-dark;
+    /*font-family: Montserrat, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;*/
+    text-align: center;
+  }
+
+  footer ul li {
+    //background-color: $primary-dark;
+    //margin-left: -100px;
+    border-radius: 30px;
+    width: 15px;
+    height: 15px;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    svg {
+      color: $font-dark !important;
+      margin-bottom: 15px !important;
+      margin-left: 10px;
+      width: 30px !important;
+      height: 30px !important;
+    }
+  }
+
+
+}

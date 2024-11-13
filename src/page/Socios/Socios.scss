@@ -1,0 +1,19 @@
+@import "../../scss/index";
+
+.tabsMenuSocios {
+  margin-top: -17px !important;
+  font-size: 18px !important;
+  text-align: center;
+
+  .react-tabs__tab {
+    width: 33% !important;
+  }
+}
+
+.titulo {
+  color: $font-dark !important;
+}
+
+.fade.fondoPrincipalAlert.alert.alert-primary.show {
+  background-color: rgb(218,218,218);
+}

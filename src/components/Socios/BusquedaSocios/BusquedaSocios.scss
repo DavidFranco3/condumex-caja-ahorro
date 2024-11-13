@@ -1,0 +1,40 @@
+@import "../../../scss/index";
+
+.contenidoFormularioPrincipal {
+  margin-top: -30px !important;
+
+  .tipoSocio {
+    margin-bottom: 15px !important;
+  }
+}
+
+.listadoSociosEncontrados {
+  margin-top: -30px !important;
+
+  .eleccionSocio {
+    height: 35px !important;
+    cursor: pointer !important;
+  }
+
+  .BuscarOtraVez {
+    margin-top: 30px !important;
+    margin-bottom: 30px !important;
+  }
+}
+
+.datosBusqueda {
+  margin-top: 15px !important;
+}
+
+.botonesBusqueda {
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+
+  .busqueda {
+    width: 100% !important;
+  }
+
+  .cancelarBusqueda {
+    width: 100% !important;
+  }
+}

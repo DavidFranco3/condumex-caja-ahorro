@@ -1,0 +1,57 @@
+@import "../../scss/index";
+
+.contenidoCentrado{
+  text-align: center !important;
+  img {
+    margin: 0 auto !important;
+  }
+}
+
+.gruposOpciones {
+  padding: 20px 10px 10px 10px;
+}
+
+// Estilos para cards trasparentes
+.card-group {
+  //margin-top: 10px !important;
+}
+.card {
+  margin-top: 5px !important;
+  background-color: $background-transparente !important;
+  //border-color: $background-transparente !important;
+  border: $background-transparente !important;
+  //border-bottom: $background-transparente !important;
+
+  .card-header {
+    color: $font-dark !important;
+    background-color: $background-transparente !important;
+    border-bottom: $background-transparente !important;
+  }
+
+  .card-body {
+    cursor: pointer !important;
+
+    img {
+      border-radius: 20px !important;
+      -webkit-transition:all .9s ease; /* Safari y Chrome */
+      -moz-transition:all .9s ease; /* Firefox */
+      -o-transition:all .9s ease; /* IE 9 */
+      -ms-transition:all .9s ease; /* Opera */
+    }
+
+    img:hover {
+      -webkit-transform:scale(1.25);
+      -moz-transform:scale(1.25);
+      -ms-transform:scale(1.25);
+      -o-transform:scale(1.25);
+      transform:scale(1.25);
+    }
+
+    .panel{
+      .contenidoPanel {
+        //margin: 0 auto !important;
+      }
+    }
+  }
+
+}
