@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
-import { Transition, Dialog } from '@headlessui/react'
+import { Transition, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/react'
 
 const ModalPrimary = ({ title, isOpen, onCancel, onOK, content }) => {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog static as="div" className="relative z-10" onClose={() => null}>
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -16,10 +16,10 @@ const ModalPrimary = ({ title, isOpen, onCancel, onOK, content }) => {
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+          </TransitionChild>
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
@@ -28,13 +28,13 @@ const ModalPrimary = ({ title, isOpen, onCancel, onOK, content }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
+                <DialogPanel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <DialogTitle
                     as="h3"
                     className="flex justify-start items-center text-2xl font-bold leading-6 text-gray-900 pb-4"
                   >
                     {title}
-                  </Dialog.Title>
+                  </DialogTitle>
                   {/* Body */}
                   <div className="flex justify-center items-center flex-col p-2">
                     {content}
@@ -57,8 +57,8 @@ const ModalPrimary = ({ title, isOpen, onCancel, onOK, content }) => {
                       Cancelar
                     </button>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>

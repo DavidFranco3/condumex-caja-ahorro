@@ -235,11 +235,6 @@ function BusquedaSocios(props) {
     ) {
       loadListadoSindicalizados()
     }
-
-    // Si son especiales, contabilidad y peregrinación
-    if (getRazonSocial() === 'CONDUMEX S.A. DE C.V.') {
-      loadListadoEspeciales()
-    }
   }
 
   const onChange = (e) => {

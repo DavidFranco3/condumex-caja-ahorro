@@ -135,11 +135,6 @@ function BusquedaSaldos(props) {
     ) {
       loadListadoSaldos()
     }
-
-    // Si son especiales, contabilidad y peregrinación
-    if (getRazonSocial() === 'CONDUMEX S.A. DE C.V.') {
-      loadListadoSaldos()
-    }
   }
 
   const onChange = (e) => {

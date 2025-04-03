@@ -1,4 +1,4 @@
-@import "../../scss/index";
+@use "../../scss/index" as *;
 
 .logoPrincipalMenu {
   cursor: pointer !important;
@@ -17,9 +17,10 @@
 
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
 }
 
-.bg-orange-800 {
+.bg-orange-900 {
   z-index: 4 !important;
   position: sticky !important;
   width: 100% !important;
@@ -57,14 +58,10 @@
   width: 100% !important;
 }
 
+/* EMPIEZA AQUÍ */
 .tooltip-container {
   margin: 0 auto;
   display: inline-block;
-}
-
-/* EMPIEZA AQUÍ */
-
-.tooltip-container {
   position: relative;
   cursor: pointer;
 }

@@ -4,19 +4,19 @@ import {
     getTokenApi,
     isExpiredToken,
     logoutApi,
-    obtenidusuarioLogueado,
     setRazonSocial
 } from "../../api/auth";
 import {
     useNavigate
 } from "react-router-dom";
-import { Disclosure, Menu, Transition } from "@headlessui/react"
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import LogoCajadeAhorro from "../../assets/png/caja-de-ahorro.png"
 import ImagenPerfil from "../../assets/png/user-avatar.png"
-import { Button, Row, Container, Form } from "react-bootstrap";
+import { Row, Container, Form } from "react-bootstrap";
 import "./LayoutPrincipal.scss"
+import { MenuItem } from '@mui/material';
 
 function LayoutPrincipal (props) {
     const { setRefreshCheckLogin, children } = props;
@@ -33,7 +33,7 @@ function LayoutPrincipal (props) {
 
     // Para almacenar en localstorage la razon social
     const almacenaRazonSocial = (razonSocial) => {
-        if (razonSocial === "Asociación de Empleados Sector Cables A.C." || razonSocial === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." || razonSocial === "CONDUMEX S.A. DE C.V.") {
+        if (razonSocial === "Asociación de Empleados Sector Cables A.C." || razonSocial === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.") {
             setRazonSocial(razonSocial)
         }
         window.location.reload()
@@ -66,10 +66,12 @@ function LayoutPrincipal (props) {
         redirecciona("/")
     }
 
+    console.log(razonSocialElegida)
+
     return (
         <>
             <Disclosure as="nav"
-                className={razonSocialElegida === "Asociación de Empleados Sector Cables A.C." ? "bg-black" : razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." ? "bg-orange-900" : razonSocialElegida === "CONDUMEX S.A. DE C.V." ? "bg-sky-900" : "bg-black"}
+                className={razonSocialElegida === "Asociación de Empleados Sector Cables A.C." ? "bg-black" : razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." ? "bg-orange-900" : "bg-black"}
             >
                 {({ open }) => (
                     <>
@@ -77,14 +79,14 @@ function LayoutPrincipal (props) {
                             <div className="relative flex items-center justify-between h-16">
                                 <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                                     {/* Mobile menu button*/}
-                                    <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                                    <DisclosureButton className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                                         <span className="sr-only">Open main menu</span>
                                         {open ? (
                                             <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                                         ) : (
                                             <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                                         )}
-                                    </Disclosure.Button>
+                                    </DisclosureButton>
                                 </div>
                                 <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
                                     <div className="flex-shrink-0 flex items-center">
@@ -121,14 +123,14 @@ function LayoutPrincipal (props) {
                                     {/* Profile dropdown */}
                                     <Menu as="div" className="ml-3 relative">
                                         <div>
-                                            <Menu.Button className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                                            <MenuButton className="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                                 <span className="sr-only">Open user menu</span>
                                                 <img
                                                     className="h-8 w-8 rounded-full"
                                                     src={ImagenPerfil}
                                                     alt=""
                                                 />
-                                            </Menu.Button>
+                                            </MenuButton>
                                         </div>
                                         <Transition
                                             as={Fragment}
@@ -139,8 +141,8 @@ function LayoutPrincipal (props) {
                                             leaveFrom="transform opacity-100 scale-100"
                                             leaveTo="transform opacity-0 scale-95"
                                         >
-                                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                <Menu.Item>
+                                            <MenuItems className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <MenuItem>
                                                     {({ active }) => (
                                                         <button
                                                             onClick={() => {
@@ -151,15 +153,15 @@ function LayoutPrincipal (props) {
                                                             Cerrar sesión
                                                         </button>
                                                     )}
-                                                </Menu.Item>
-                                            </Menu.Items>
+                                                </MenuItem>
+                                            </MenuItems>
                                         </Transition>
                                     </Menu>
                                 </div>
                             </div>
                         </div>
 
-                        <Disclosure.Panel className="sm:hidden">
+                        <DisclosurePanel className="sm:hidden">
                             <div className="px-2 pt-2 pb-3 space-y-1">
                                 {/* Informacion en el menu principal */}
                                 {/* Seleccionable con razones sociales */}
@@ -177,7 +179,7 @@ function LayoutPrincipal (props) {
                                     <option value="Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." selected={razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."}>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
                                 </Form.Control>
                             </div>
-                        </Disclosure.Panel>
+                        </DisclosurePanel>
                     </>
                 )}
             </Disclosure>

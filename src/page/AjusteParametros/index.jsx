@@ -146,7 +146,7 @@ function formatModelAjusteParametros(data) {
     data.forEach(data => {
         dataTemp.push({
             id: data._id,
-            
+
             inicioPeriodoEmpleados: data.inicioPeriodoEmpleados,
             finPeriodoEmpleados: data.finPeriodoEmpleados,
             fechaEnvioEstadosCuentaEmpleados: data.fechaEnvioEstadosCuentaEmpleados,

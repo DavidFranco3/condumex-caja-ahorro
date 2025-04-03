@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment, Suspense } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { withRouter } from "../../utils/withRouter";
 import Lottie from 'react-lottie-player'
 import { toast } from 'react-toastify'
@@ -264,7 +264,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
     <>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog static as="div" className="relative z-10" onClose={() => null}>
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -274,11 +274,11 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
+          </TransitionChild>
 
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
@@ -287,13 +287,13 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <DialogTitle
                     as="h3"
                     className="flex justify-center items-center text-lg font-medium leading-6 text-gray-900"
                   >
                     Guardando rendimientos
-                  </Dialog.Title>
+                  </DialogTitle>
                   <div className="flex justify-center items-center flex-col mt-2">
                     <p className="text-sm text-gray-500">
                       {countSave} de {contribuitors.length}
@@ -314,8 +314,8 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
                       </button>
                     )}
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>

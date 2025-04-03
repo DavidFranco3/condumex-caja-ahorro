@@ -1,4 +1,4 @@
-@import "../../../scss/index";
+@use "../../../scss/index.scss" as *;
 
 .basic-modal-principal{
   margin-top: 40px !important;

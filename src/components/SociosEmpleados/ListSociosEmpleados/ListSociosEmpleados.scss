@@ -1,4 +1,4 @@
-@import "../../../scss/index";
+@use "../../../scss/index.scss" as *;
 
 .editaEstado {
   cursor: pointer !important;

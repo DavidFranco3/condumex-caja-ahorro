@@ -1,4 +1,4 @@
-@import "../../../scss/index";
+@use "../../../scss/index.scss" as *;
 
 .busquedaSocio {
   width: 100% !important;

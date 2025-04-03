@@ -1,4 +1,4 @@
-@import "../../scss/index";
+@use "../../scss/index" as *;
 
 .contenidoCentrado{
   text-align: center !important;
@@ -12,9 +12,6 @@
 }
 
 // Estilos para cards trasparentes
-.card-group {
-  //margin-top: 10px !important;
-}
 .card {
   margin-top: 5px !important;
   background-color: $background-transparente !important;
@@ -30,28 +27,16 @@
 
   .card-body {
     cursor: pointer !important;
-
+  
     img {
       border-radius: 20px !important;
-      -webkit-transition:all .9s ease; /* Safari y Chrome */
-      -moz-transition:all .9s ease; /* Firefox */
-      -o-transition:all .9s ease; /* IE 9 */
-      -ms-transition:all .9s ease; /* Opera */
+      transition: all 0.9s ease; /* Propiedad estándar */
     }
-
+  
     img:hover {
-      -webkit-transform:scale(1.25);
-      -moz-transform:scale(1.25);
-      -ms-transform:scale(1.25);
-      -o-transform:scale(1.25);
-      transform:scale(1.25);
-    }
-
-    .panel{
-      .contenidoPanel {
-        //margin: 0 auto !important;
-      }
+      transform: scale(1.25);
     }
   }
+  
 
 }

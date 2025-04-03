@@ -1,4 +1,4 @@
-@import "../../scss/index";
+@use "../../scss/index" as *;
 
 .fade.alert.alert-primary.show {
   background-color: $background-alert !important;

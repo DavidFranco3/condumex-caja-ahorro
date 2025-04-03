@@ -1,4 +1,4 @@
-@import "../../../../scss/index";
+@use "../../../scss/index.scss" as *;
 
 .contenidoFormularioPrincipal {
   margin-top: -30px !important;
