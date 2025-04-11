@@ -9,16 +9,15 @@ import {
 import {
     useNavigate
 } from "react-router-dom";
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, Transition } from "@headlessui/react"
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, Transition, MenuItem } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import LogoCajadeAhorro from "../../assets/png/caja-de-ahorro.png"
 import ImagenPerfil from "../../assets/png/user-avatar.png"
 import { Row, Container, Form } from "react-bootstrap";
 import "./LayoutPrincipal.scss"
-import { MenuItem } from '@mui/material';
 
-function LayoutPrincipal (props) {
+function LayoutPrincipal(props) {
     const { setRefreshCheckLogin, children } = props;
 
     const redirecciona = useNavigate();
@@ -65,8 +64,6 @@ function LayoutPrincipal (props) {
     const enrutaInicio = () => {
         redirecciona("/")
     }
-
-    console.log(razonSocialElegida)
 
     return (
         <>

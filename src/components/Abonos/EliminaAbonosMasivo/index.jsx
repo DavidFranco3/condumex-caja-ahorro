@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import { actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
+import { getRazonSocial } from '../../../api/auth';
 
 function EliminaAbonosMasivo(props) {
 
