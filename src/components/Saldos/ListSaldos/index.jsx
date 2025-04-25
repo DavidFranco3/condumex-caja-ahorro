@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import moment from "moment";
 import "moment/locale/es-mx"
 // Inician importaciones para la tabla
@@ -18,7 +18,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import BasicModal from "../../Modal/BasicModal";
 
 function ListSaldos(props) {
-    const { listSaldosSocios, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, totalSaldosSocios } = props;
+    const { listSaldosSocios, rowsPerPage, setRowsPerPage, page, setPage, totalSaldosSocios } = props;
 
     // Configura el idioma a español para la fecha
     moment.locale("es-mx")

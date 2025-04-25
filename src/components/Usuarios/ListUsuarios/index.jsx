@@ -1,18 +1,14 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState } from 'react';
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import DataTable from "react-data-table-component";
 import "./ListUsuarios.scss";
 import ModificaUsuarios from "../ModificaUsuarios";
 import EliminaUsuarios from "../EliminaUsuarios";
-import { estilos } from "../../../utils/tableStyled";
-import styled from 'styled-components';
-import { filter } from 'lodash';
+import DataTablecustom from '../../Generales/DataTable';
 
 function ListUsuarios(props) {
     const { listUsuarios, history, location, setRefreshCheckLogin } = props;
@@ -51,7 +47,7 @@ function ListUsuarios(props) {
         },
         {
             name: "Acciones",
-            selector: row => (
+            cell: row => (
                 <>
                     <div className="flex justify-end items-center space-x-4">
                         <Badge
@@ -110,41 +106,9 @@ function ListUsuarios(props) {
         setShowModal(true);
     }
 
-    // Definiendo estilos para data table
-    // Configurando animacion de carga
-    const [pending, setPending] = useState(true);
-    const [rows, setRows] = useState([]);
-
-    const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
-
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setRows(listUsuarios);
-            setPending(false);
-        }, 0);
-        return () => clearTimeout(timeout);
-    }, []);
-
-    const paginationComponentOptions = {
-        rowsPerPageText: 'Filas por página',
-        rangeSeparatorText: 'de'
-    };
-
     return (
         <>
-            <Container fluid>
-                <DataTable
-                    columns={columns}
-                    noDataComponent="No hay registros para mostrar"
-                    data={listUsuarios}
-                    progressPending={pending}
-                    paginationComponentOptions={paginationComponentOptions}
-                    paginationResetDefaultPage={resetPaginationToogle}
-                    customStyles={estilos}
-                    sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
-                    pagination
-                />
-            </Container>
+           <DataTablecustom datos={listUsuarios} columnas={columns} title={"Usuarios"} />
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
                 {contentModal}

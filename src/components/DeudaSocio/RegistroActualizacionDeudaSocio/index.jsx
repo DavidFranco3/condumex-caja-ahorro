@@ -4,7 +4,7 @@ import { registraDeudaSocio,
     obtenerFolioActualDeudaSocio, 
     obtenerDatosDeudaSocio 
 } from "../../../api/deudaSocio";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza la modificación de saldos al realizar un movimiento
 export const actualizacionDeudaSocio = async (fichaSocio, ingresaAbono, ingresaPrestamo, movimiento, ingresaFecha) =>  {

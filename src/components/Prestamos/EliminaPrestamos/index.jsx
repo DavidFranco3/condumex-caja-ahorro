@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaPrestamos} from "../../../api/prestamos";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 import queryString from "query-string";
@@ -34,7 +34,12 @@ function EliminaPrestamos(props) {
         try {
                 eliminaPrestamos(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 // Revierte saldos para eliminar el prestamo correspondiente
                 registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", parseFloat(prestamoTotal), "0", "0", "0", "0", "Eliminación prestamo");

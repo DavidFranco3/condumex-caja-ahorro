@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import queryString from "query-string";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
@@ -61,10 +61,20 @@ function RegistroPatrimonios(props) {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
-            toast.warning("Debe elegir un socio");
+            Swal.fire({
+                title: "Debe elegir un socio",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         } else {
             if (!formData.patrimonio || !formData.fecha) {
-                toast.warning("Faltan datos");
+                Swal.fire({
+                    title: "Faltan datos",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });;
             } else {
                 setLoading(true)
 
@@ -85,7 +95,12 @@ function RegistroPatrimonios(props) {
 
                     registraPatrimonio(dataTemp).then(response => {
                         const { data } = response;
-                        toast.success('Patrimonio registrado')
+                        Swal.fire({
+                            title: data.mensaje,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
 
                         // Registro de movimientos
                         registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", formData.patrimonio, "0", "0", "0", "Patrimonio")

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import { Card, Container, CardGroup, Image } from 'react-bootstrap';
 // Importaciones de imagenes del dashboard
@@ -32,8 +32,18 @@ function Dashboard(props) {
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-        toast.warning('Sesión expirada');
-        toast.success('Sesión cerrada por seguridad');
+         Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });;
+         Swal.fire({
+                        title: "Sesión cerrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });;
         logoutApi();
         setRefreshCheckLogin(true);
       }

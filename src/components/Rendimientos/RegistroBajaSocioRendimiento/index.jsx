@@ -2,7 +2,7 @@ import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registraRendimientosSocios, 
     obtenerFolioActualRendimientos, 
 } from "../../../api/rendimientos";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza el registro inicial de saldos de socios
 export function registroRendimientoInicial (

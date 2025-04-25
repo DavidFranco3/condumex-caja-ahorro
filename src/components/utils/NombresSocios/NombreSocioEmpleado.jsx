@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {obtenerNombreSocioEmpleado} from "../../../api/sociosEmpleados";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 
 function NombreSocio(props) {
     const { fichaSocio } = props;
@@ -20,7 +20,12 @@ function NombreSocio(props) {
                 //console.log(e)
                 if(e.message === 'Network Error') {
                     //console.log("No hay internet")
-                    toast.error("Conexión al servidor no disponible");
+                     Swal.fire({
+                        title: "Conexión al servidor no disponible",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 }
             })
         } catch (e) {

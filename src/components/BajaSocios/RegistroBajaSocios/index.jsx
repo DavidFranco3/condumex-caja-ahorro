@@ -9,7 +9,7 @@ import BasicModal from "../../Modal/BasicModal";
 import { obtenerInfoxFichaSaldoSocios } from "../../../api/saldosSocios";
 import { obtenerDatosxFolio, obtenerFolioActualSaldosGlobales } from "../../../api/saldosGlobales";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { registroPatrimonioInicial } from "../../Patrimonio/RegistroBajaSocioPatrimonio";
 import { registroRendimientoInicial } from "../../Rendimientos/RegistroBajaSocioRendimiento";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
@@ -94,7 +94,12 @@ function RegistroBajaSocios(props) {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
-            toast.warning("Debe elegir un socio")
+            Swal.fire({
+            title: "Debe elegir un socio",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         } else {
             setLoading(true)
             // Realiza registro de la aportación
@@ -131,7 +136,12 @@ function RegistroBajaSocios(props) {
 
                     actualizacionSaldosSocios(fichaSocioElegido, aportacionSocioElegido, patrimonioSocioElegido, rendimientoSocioElegido, folio, "Baja Socio")
 
-                    toast.success(data.mensaje)
+                    Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                     setTimeout(() => {
                         setLoading(false)
                         history({

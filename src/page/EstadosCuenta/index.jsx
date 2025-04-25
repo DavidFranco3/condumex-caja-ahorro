@@ -8,7 +8,7 @@ import {
     getPeriodo,
     setPeriodo
 } from '../../api/auth';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import { Alert, Col, Row, Tabs, Tab, Spinner, Form } from 'react-bootstrap';
 import Lottie from 'react-lottie-player';
 import BasicModal from '../../components/Modal/BasicModal';
@@ -166,8 +166,18 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning('Sesión expirada')
-                toast.success('Sesión cerrada por seguridad')
+                Swal.fire({
+                    title: "Sesión expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesión cerrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi()
                 setRefreshCheckLogin(true)
             }
@@ -255,9 +265,20 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
         const response = await sendEmail(fichaSocioElegido, periodo)
 
         if (response.status === 200) {
-            toast.success('Correo enviado')
+            Swal.fire({
+                title: "Correo enviado",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
-            toast.error('Error al enviar correo')
+            Swal.fire({
+                title: "Error al enviar el correo",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
+
         }
 
         setLoading(false)
@@ -270,12 +291,21 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
 
             const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodo)
 
-
-
             if (response.status === 200) {
-                toast.success('Correo enviado')
+                Swal.fire({
+                    title: "Correo enviado",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             } else {
-                toast.error('Error al enviar el correo')
+                Swal.fire({
+                    title: "Error al enviar el correo",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+
             }
 
             setLoading(false)
@@ -288,13 +318,21 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
         for (let i = 0; i < listaFichasEmpleados.length; i++) {
 
             const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodo)
-
-
-
             if (response.status === 200) {
-                toast.success('Correo enviado')
+                Swal.fire({
+                    title: "Correo enviado",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             } else {
-                toast.error('Error al enviar el correo')
+                Swal.fire({
+                    title: "Error al enviar el correo",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+
             }
 
             setLoading(false)

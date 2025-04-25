@@ -4,7 +4,7 @@ import {
     obtenerFolioActualSaldosGlobales,
     registraSaldosGlobalesSistema
 } from "../../../api/saldosGlobales";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Registra nuevos saldos globales para inicio de periodos
 export function registraSaldosGlobales() {
@@ -23,7 +23,12 @@ export function registraSaldosGlobales() {
 
             registraSaldosGlobalesSistema(dataTemp).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             }).catch(e => {
                 console.log(e)
             })
@@ -89,7 +94,12 @@ export function actualizacionSaldosGlobales(nuevoAportacion, nuevoInteres, nuevo
 
                 actualizaSaldosGlobales(_id, dataTemp).then(response => {
                     const { data } = response;
-                    toast.success(data.mensaje)
+                    Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                     // console.log("Actualizacion de saldos globales")
                 }).catch(e => {
                     console.log(e)

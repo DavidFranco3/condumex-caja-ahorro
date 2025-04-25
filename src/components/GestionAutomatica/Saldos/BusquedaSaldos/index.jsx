@@ -11,20 +11,20 @@ import { TablePagination } from '@mui/material'
 import './BusquedaSaldos.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
-import { toast } from 'react-toastify'
+import Swal from "sweetalert2";
 import { obtenerDatosSaldos } from "../../../../api/saldosSocios"
 import { getRazonSocial } from '../../../../api/auth'
 
 function BusquedaSaldos(props) {
-  const { setShowModal, 
-      setFichaSocioElegido, 
-      setIdSocioElegido, 
-      setAportacionSocioElegido, 
-      setPrestamoSocioElegido, 
-      setPatrimonioSocioElegido, 
-      setRendimientoSocioElegido, 
-      setRetiroSocioElegido, 
-      setAbonoSocioElegido 
+  const { setShowModal,
+    setFichaSocioElegido,
+    setIdSocioElegido,
+    setAportacionSocioElegido,
+    setPrestamoSocioElegido,
+    setPatrimonioSocioElegido,
+    setRendimientoSocioElegido,
+    setRetiroSocioElegido,
+    setAbonoSocioElegido
   } = props
 
   // Para controlar la paginación
@@ -59,7 +59,7 @@ function BusquedaSaldos(props) {
   const eliminaDatosBusqueda = () => {
     setListSaldosEncontrados(null)
     setFichaSocioElegido('')
-    setAportacionSocioElegido('') 
+    setAportacionSocioElegido('')
     setPrestamoSocioElegido('')
     setPatrimonioSocioElegido('')
     setRendimientoSocioElegido('')
@@ -72,7 +72,7 @@ function BusquedaSaldos(props) {
     // Almacena id, ficha y nombre del socio elegido
     setIdSocioElegido(id)
     setFichaSocioElegido(fichaSocio)
-    setAportacionSocioElegido(aportacion) 
+    setAportacionSocioElegido(aportacion)
     setPrestamoSocioElegido(prestamo)
     setPatrimonioSocioElegido(patrimonio)
     setRendimientoSocioElegido(rendimiento)
@@ -86,7 +86,12 @@ function BusquedaSaldos(props) {
   // Validar listado de socios encontrados
   const validarListadoSaldos = (listSaldos) => {
     if (listSaldos.length === 0) {
-      toast.error('No se encontraron saldos con los datos ingresados')
+      Swal.fire({
+        title: "No se encontraron saldos con los datos ingresados",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+      });
     }
     setListSaldosEncontrados(formatModelSocios(listSaldos))
   }
@@ -102,7 +107,12 @@ function BusquedaSaldos(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+      });
     }
   }
 
@@ -111,7 +121,12 @@ function BusquedaSaldos(props) {
 
     // Busqueda por ficha
     if (tipo === 'fichaSocio' && fichaSocio === '') {
-      toast.warning('Debe especificar la ficha del socio')
+      Swal.fire({
+        title: "Debe especificar la ficha del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+      });
       setLoading(false)
     } else if (tipo === 'fichaSocio') {
       obtenerSaldoPorFicha(fichaSocio)
@@ -142,9 +157,8 @@ function BusquedaSaldos(props) {
   }
 
   function labelDisplayRows({ _from, to, count }) {
-    return `Visualizando ${to} de ${
-      count !== -1 ? count + ' Registros' : `more than ${to}`
-    }`
+    return `Visualizando ${to} de ${count !== -1 ? count + ' Registros' : `more than ${to}`
+      }`
   }
 
   return (

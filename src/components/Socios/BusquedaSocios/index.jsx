@@ -5,7 +5,7 @@ import 'moment/locale/es';
 import './BusquedaSocios.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faArrowDownLong } from '@fortawesome/free-solid-svg-icons';
-import { toast } from 'react-toastify'
+import Swal from "sweetalert2";
 import {
   obtenerDatosSocioEmpleado,
   obtenerEmpleadosPorNombre,
@@ -68,7 +68,12 @@ function BusquedaSocios(props) {
   // Validar listado de socios encontrados
   const validarListadoSocios = (listSocios) => {
     if (listSocios.length === 0) {
-      toast.error('No se encontraron socios con los datos ingresados')
+      Swal.fire({
+        title: 'No se encontraron socios con los datos ingresados',
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
     setListSociosEncontrados(formatModelSocios(listSocios))
   }
@@ -84,7 +89,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -99,7 +109,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -114,7 +129,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -129,7 +149,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -144,7 +169,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -159,7 +189,12 @@ function BusquedaSocios(props) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      toast.error(error.message)
+      Swal.fire({
+        title: error.message,
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     }
   }
 
@@ -168,7 +203,12 @@ function BusquedaSocios(props) {
 
     // Busqueda por ficha
     if (tipo === 'ficha' && ficha === '') {
-      toast.warning('Debe especificar la ficha del socio')
+      Swal.fire({
+        title: "Debe especificar la ficha del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
       setLoading(false)
     } else if (tipo === 'ficha') {
       obtenerEmpleadoPorFicha(ficha)
@@ -176,7 +216,12 @@ function BusquedaSocios(props) {
 
     // Busqueda por nombre
     if (tipo === 'nombre' && nombre === '') {
-      toast.warning('Debe especificar el nombre del socio')
+      Swal.fire({
+        title: "Debe especificar el nombre del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     } else if (tipo === 'nombre') {
       obtenerEmpleadoPorNombre(nombre)
     }
@@ -187,14 +232,24 @@ function BusquedaSocios(props) {
 
     // Busqueda por ficha
     if (tipo === 'ficha' && ficha === '') {
-      toast.warning('Debe especificar la ficha del socio')
+      Swal.fire({
+        title: "Debe especificar la ficha del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     } else if (tipo === 'ficha') {
       obtenerSindicalizadoPorFicha(formData.ficha)
     }
 
     // Busqueda por nombre
     if (tipo === 'nombre' && nombre === '') {
-      toast.warning('Debe especificar el nombre del socio')
+      Swal.fire({
+        title: "Debe especificar el nombre del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     } else if (tipo === 'nombre') {
       obtenerSindicalizadoPorNombre(nombre)
     }
@@ -205,14 +260,24 @@ function BusquedaSocios(props) {
 
     // Búsqueda por ficha
     if (tipo === 'ficha' && ficha === '') {
-      toast.warning('Debe especificar la ficha del socio')
+      Swal.fire({
+        title: "Debe especificar la ficha del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     } else if (tipo === 'ficha') {
       obtenerEspecialPorFicha(ficha)
     }
 
     // Búsqueda por nombre
     if (tipo === 'nombre' && nombre === '') {
-      toast.warning('Debe especificar el nombre del socio')
+      Swal.fire({
+        title: "Debe especificar el nombre del socio",
+        icon: "warning",
+        showConfirmButton: false,
+        timer: 1600,
+    });
     } else if (tipo === 'nombre') {
       obtenerEspecialPorNombre(nombre)
     }

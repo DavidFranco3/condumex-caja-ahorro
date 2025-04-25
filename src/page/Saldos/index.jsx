@@ -5,7 +5,7 @@ import { getRazonSocial } from "../../api/auth";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
 import {getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from "react-lottie-player"
 import AnimacionLoading from "../../assets/json/loading.json"
@@ -20,8 +20,18 @@ function Saldos(props) {
     useEffect(() => {
         if(getTokenApi()) {
             if(isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

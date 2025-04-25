@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaAportaciones } from '../../../api/aportaciones';
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 const initialFormData = ({ id, folio, fichaSocio, aportacion, fechaCreacion }) => (
@@ -25,7 +25,7 @@ const initialFormData = ({ id, folio, fichaSocio, aportacion, fechaCreacion }) =
     }
 )
 
-function ModificaAportaciones ({ datos, setShowModal, history }) {
+function ModificaAportaciones({ datos, setShowModal, history }) {
 
     const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
@@ -41,7 +41,12 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
         event.preventDefault();
 
         if (!formData.createdAt || !formData.aportacion) {
-            toast.error('Faltan datos')
+            Swal.fire({
+                title: "Faltan datos",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             return;
         }
 
@@ -49,23 +54,33 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
 
         const response = await actualizaAportaciones(formData.id, formData);
         registroMovimientosSaldosSocios(parseInt(formData.fichaSocio), formData.aportacion, "0", "0", "0", "0", "0", "0", "Modificacion aportación")
-        
+
         // Registra Saldos
         registroSaldoInicial(parseInt(formData.fichaSocio), formData.aportacion, "0", "0", formData.folio, "Modificacion aportación")
-        
+
         const { status, data: { mensaje } } = response
         console.log(status)
         console.log(mensaje)
         if (status === 200) {
-            toast.success("Actualizado correctamente")
-            setTimeout(() => {
-            history({
-                search: queryString.stringify(''),
+            Swal.fire({
+                title: "Actualizado correctamente",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
             });
-            setShowModal(false);
-        }, 2000)
+            setTimeout(() => {
+                history({
+                    search: queryString.stringify(''),
+                });
+                setShowModal(false);
+            }, 2000)
         } else {
-            toast.error(mensaje);
+            Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 
@@ -104,8 +119,8 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
                                 disabled
                             />
                         </Form.Group>
-                    </Row>                   
-                                        
+                    </Row>
+
                     <Row className="mb-3">
 
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
@@ -114,11 +129,11 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
                             </Form.Label>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.createdAt}
-                                placeholder="Fecha"
-                                name="createdAt"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.createdAt}
+                                    placeholder="Fecha"
+                                    name="createdAt"
                                 />
                             </InputGroup>
 
@@ -144,7 +159,7 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
 
                         </Form.Group>
                     </Row>
-                    
+
                     <Form.Group as={Row} className='botones'>
                         <Col>
                             <Button

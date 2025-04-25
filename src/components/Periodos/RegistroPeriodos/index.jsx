@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { obtenerFolioActualPeriodo, registraPeriodos } from "../../../api/periodos";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getRazonSocial } from "../../../api/auth";
 import queryString from "query-string";
 
@@ -54,7 +54,12 @@ function RegistroPeriodos(props) {
         e.preventDefault()
 
             if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
-                toast.warning("Faltan datos")
+                Swal.fire({
+            title: "Faltan datos",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             } else {
 
                 setLoading(true)
@@ -75,7 +80,12 @@ function RegistroPeriodos(props) {
                     registraPeriodos(dataTemp).then(response => {
                         const { data } = response;
 
-                        toast.success(data.mensaje);
+                         Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                         setTimeout(() => {
                             setLoading(false)
                             history({

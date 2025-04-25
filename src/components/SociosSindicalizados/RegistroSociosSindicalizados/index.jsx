@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
 import queryString from "query-string";
 import { obtenerFichaActualSocioSindicalizado, registraSocioSindicalizado } from "../../../api/sociosSindicalizados";
 
-function RegistroSociosSindicalizados (props) {
+function RegistroSociosSindicalizados(props) {
     const { setShowModal, history, location } = props;
 
     const cancelarRegistro = () => {
@@ -40,16 +40,26 @@ function RegistroSociosSindicalizados (props) {
 
     const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
 
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
+    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
 
     const onSubmit = (e) => {
         e.preventDefault()
 
         if (!formData.ficha || !formData.nombre || !formData.tipo) {
-            toast.warning("Completa el formulario")
+            Swal.fire({
+                title: "Completa el formulario",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             if (!isEmailValid(formData.correo)) {
-                toast.warning("Escriba un correo valido")
+                Swal.fire({
+                    title: "Escriba un correo valido",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             } else {
                 setLoading(true)
                 const dataTemp = {
@@ -63,7 +73,12 @@ function RegistroSociosSindicalizados (props) {
                 try {
                     registraSocioSindicalizado(dataTemp).then(response => {
                         const { data } = response;
-                        toast.success(data.mensaje)
+                        Swal.fire({
+                            title: data.mensaje,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
                         setLoading(false)
                         history({
                             search: queryString.stringify(""),
@@ -73,12 +88,22 @@ function RegistroSociosSindicalizados (props) {
                         console.log(e)
                         if (e.message === 'Network Error') {
                             //console.log("No hay internet")
-                            toast.error("Conexión al servidor no disponible");
+                            Swal.fire({
+                                title: "Conexión al servidor no disponible",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                            });
                             setLoading(false);
                         } else {
                             if (e.response && e.response.status === 401) {
                                 const { mensaje } = e.response.data;
-                                toast.error(mensaje);
+                                Swal.fire({
+                                    title: mensaje,
+                                    icon: "error",
+                                    showConfirmButton: false,
+                                    timer: 1600,
+                                });;
                                 setLoading(false);
                             }
                         }
@@ -160,12 +185,12 @@ function RegistroSociosSindicalizados (props) {
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                                <Form.Control
+                            <Form.Control
                                 type="datetime-local"
                                 defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />                            
+                            />
                         </Form.Group>
                     </Row>
 
@@ -198,7 +223,7 @@ function RegistroSociosSindicalizados (props) {
     );
 }
 
-function initialFormData () {
+function initialFormData() {
     return {
         ficha: "",
         nombre: "",

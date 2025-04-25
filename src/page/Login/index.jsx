@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
+import Swal from "sweetalert2";
 import { isEmailValid } from '../../utils/validations'
 import { size, values } from 'lodash'
 import { login, setTokenApi } from '../../api/auth'
@@ -29,10 +29,20 @@ function Login({ setRefreshCheckLogin }) {
     })
 
     if (validCount !== size(formData)) {
-      toast.warning('Completa todos los campos del formulario.')
+       Swal.fire({
+                        title: 'Completa todos los campos del formulario.',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
     } else {
       if (!isEmailValid(formData.correo)) {
-        toast.warning('Correo no valido')
+        Swal.fire({
+                        title: 'Correo no valido',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
       } else {
         setSignInLoading(true)
         try {
@@ -48,27 +58,52 @@ function Login({ setRefreshCheckLogin }) {
                 obtenerUsuario(idUdsuario).then(
                   ({ data: { nombre, apellidos } }) => {
                     setRefreshCheckLogin(true)
-                    toast.success('Bienvenido ' + nombre + ' ' + apellidos)
+                    Swal.fire({
+                        title: 'Bienvenido ' + nombre + ' ' + apellidos,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                   }
                 )
               } catch (ex) {
-                toast.error('Error al obtener el usuario')
+                Swal.fire({
+                        title: 'Error al obtener el usuario',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
               }
             })
             .catch((ex) => {
               if (ex.message === 'Network Error') {
-                toast.error('Conexión al servidor no disponible')
+                 Swal.fire({
+                        title: 'Conexión al servidor no disponible',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setSignInLoading(false)
               } else {
                 if (ex.response && ex.response.status === 401) {
                   const { mensaje } = ex.response.data
-                  toast.error(mensaje)
+                   Swal.fire({
+                        title: mensaje,
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                   setSignInLoading(false)
                 }
               }
             })
         } catch (ex) {
-          toast.error('Error al iniciar sesión')
+          Swal.fire({
+                        title: 'Error al iniciar sesion',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
           setSignInLoading(false)
         }
       }

@@ -1,15 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
-import { toast } from "react-toastify";
-import { Alert, Button, Col, Row, Spinner } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import { listarPaginacionParametros, listarParametros, totalParametros } from "../../api/parametros";
+import Swal from "sweetalert2";
+import { Alert, Col, Row, Spinner } from "react-bootstrap";
+import { listarParametros } from "../../api/parametros";
 import ListAjusteParametros from "../../components/AjusteParametros/ListAjusteParametros";
 import BasicModal from "../../components/Modal/BasicModal";
-import RegistroAjusteParametros from "../../components/AjusteParametros/RegistroAjusteParametros";
-import DatePicker from "react-datepicker";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 
@@ -30,8 +26,18 @@ function AjusteParametros(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

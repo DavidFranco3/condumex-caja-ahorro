@@ -12,7 +12,7 @@ import { listarRetiros } from "../../api/retiros";
 import { listarBajaSocios } from "../../api/bajaSocios";
 import { listarDeudaSocio } from "../../api/deudaSocio";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { exportCSVFile } from "../../utils/exportCSV";
 import moment from "moment";
 
@@ -35,8 +35,18 @@ function RespaldosAutomaticos(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
@@ -294,7 +304,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVAbonos = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalAbonos }])
                 const datosTemp = listAbonos.concat(dataConcatTitulos)
@@ -308,7 +323,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVAportaciones = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalAportaciones }])
                 const datosTemp = listAportaciones.concat(dataConcatTitulos)
@@ -322,7 +342,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVPatrimonios = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalPatrimonio }])
                 const datosTemp = listPatrimonio.concat(dataConcatTitulos)
@@ -336,7 +361,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVPrestamos = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalPrestamos }])
                 const datosTemp = listPrestamos.concat(dataConcatTitulos)
@@ -350,7 +380,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVRendimientos = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalRendimiento }])
                 const datosTemp = listRendimientos.concat(dataConcatTitulos)
@@ -364,7 +399,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVRetiros = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalRetiros }])
                 const datosTemp = listRetiros.concat(dataConcatTitulos)
@@ -378,7 +418,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVBajaSocios = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalBajasSocios }])
                 const datosTemp = listBajaSocios.concat(dataConcatTitulos)
@@ -421,7 +466,12 @@ function RespaldosAutomaticos(props) {
 
     const generacionCSVDeudaSocios = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 const dataConcatTitulos = dataTitulo.concat([{ totalDeudaSocios }])
                 const datosTemp = listInteresesSinDuplicados.concat(dataConcatTitulos)

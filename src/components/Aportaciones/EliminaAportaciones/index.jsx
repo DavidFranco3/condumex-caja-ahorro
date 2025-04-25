@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaAportaciones} from "../../../api/aportaciones";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
@@ -35,7 +35,12 @@ function EliminaAportaciones(props) {
         try {
             eliminaAportaciones(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 // Revierte saldos para eliminar la aportacion correspondiente
                 registroMovimientosSaldosSocios(parseInt(fichaSocio), aportacion, "0", "0", "0", "0", "0", "0", "Eliminación aportación")

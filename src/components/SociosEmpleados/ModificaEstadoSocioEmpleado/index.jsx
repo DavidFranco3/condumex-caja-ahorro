@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import {cambiaEstadoSocioEmpleado} from "../../../api/sociosEmpleados";
 
@@ -26,7 +26,12 @@ function ModificaEstadoSocioEmpleado(props) {
         try {
             cambiaEstadoSocioEmpleado(id, dataTemp).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),

@@ -2,7 +2,7 @@ import { useState, useEffect, Fragment, Suspense } from 'react'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { withRouter } from "../../utils/withRouter";
 import Lottie from 'react-lottie-player'
-import { toast } from 'react-toastify'
+import Swal from "sweetalert2";
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
@@ -60,7 +60,12 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
       })
       .catch((e) => {
         if (e.message === 'Network Error') {
-          toast.error('Conexión al servidor no disponible')
+           Swal.fire({
+                        title: 'Conexión al servidor no disponible',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
         }
       })
 
@@ -82,8 +87,18 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-        toast.warning('Sesión expirada')
-        toast.success('Sesión cerrada por seguridad')
+         Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+         Swal.fire({
+                        title: "Sesión cerrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
         logoutApi()
         setRefreshCheckLogin(true)
       }

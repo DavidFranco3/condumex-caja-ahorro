@@ -3,9 +3,8 @@ import moment from "moment";
 // import BasicModal from "../../Modal/BasicModal";
 import { Button, Col, Form, Row, Spinner, Container, Badge, InputGroup } from "react-bootstrap";
 import "./ListAjusteParametros.scss"
-import DatePicker, { CalendarContainer, registerLocale } from "react-datepicker";
 import { actualizaParametros } from "../../../api/parametros";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import Lottie from "react-lottie-player"
 import AnimacionLoading from "../../../assets/json/loading.json";
@@ -64,7 +63,12 @@ function ListAjusteParametros(props) {
             actualizaParametros(id, dataTemp).then(response => {
                 const { data } = response;
                 // console.log(data)
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setLoading(false)
                 history.push({
                     search: queryString.stringify(""),

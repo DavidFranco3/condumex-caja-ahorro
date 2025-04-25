@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaSindicalizadosMasivo} from "../../../api/sociosSindicalizados";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
@@ -32,7 +32,12 @@ function EliminaSindicalizadosMasivo(props) {
         e.preventDefault()
         
         if(!formData.fecha){
-            toast.error("Por favor selecciona una fecha");
+Swal.fire({
+                        title: "Por favor selecciona una fecha",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             return;
         }
         
@@ -42,7 +47,12 @@ function EliminaSindicalizadosMasivo(props) {
             eliminaSindicalizadosMasivo(formData.fecha, razonSocialElegida).then(response => {
                 
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 setTimeout(() => {
                     setLoading(false)

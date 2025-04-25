@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
@@ -30,7 +30,12 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
         const handleSubmit = async (evt) => {
                 evt.preventDefault();
                 if (dataFile.length === 0) {
-                        toast.error('No hay datos para cargar');
+                        Swal.fire({
+                                title: 'No hay datos para cargar',
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                        });
                         return;
                 }
 
@@ -64,7 +69,13 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                         // increment count for render value in progress bar
                         setCount(oldCount => oldCount + 1);
                 }
-                toast.success("Retiros registrados con exito");
+
+                Swal.fire({
+                        title: "Retiros registrados con exito",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                });
                 setDataFile([]);
                 setLoading(false);
                 history({
@@ -94,7 +105,12 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                                 setDataFile(data.filter(({ fichaSocio, retiro }) => fichaSocio && retiro));
                         }
 
-                        reader.onerror = (_evt) => toast.error('Error al leer el archivo')
+                        reader.onerror = (_evt) => Swal.fire({
+                                title: "Error al leer el archivo",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                        });
 
                 }
         }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
@@ -19,12 +19,22 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         if (dataFile.length === 0) {
-            toast.error('No hay datos para cargar');
+             Swal.fire({
+                        title: 'No hay datos para cargar',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             return;
         }
 
         if (!formData.fecha) {
-            toast.warning('Por favor selecciona una fecha');
+            Swal.fire({
+                    title: "Por favor selecciona una fecha",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             return;
         }
 
@@ -80,7 +90,12 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
                 });
                 setDataFile(data.filter(({ fichaSocio, patrimonio }) => fichaSocio && patrimonio));
             }
-            reader.onerror = (_evt) => toast.error('Error al leer el archivo')
+            reader.onerror = (_evt) => Swal.fire({
+                    title: "Error al leer el archivo",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
         }
     }

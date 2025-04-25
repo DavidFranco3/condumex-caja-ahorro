@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaRetiros } from '../../../api/retiros';
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 const initialFormData = ({ id, folio, fichaSocio, retiro, fechaCreacion }) => (
@@ -25,7 +25,7 @@ const initialFormData = ({ id, folio, fichaSocio, retiro, fechaCreacion }) => (
     }
 )
 
-function ModificaRetiros ({ datos, setShowModal, history }) {
+function ModificaRetiros({ datos, setShowModal, history }) {
 
     const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
@@ -41,7 +41,12 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
         event.preventDefault();
 
         if (!formData.retiro || !formData.createdAt) {
-            toast.error('Faltan datos');
+            Swal.fire({
+            title: "Faltan datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             return;
         }
 
@@ -49,19 +54,29 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
 
         const response = await actualizaRetiros(formData.id, formData);
         registroMovimientosSaldosSocios(formData.fichaSocio, "0", "0", "0", "0", "0", formData.retiro, "0", "Modificación retiro");
-        
+
         const { status, data: { mensaje } } = response
 
         if (status === 200) {
-            toast.success(mensaje);
-            setTimeout(() => {
-            history({
-                search: queryString.stringify(''),
+            Swal.fire({
+                title: mensaje,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
             });
-            setShowModal(false);
-        }, 2000)
+            setTimeout(() => {
+                history({
+                    search: queryString.stringify(''),
+                });
+                setShowModal(false);
+            }, 2000)
         } else {
-            toast.error(mensaje);
+            Swal.fire({
+            title: mensaje,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         }
     };
 
@@ -100,8 +115,8 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
                                 disabled
                             />
                         </Form.Group>
-                    </Row>                   
-                                        
+                    </Row>
+
                     <Row className="mb-3">
 
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
@@ -111,11 +126,11 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
 
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.createdAt}
-                                placeholder="Fecha"
-                                name="createdAt"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    defaultValue={formData.createdAt}
+                                    placeholder="Fecha"
+                                    name="createdAt"
                                 />
                             </InputGroup>
                         </Form.Group>
@@ -140,7 +155,7 @@ function ModificaRetiros ({ datos, setShowModal, history }) {
 
                         </Form.Group>
                     </Row>
-                    
+
                     <Form.Group as={Row} className='botones'>
                         <Col>
                             <Button

@@ -4,7 +4,7 @@ import { registroInicialSaldosSocio,
     obtenerFolioActualSaldosSocios, 
     obtenerInfoxFichaSaldoSocios 
 } from "../../../api/saldosSocios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza la modificación de saldos al realizar un movimiento
 export const actualizacionSaldosSocios = async (fichaSocio, ingresaAportacion, ingresaPatrimonio, ingresaRendimiento, folioMovimiento, movimiento) => {
@@ -55,7 +55,12 @@ export const actualizacionSaldosSocios = async (fichaSocio, ingresaAportacion, i
             // Inicia actualización de saldos de los socios
             actualizaSaldosSocios(_id, dataTemp).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 // console.log("Actualización de saldo personal")
 
             }).catch(e => {

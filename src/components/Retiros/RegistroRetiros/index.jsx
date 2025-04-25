@@ -7,7 +7,7 @@ import { obtenerFolioActualRetiros, registraRetiros } from "../../../api/retiros
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
@@ -75,10 +75,20 @@ function RegistroRetiros(props) {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
-            toast.warning("Debe elegir un socio")
+            Swal.fire({
+            title: "Debe elegir un socio",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         } else {
             if (!formData.retiro || !formData.tipo) {
-                toast.warning("Faltan datos")
+                Swal.fire({
+            title: "Faltan datos",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             } else {
 
                 setLoading(true)
@@ -113,7 +123,12 @@ function RegistroRetiros(props) {
                             registroRendimientoInicial(fichaSocioElegido, retiro, formData.fecha);
                         }
 
-                        toast.success(data.mensaje)
+                        Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                         setTimeout(() => {
                             history({
                                 search: queryString.stringify(""),

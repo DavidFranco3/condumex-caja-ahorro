@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaAbonos} from "../../../api/abonos";
-import {toast} from "react-toastify";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaAbonos } from "../../../api/abonos";
+import Swal from "sweetalert2";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaAbonos(props) {
     const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
-    const { id, folio, fichaSocio, abono, fechaCreacion, fechaActualizacion} = datos;
+    const { id, folio, fichaSocio, abono, fechaCreacion, fechaActualizacion } = datos;
 
     const cancelarEliminacion = () => {
         setShowModal(false)
@@ -32,15 +32,20 @@ function EliminaAbonos(props) {
         setLoading(true)
 
         try {
-                eliminaAbonos(id).then(response => {
+            eliminaAbonos(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
                 // Registra movimientos
                 registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", "0", "0", "0", "0", parseFloat(abono), "Eliminación abono");
-                
+
                 actualizacionDeudaSocio(parseInt(fichaSocio), parseFloat(abono), "0", "Eliminación abono", fechaCreacion);
-            
+
                 setTimeout(() => {
                     setLoading(false)
                     history({
@@ -108,20 +113,20 @@ function EliminaAbonos(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
-                    <Row>    
+
+                    <Row>
                         <Form.Group as={Col} controlId="formGridAbono">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                           <Form.Control
+                            <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
                                 defaultValue={fechaToCurrentTimezone(fechaCreacion)}
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
 

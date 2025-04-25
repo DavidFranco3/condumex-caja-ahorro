@@ -4,7 +4,7 @@ import { Button, Col, Row, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { listarPaginacionSocioSindizalizado, totalRegistrosSocioSindicalizado } from "../../api/sociosSindicalizados";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { listarPaginacionSocioEspecial, totalRegistroSocioEspecial } from "../../api/sociosEspeciales";
 import ListSociosEspeciales from "../../components/SociosEspeciales/ListSociosEspeciales";
 import RegistroSociosEspeciales from "../../components/SociosEspeciales/RegistroSociosEspeciales";
@@ -61,7 +61,12 @@ function SociosEspeciales(props) {
                 // console.log(e)
                 if (e.message === 'Network Error') {
                     //console.log("No hay internet")
-                    toast.error("Conexión al servidor no disponible");
+                     Swal.fire({
+                        title: "Conexión al servidor no disponible",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 }
             })
 

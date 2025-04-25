@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { listarSociosEmpleados } from "../../api/sociosEmpleados";
 import ListSociosEmpleados from "../../components/SociosEmpleados/ListSociosEmpleados";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import RegistroSociosEmpleados from "../../components/SociosEmpleados/RegistroSociosEmpleados";
 import CargaMasivaSociosEmpleados from "../../components/SociosEmpleados/CargaMasivaSociosEmpleados";
 import EliminaSociosEmpleadosMasivo from "../../components/SociosEmpleados/EliminaSociosEmpleadosMasivo";
@@ -44,7 +44,12 @@ function Empleados(props) {
 
     const generacionCSV = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
             exportCSVFile(listSociosCSV, "LISTA_SOCIOS_EMPLEADOS");
         }, 5600);
@@ -58,8 +63,18 @@ function Empleados(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

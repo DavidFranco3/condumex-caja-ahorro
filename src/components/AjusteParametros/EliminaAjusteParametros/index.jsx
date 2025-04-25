@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {getTokenApi, isExpiredToken, logoutApi} from "../../../api/auth";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaParametros} from "../../../api/parametros";
 import queryString from "query-string";
@@ -17,8 +17,18 @@ function EliminaAjusteParametros(props) {
     useEffect(() => {
         if(getTokenApi()) {
             if(isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                Swal.fire({
+                    title: "Sesion expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesion cerrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
@@ -36,7 +46,12 @@ function EliminaAjusteParametros(props) {
         try {
             eliminaParametros(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),

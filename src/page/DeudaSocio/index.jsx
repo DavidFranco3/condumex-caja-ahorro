@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from "../../api/auth";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -34,8 +34,18 @@ function DeudaSocio(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

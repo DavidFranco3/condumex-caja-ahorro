@@ -4,7 +4,7 @@ import { registraAbonos,
     obtenerFolioActualAbono, 
     obtenerDatosAbonos 
 } from "../../../api/abonos";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza el registro inicial de saldos de socios
 export function registroAbonoInicial (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaPeriodos } from '../../../api/periodos';
 
@@ -40,7 +40,12 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
         event.preventDefault();
 
         if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
-            toast.error('Faltan datos');
+            Swal.fire({
+            title: "Faltan datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             return;
         }
 
@@ -54,13 +59,23 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
         setLoading(false);
 
         if (status === 200) {
-            toast.success(mensaje);
+            Swal.fire({
+                        title: mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
         } else {
-            toast.error(mensaje);
+             Swal.fire({
+                        title: mensaje,
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });;
         }
     };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {Button, Col, Form, Row, Spinner, Alert} from "react-bootstrap";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import {eliminaSocioEmpleado} from "../../../api/sociosEmpleados";
 
@@ -32,7 +32,12 @@ function EliminaSocioEmpleado(props) {
         try {
             eliminaSocioEmpleado(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),

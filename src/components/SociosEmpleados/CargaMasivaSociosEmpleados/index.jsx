@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { map, size, values } from "lodash";
 import { registraSociosEmpleados } from "../../../api/sociosEmpleados";
@@ -18,12 +18,22 @@ const [loading, setLoading] = useState(false);
         const handleSubmit = async (evt) => {
 evt.preventDefault();
         if (dataFile.length === 0) {
-toast.error('No hay datos para cargar');
+ Swal.fire({
+                        title: 'No hay datos para cargar',
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
         return;
 }
 
 if (!formData.fecha) {
-toast.warning('Por favor selecciona una fecha');
+Swal.fire({
+                    title: "Por favor selecciona una fecha",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
         return;
 }
         setLoading(true);
@@ -71,7 +81,12 @@ const { result } = evt.target;
         setDataFile(data.filter(({ ficha, nombre, correo }) => ficha && nombre && correo));
 }
 
-reader.onerror = (_evt) => toast.error('Error al leer el archivo')
+reader.onerror = (_evt) => Swal.fire({
+                    title: "Error al leer el archivo",
+                    icon: "error",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
 }
 }

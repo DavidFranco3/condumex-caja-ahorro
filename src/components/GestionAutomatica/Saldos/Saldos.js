@@ -4,7 +4,7 @@ import { registroInicialSaldosSocio,
     obtenerFolioActualSaldosSocios, 
     obtenerInfoxFichaSaldoSocios 
 } from "../../../api/saldosSocios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { actualizacionSaldosGlobales } from "../SaldosGlobales/SaldosGlobales";
 
 // Realiza el registro inicial de saldos de socios

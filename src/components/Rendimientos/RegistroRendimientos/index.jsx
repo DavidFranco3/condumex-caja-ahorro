@@ -6,7 +6,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { obtenerFolioActualRendimientos, registraRendimientosSocios } from "../../../api/rendimientos";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
@@ -71,10 +71,20 @@ function RegistroRendimientos({ setShowModal, history }) {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
-            toast.warning("Debe elegir un socio")
+            Swal.fire({
+            title: "Debe elegir un socio",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         } else {
             if (!formData.rendimiento) {
-                toast.warning("Faltan datos")
+                Swal.fire({
+            title: "Faltan datos",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             } else {
 
                 setLoading(true)
@@ -103,7 +113,12 @@ function RegistroRendimientos({ setShowModal, history }) {
 
                         actualizacionSaldosSocios(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
 
-                        toast.success(data.mensaje)
+                        Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                         setTimeout(() => {
                             history({
                                 search: queryString.stringify(""),

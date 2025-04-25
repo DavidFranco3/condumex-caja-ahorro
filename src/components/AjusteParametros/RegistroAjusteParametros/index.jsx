@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import {Button, Col, Form, InputGroup, Row, Spinner} from "react-bootstrap";
-import {size, values} from "lodash";
-import {toast} from "react-toastify";
-import {registraParametros} from "../../../api/parametros";
+import { Button, Col, Form, InputGroup, Row, Spinner } from "react-bootstrap";
+import { size, values } from "lodash";
+import Swal from "sweetalert2";
+import { registraParametros } from "../../../api/parametros";
 import queryString from "query-string";
-import DatePicker, { CalendarContainer } from "react-datepicker";
 import "./RegistroAjusteParametros.scss"
 
 function RegistroAjusteParametros(props) {
@@ -15,19 +14,6 @@ function RegistroAjusteParametros(props) {
 
     // Para almacenar la fecha de fin del periodo
     const [finPeriodo, setFinPeriodo] = useState(new Date);
-
-    const contenedorFechas = ({ className, children }) => {
-        return (
-            <div style={{ padding: "16px", background: "#216ba5", color: "#fff" }}>
-                <CalendarContainer className={className}>
-                    <div style={{ background: "#f0f0f0" }}>
-                        Seleccione la fecha
-                    </div>
-                    <div style={{ position: "relative" }}>{children}</div>
-                </CalendarContainer>
-            </div>
-        );
-    };
 
     // Cancelar registro
     const cancelarRegistro = () => {
@@ -49,8 +35,13 @@ function RegistroAjusteParametros(props) {
             return null;
         });
 
-        if(size(formData) !== validCount){
-            toast.warning("Completa el formulario")
+        if (size(formData) !== validCount) {
+            Swal.fire({
+                title: "Completa el formulario",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             setLoading(false)
             const tempIntereses = formData.tasaInteres / 100
@@ -65,7 +56,12 @@ function RegistroAjusteParametros(props) {
             try {
                 registraParametros(dataTemp).then(response => {
                     const { data } = response;
-                    toast.success(data.mensaje)
+                    Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                     setLoading(false)
                     history({
                         search: queryString.stringify(""),
@@ -95,31 +91,25 @@ function RegistroAjusteParametros(props) {
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridFechaInicioPeriodo">
                                 <Form.Label>Inicio del periodo</Form.Label>
-                                <DatePicker
-                                    locale="es"
-                                    selected={fechaInicio}
-                                    onChange={(date) => {setFechaInicio(date)}}
-                                    calendarContainer={contenedorFechas}
-                                    peekNextMonth
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                    todayButton="Fecha actual"
+                                <Form.Control
+                                    type="datetime-local"
+                                    value={fechaInicio ? fechaInicio.toISOString().slice(0, 16) : ""}
+                                    onChange={(e) => setFechaInicio(new Date(e.target.value))}
+                                    name="fechaInicio"
+                                    placeholder="Fecha"
+                                    lang="es"
                                 />
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridFechaInicioPeriodo">
                                 <Form.Label>Fin del periodo</Form.Label>
-                                <DatePicker
-                                    locale="es"
-                                    selected={finPeriodo}
-                                    onChange={(date) => {setFinPeriodo(date)}}
-                                    calendarContainer={contenedorFechas}
-                                    peekNextMonth
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                    todayButton="Fecha actual"
+                                <Form.Control
+                                    type="datetime-local"
+                                    value={finPeriodo ? finPeriodo.toISOString().slice(0, 16) : ""}
+                                    onChange={(e) => setFinPeriodo(new Date(e.target.value))}
+                                    name="finPeriodo"
+                                    placeholder="Fecha"
+                                    lang="es"
                                 />
                             </Form.Group>
                         </Row>

@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItems, Transition, MenuItem } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import LogoCajadeAhorro from "../../assets/png/caja-de-ahorro.png"
 import ImagenPerfil from "../../assets/png/user-avatar.png"
 import { Row, Container, Form } from "react-bootstrap";
@@ -24,7 +24,12 @@ function LayoutPrincipal(props) {
 
     //Para cerrar la sesion
     const cerrarSesion = () => {
-        toast.success("Sesión cerrada");
+        Swal.fire({
+            title: "Sesión cerrada",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         redirecciona("")
         logoutApi();
         setRefreshCheckLogin(true);
@@ -51,8 +56,18 @@ function LayoutPrincipal(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                Swal.fire({
+                    title: "Sesión expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesión cerrrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

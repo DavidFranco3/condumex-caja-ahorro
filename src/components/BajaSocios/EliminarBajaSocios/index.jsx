@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { eliminaBajaSocios } from "../../../api/bajaSocios";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
@@ -48,7 +48,12 @@ function EliminaBajaSocios(props) {
         try {
             eliminaBajaSocios(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setTimeout(() => {
                     setLoading(false)
                     history({

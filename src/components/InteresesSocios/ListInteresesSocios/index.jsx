@@ -10,7 +10,7 @@ import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
 import NombreSocio from './nombreSocio';
 import { exportCSVFile } from "../../../utils/exportCSV";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 function ListInteresesSocios(props) {
     const { listInteresesSocios, history, location, setRefreshCheckLogin } = props;
@@ -35,7 +35,12 @@ function ListInteresesSocios(props) {
 
     const generacionCSV = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
                 exportCSVFile(listInteresesSinDuplicados, "LISTA_SOCIOS_SINDICALIZADOS");
             }, 5600);

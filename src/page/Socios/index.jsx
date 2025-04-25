@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import 'react-tabs/style/react-tabs.css';
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import BasicModal from "../../components/Modal/BasicModal";
 import Empleados from "../Empleados";
 import Sindicalizados from "../Sindicalizados";
@@ -23,8 +23,18 @@ function Socios(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

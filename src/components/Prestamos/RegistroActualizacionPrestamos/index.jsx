@@ -4,7 +4,7 @@ import { registraPrestamos,
     obtenerFolioActualPrestamo, 
     obtenerInfoxPrestamos 
 } from "../../../api/prestamos";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza el registro inicial de saldos de socios
 export function registroPrestamoInicial (

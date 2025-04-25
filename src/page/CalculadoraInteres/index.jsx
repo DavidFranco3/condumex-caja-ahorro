@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 import {getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {Alert, Col, Row} from "react-bootstrap";
 import { Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -13,8 +13,18 @@ function CalculadoraInteres(props) {
     useEffect(() => {
         if(getTokenApi()) {
             if(isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+                 Swal.fire({
+                        title: "Sesión expirada",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                 Swal.fire({
+                        title: "Sesión cerrrada por seguridad",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }

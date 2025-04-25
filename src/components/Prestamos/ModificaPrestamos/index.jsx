@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
 import queryString from "query-string";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import { actualizaPrestamos } from '../../../api/prestamos';
@@ -55,7 +55,12 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
         event.preventDefault();
 
         if (!formData.prestamo || !formData.createdAt || !formData.tasaInteres) {
-            toast.error("Faltan datos");
+            Swal.fire({
+            title: "Faltan datos",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             return;
         }
 
@@ -77,7 +82,12 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
         actualizacionDeudaSocio(formData.fichaSocio, "0", total, "Modificación prestamo", formData.createdAt);
 
         if (status === 200) {
-            toast.success(mensaje);
+            Swal.fire({
+                        title: mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             setTimeout(() => {
             history({
                 search: queryString.stringify(''),
@@ -85,7 +95,12 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
             setShowModal(false);
         }, 2000);
         } else {
-            toast.error(mensaje);
+             Swal.fire({
+                        title: mensaje,
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });;
         }
     };
 

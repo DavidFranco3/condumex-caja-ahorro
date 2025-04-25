@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaDeudaSocio} from "../../../api/deudaSocio";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import queryString from "query-string";
 
 const fechaToCurrentTimezone = (fecha) => {
@@ -32,7 +32,12 @@ function EliminaDeudaSocio(props) {
         try {
                 eliminaDeudaSocio(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 setTimeout(() => {
                     setLoading(false)

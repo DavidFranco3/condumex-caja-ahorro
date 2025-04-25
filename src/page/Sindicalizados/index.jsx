@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faTrashCan, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { listarSocioSindicalizado } from "../../api/sociosSindicalizados";
 import ListSociosSindicalizados from "../../components/SociosSindicalizados/ListSociosSindicalizados";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import RegistroSociosSindicalizados from "../../components/SociosSindicalizados/RegistroSociosSindicalizados";
 import CargaMasivaSociosSindicalizados from "../../components/SociosSindicalizados/CargaMasivaSociosSindicalizados";
 import EliminaSociosSindicalizadosMasivo from "../../components/SociosSindicalizados/EliminaSociosSindicalizadosMasivo";
@@ -43,7 +43,12 @@ function Sindicalizados(props) {
 
     const generacionCSV = () => {
         try {
-            toast.info("Estamos empaquetando tu respaldo, espere por favor ....")
+Swal.fire({
+                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
+                        icon: "info",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
             const timer = setTimeout(() => {
             exportCSVFile(listSociosCSV, "LISTA_SOCIOS_SINDICALIZADOS");
         }, 5600);

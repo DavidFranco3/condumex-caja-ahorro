@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import "./ModificaSociosEspeciales.scss"
 import { size, values } from "lodash";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
 import { actualizaSocioEspecial } from "../../../api/sociosEspeciales";
 import queryString from "query-string";
@@ -48,10 +48,20 @@ function ModificaSociosEspeciales (props) {
         });
 
         if (size(formData) !== validCount || !formData.createdAt) {
-            toast.warning("Completa el formulario")
+            Swal.fire({
+                    title: "Completa el formulario",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
         } else {
             if (!isEmailValid(formData.correo)) {
-                toast.warning("Escriba un correo valido")
+                Swal.fire({
+                    title: "Escriba un correo valido",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             } else {
                 setLoading(true)
 
@@ -67,7 +77,12 @@ function ModificaSociosEspeciales (props) {
                 try {
                     actualizaSocioEspecial(id, dataTemp).then(response => {
                         const { data } = response;
-                        toast.success(data.mensaje)
+                        Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                         setLoading(false)
                         history({
                             search: queryString.stringify(""),

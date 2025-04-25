@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import {getTokenApi, isExpiredToken, logoutApi} from "../../../api/auth";
-import {toast} from "react-toastify";
-import { Alert, Button, Col, Form, Row, Spinner, InputGroup } from "react-bootstrap";
-import {size, values} from "lodash";
-import {actualizaParametros} from "../../../api/parametros";
+import { getTokenApi, isExpiredToken, logoutApi } from "../../../api/auth";
+import Swal from "sweetalert2";
+import { Button, Col, Form, Row, Spinner, InputGroup } from "react-bootstrap";
+import { size, values } from "lodash";
+import { actualizaParametros } from "../../../api/parametros";
 import queryString from "query-string";
-import DatePicker, {CalendarContainer} from "react-datepicker";
 
 function ModificaAjusteParametros(props) {
     const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
@@ -18,28 +17,25 @@ function ModificaAjusteParametros(props) {
     // Para almacenar la fecha de fin del periodo
     const [fechaFinPeriodo, setFechaFinPeriodo] = useState(new Date);
 
-    const contenedorFechas = ({ className, children }) => {
-        return (
-            <div style={{ padding: "16px", background: "#216ba5", color: "#fff" }}>
-                <CalendarContainer className={className}>
-                    <div style={{ background: "#f0f0f0" }}>
-                        Seleccione la fecha
-                    </div>
-                    <div style={{ position: "relative" }}>{children}</div>
-                </CalendarContainer>
-            </div>
-        );
-    };
-
     // Controlar la animacion
     const [loading, setLoading] = useState(false);
 
     // Cerrado de sesión automatico
     useEffect(() => {
-        if(getTokenApi()) {
-            if(isExpiredToken(getTokenApi())) {
-                toast.warning("Sesión expirada");
-                toast.success("Sesión cerrada por seguridad");
+        if (getTokenApi()) {
+            if (isExpiredToken(getTokenApi())) {
+                Swal.fire({
+                    title: "Sesion expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesion cerrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
@@ -63,8 +59,13 @@ function ModificaAjusteParametros(props) {
             return null;
         });
 
-        if(size(formData) !== validCount){
-            toast.warning("Completa el formulario")
+        if (size(formData) !== validCount) {
+            Swal.fire({
+                title: "Completa el formulario",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             setLoading(true)
             const tempIntereses = formData.tasaInteres / 100
@@ -80,7 +81,12 @@ function ModificaAjusteParametros(props) {
             try {
                 actualizaParametros(id, dataTemp).then(response => {
                     const { data } = response;
-                    toast.success(data.mensaje)
+                    Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                     setLoading(false)
                     history({
                         search: queryString.stringify(""),
@@ -110,31 +116,24 @@ function ModificaAjusteParametros(props) {
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridFechaInicioPeriodo">
                                 <Form.Label>Inicio del periodo</Form.Label>
-                                <DatePicker
-                                    locale="es"
-                                    selected={fechaInicio}
-                                    onChange={(date) => {setFechaInicio(date)}}
-                                    calendarContainer={contenedorFechas}
-                                    peekNextMonth
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                    todayButton="Fecha actual"
+                                <Form.Control
+                                    type="datetime-local"
+                                    value={fechaFinPeriodo ? fechaFinPeriodo.toISOString().slice(0, 16) : ""}
+                                    onChange={(e) => setFechaFinPeriodo(new Date(e.target.value))}
+                                    name="fechaFinPeriodo"
                                 />
+
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formGridFechaInicioPeriodo">
                                 <Form.Label>Fin del periodo</Form.Label>
-                                <DatePicker
-                                    locale="es"
-                                    selected={fechaFinPeriodo}
-                                    onChange={(date) => {setFechaFinPeriodo(date)}}
-                                    calendarContainer={contenedorFechas}
-                                    peekNextMonth
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                    todayButton="Fecha actual"
+                                <Form.Control
+                                    type="datetime-local"
+                                    value={fechaFinPeriodo ? fechaFinPeriodo.toISOString().slice(0, 16) : ""}
+                                    onChange={(e) => setFechaFinPeriodo(new Date(e.target.value))}
+                                    name="fechaFinPeriodo"
+                                    placeholder="Fecha"
+                                    lang="es"
                                 />
                             </Form.Group>
                         </Row>

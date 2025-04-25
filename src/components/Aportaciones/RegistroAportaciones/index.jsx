@@ -6,7 +6,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { obtenerFolioActualAportaciones, registraAportacionesSocios } from "../../../api/aportaciones";
 import BusquedaSocios from "../../Socios/BusquedaSocios";
 import BasicModal from "../../Modal/BasicModal";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
@@ -75,10 +75,20 @@ function RegistroAportaciones(props) {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
-            toast.warning("Debe elegir un socio")
+            Swal.fire({
+            title: "Debe elegir un socio",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
         } else {
             if (!formData.aportacion) {
-                toast.warning("Faltan datos")
+                Swal.fire({
+            title: "Faltan datos",
+            icon: "warning",
+            showConfirmButton: false,
+            timer: 1600,
+        });
             } else {
 
                 setLoading(true)
@@ -107,7 +117,12 @@ function RegistroAportaciones(props) {
 
                         actualizacionSaldosSocios(fichaSocioElegido, formData.aportacion, "0", "0", folio, "Aportación")
 
-                        toast.success(data.mensaje)
+                        Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                         setTimeout(() => {
                             setLoading(false)
                             history({

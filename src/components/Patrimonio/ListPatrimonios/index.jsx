@@ -1,19 +1,13 @@
-import { useState, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
+import { useState } from 'react';
 import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container } from "react-bootstrap";
-import TableRow from '@mui/material/TableRow';
+import { Badge } from "react-bootstrap";
 import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import DataTable from "react-data-table-component";
 import EliminaPatrimonio from "../EliminaPatrimonios";
 import ModificaPatrimonio from "../ModificaPatrimonios";
-import { estilos } from "../../../utils/tableStyled";
-import NombreSocioEmpleado from "../../utils/NombresSocios/NombreSocioEmpleado";
-import NombreSocioSindicalizado from "../../utils/NombresSocios/NombreSocioSindicalizado";
+import DataTablecustom from '../../Generales/DataTable';
 
 function ListPatrimonios(props) {
   const { listPatrimonios, history, location, setRefreshCheckLogin } = props;
@@ -65,7 +59,7 @@ function ListPatrimonios(props) {
     },
     {
       name: "Acciones",
-      selector: row => (
+      cell: row => (
         <>
           <div className="flex justify-end items-center space-x-4">
             <Badge
@@ -124,45 +118,9 @@ function ListPatrimonios(props) {
     setShowModal(true);
   }
 
-
-  // Definiendo estilos para data table
-  // Configurando animacion de carga
-  const [pending, setPending] = useState(true);
-  const [rows, setRows] = useState([]);
-
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setRows(listPatrimonios);
-      setPending(false);
-    }, 0);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const paginationComponentOptions = {
-    rowsPerPageText: 'Filas por página',
-    rangeSeparatorText: 'de',
-    selectAllRowsItem: true,
-    selectAllRowsItemText: 'Todos'
-  };
-
-  const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
-
   return (
     <>
-      <Container fluid>
-        <DataTable
-          columns={columns}
-          data={listPatrimonios}
-          progressPending={pending}
-          paginationComponentOptions={paginationComponentOptions}
-          paginationResetDefaultPage={resetPaginationToogle}
-          customStyles={estilos}
-          sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
-          pagination
-        />
-      </Container>
-
+      <DataTablecustom datos={listPatrimonios} columnas={columns} title={"Patrimonios"} />
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
       </BasicModal>

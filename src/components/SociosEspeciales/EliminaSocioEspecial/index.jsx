@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaSocioEspecial} from "../../../api/sociosEspeciales";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import queryString from "query-string";
 
 function EliminaSocioEspecial(props) {
@@ -22,7 +22,12 @@ function EliminaSocioEspecial(props) {
         try {
             eliminaSocioEspecial(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),

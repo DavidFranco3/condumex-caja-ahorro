@@ -4,7 +4,7 @@ import { registraDeudaSocio,
     obtenerFolioActualDeudaSocio, 
     obtenerDatosDeudaSocio 
 } from "../../../../api/deudaSocio";
-import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 // Realiza el registro inicial de saldos de socios
 export function registroDeudaSocioInicial (fichaSocio, abonoTotal, prestamoTotal, movimiento, fecha) {

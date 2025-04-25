@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
 import {eliminaRetiros} from "../../../api/retiros";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
 import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
 
@@ -36,7 +35,12 @@ function EliminaRetiros(props) {
         try {
             eliminaRetiros(id).then(response => {
                 const { data } = response;
-                toast.success(data.mensaje)
+                Swal.fire({
+                        title: data.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 // Revierte saldos para eliminar el retiro correspondiente
                 registroMovimientosSaldosSocios(fichaSocio, "0", "0", "0", "0", "0", retiro, "0", "Eliminación retiro")
