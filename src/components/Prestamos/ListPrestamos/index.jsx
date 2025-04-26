@@ -51,36 +51,6 @@ function ListPrestamos(props) {
             reorder: false
         },
         {
-            name: "Interés",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamoTotal - row.prestamo)} MXN
-                </>
-            ),
-            sortable: false,
-            center: true,
-            reorder: false
-        },
-        {
-            name: "Total",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamoTotal)} MXN
-                </>
-            ),
-            sortable: false,
-            center: true,
-            reorder: false
-        },
-        {
             name: "Fecha de registro",
             sortable: false,
             center: true,
