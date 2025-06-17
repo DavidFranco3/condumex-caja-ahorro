@@ -8,7 +8,6 @@ import BasicModal from "../../Modal/BasicModal";
 import Swal from "sweetalert2";
 import { getRazonSocial, getPeriodo } from "../../../api/auth";
 import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
-import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import queryString from "query-string";
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioAportacion";
