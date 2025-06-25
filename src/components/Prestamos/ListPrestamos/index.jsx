@@ -57,6 +57,7 @@ function ListPrestamos(props) {
             reorder: false,
             selector: row => moment(row.fechaCreacion).format('LL')
         },
+        
         {
             name: "Acciones",
             cell: row => (
