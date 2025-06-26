@@ -8,6 +8,7 @@ import { listarPatrimoniosPeriodo } from "../../api/patrimonio";
 import { listarAportacionesPeriodo } from "../../api/aportaciones";
 import { listarPrestamoPeriodo } from "../../api/prestamos";
 import { listarAbonosPeriodo } from '../../api/abonos';
+import { listarBajaSocioPeriodo } from "../../api/bajaSocios";
 import ListSaldosSocios from "../../components/SaldosSocios/ListSaldosSocios";
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from 'react-lottie-player';
@@ -27,24 +28,49 @@ function SaldosSocios(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                 Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                 Swal.fire({
-                        title: "Sesión cerrrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                Swal.fire({
+                    title: "Sesión expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesión cerrrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
         }
     }, []);
     // Termina cerrado de sesión automatico
+
+    // Para almacenar el listado de bajas de socios
+    const [listBajasSocios, setListBajasSocios] = useState(null);
+
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarBajaSocioPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listBajasSocios && data) {
+                    setListBajasSocios(formatModelBajaSocios(data));
+                } else {
+                    const datosBajas = formatModelBajaSocios(data);
+                    setListBajasSocios(datosBajas)
+                }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
+
+    console.log(listBajasSocios)
 
     // Almacena los datos de los abonos
     const [listInteresesSocios, setListInteresesSocios] = useState(null);
@@ -138,28 +164,28 @@ function SaldosSocios(props) {
         }
     }, [location]);
 
-     // Almacena los datos de los abonos
-     const [listAbonosSocios, setListAbonosSocios] = useState(null);
+    // Almacena los datos de los abonos
+    const [listAbonosSocios, setListAbonosSocios] = useState(null);
 
-     useEffect(() => {
-         try {
-             // Inicia listado de detalles de los articulos vendidos
-             listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
-                 const { data } = response;
-                 // console.log(data)
-                 if (!listAbonosSocios && data) {
-                     setListAbonosSocios(formatModelAbonosSocios(data));
-                 } else {
-                     const datosAbonosSocios = formatModelAbonosSocios(data);
-                     setListAbonosSocios(datosAbonosSocios)
-                 }
-             }).catch(e => {
-                 console.log(e)
-             })
-         } catch (e) {
-             console.log(e)
-         }
-     }, [location]);
+    useEffect(() => {
+        try {
+            // Inicia listado de detalles de los articulos vendidos
+            listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+                const { data } = response;
+                // console.log(data)
+                if (!listAbonosSocios && data) {
+                    setListAbonosSocios(formatModelAbonosSocios(data));
+                } else {
+                    const datosAbonosSocios = formatModelAbonosSocios(data);
+                    setListAbonosSocios(datosAbonosSocios)
+                }
+            }).catch(e => {
+                console.log(e)
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }, [location]);
 
     // Para almacenar las sucursales registradas
     const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
@@ -249,6 +275,7 @@ function SaldosSocios(props) {
                                     listPatrimoniosSocios={listPatrimoniosSocios}
                                     listPrestamosSocios={listPrestamosSocios}
                                     listAbonosSocios={listAbonosSocios}
+                                    listBajasSocios={listBajasSocios}
                                     history={history}
                                     location={location}
                                     setRefreshCheckLogin={setRefreshCheckLogin}
@@ -269,6 +296,25 @@ function SaldosSocios(props) {
             </BasicModal>
         </>
     );
+}
+
+function formatModelBajaSocios(data) {
+    const dataTemp = []
+    data.forEach(data => {
+        dataTemp.push({
+            id: data._id,
+            folio: data.folio,
+            fichaSocio: String(data.fichaSocio),
+            tipo: data.tipo,
+            total: data.total,
+            aportacion: data.aportacion,
+            rendimiento: data.rendimiento,
+            patrimonio: data.patrimonio,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
+        });
+    });
+    return dataTemp;
 }
 
 function formatModelInteresesSocios(data) {

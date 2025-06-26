@@ -11,32 +11,50 @@ import Swal from "sweetalert2";
 import DataTablecustom from '../../Generales/DataTable';
 
 function ListSaldosSocios(props) {
-    const { listInteresesSocios, listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios, history, location, setRefreshCheckLogin } = props;
+    const { listInteresesSocios, listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios, listBajasSocios, history, location, setRefreshCheckLogin } = props;
 
     const listSaldosSocios = listInteresesSocios.concat(listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios);
 
+    const fichasDadosDeBaja = listBajasSocios.map(b => String(b.fichaSocio));
+
     const listInteresesSinDuplicados = listSaldosSocios.reduce((acumulador, valorActual) => {
-        const elementoExistente = acumulador.find(elemento => elemento.fichaSocio === valorActual.fichaSocio);
+        // Omitir si la ficha está en la lista de bajas
+        if (fichasDadosDeBaja.includes(String(valorActual.fichaSocio))) {
+            return acumulador;
+        }
+
+        const elementoExistente = acumulador.find(
+            elemento => elemento.fichaSocio === valorActual.fichaSocio
+        );
 
         if (elementoExistente) {
             return acumulador.map(elemento => {
                 if (elemento.fichaSocio === valorActual.fichaSocio) {
                     return {
                         ...elemento,
-                        patrimonio: elemento.patrimonio + valorActual.patrimonio,
-                        monto: elemento.monto + valorActual.monto,
-                        prestamo: elemento.prestamo + valorActual.prestamo,
-                        abono: elemento.abono + valorActual.abono,
-
+                        patrimonio: parseFloat((elemento.patrimonio + (valorActual.patrimonio || 0)).toFixed(2)),
+                        monto: parseFloat((elemento.monto + (valorActual.monto || 0)).toFixed(2)),
+                        prestamo: parseFloat((elemento.prestamo + (valorActual.prestamo || 0)).toFixed(2)),
+                        abono: parseFloat((elemento.abono + (valorActual.abono || 0)).toFixed(2)),
                     };
                 }
-
                 return elemento;
             });
         }
 
-        return [...acumulador, valorActual];
+        // Si no existe aún, agregarlo (ya redondeado)
+        return [
+            ...acumulador,
+            {
+                ...valorActual,
+                patrimonio: parseFloat((valorActual.patrimonio || 0).toFixed(2)),
+                monto: parseFloat((valorActual.monto || 0).toFixed(2)),
+                prestamo: parseFloat((valorActual.prestamo || 0).toFixed(2)),
+                abono: parseFloat((valorActual.abono || 0).toFixed(2)),
+            },
+        ];
     }, []);
+
 
     const generacionCSV = () => {
         try {
