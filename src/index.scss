@@ -38,3 +38,53 @@ code {
     border-color: $background-dark;
   }
 }
+
+.btnAddTables {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 12px;
+  font-size: 0.775rem;
+  border-radius: 50px 0 0 50px; 
+  border: 2px solid #fff;
+  transition: background-color 0.25s ease, transform 0.15s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  line-height: 1.4;
+  cursor: pointer;
+  float: right;
+  margin-top: -5rem;
+  margin-right: -3rem;
+  margin-left: auto;
+  display: block;
+  clear: both;
+  animation: vibrar 0.4s infinite;
+}
+
+.btnAddTables:hover {
+  background-color: #0b5ed7;
+  transform: translateY(-1px);
+}
+
+.btnAddTables:active {
+  background-color: #0a58ca;
+  transform: translateY(0);
+}
+
+.btnAddTables:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .btnAddTables {
+    width: 100%;
+    float: none;
+    justify-content: center;
+    margin: 10px 0 0 0;
+  }
+}
