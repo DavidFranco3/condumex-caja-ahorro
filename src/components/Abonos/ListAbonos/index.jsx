@@ -3,8 +3,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { Badge } from "react-bootstrap";
+import { faTrashCan, faBars } from "@fortawesome/free-solid-svg-icons";
+import { Badge, Dropdown } from "react-bootstrap";
 import EliminaAbonos from "../EliminaAbonos";
 import DataTablecustom from '../../Generales/DataTable';
 
@@ -61,23 +61,30 @@ function ListAbonos(props) {
             cell: row => (
                 <>
                     <div className="flex justify-end items-center space-x-4">
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionAbonos(
-                                    <EliminaAbonos
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
+                        <Dropdown>
+                            <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                                <FontAwesomeIcon icon={faBars} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    bg="danger"
+                                    className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        eliminacionAbonos(
+                                            <EliminaAbonos
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </>
             ),
