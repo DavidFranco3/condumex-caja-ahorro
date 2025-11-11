@@ -14,6 +14,7 @@ import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
 import { exportCSVFile } from "../../utils/exportCSV";
 import moment from "moment";
+import { formatFecha } from '../../components/Generales/FormatFecha';
 
 function Sindicalizados(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -232,7 +233,7 @@ function formatModelSocios2(data) {
             ficha: parseInt(data.ficha),
             nombre: data.nombre,
             correo: data.correo ? data.correo : "No especificado",
-            fechaCreacion: moment(data.createdAt).format('LL')
+            fechaCreacion: formatFecha(data.createdAt)
         });
     });
     return dataTemp;

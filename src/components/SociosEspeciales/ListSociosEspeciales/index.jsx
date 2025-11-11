@@ -11,6 +11,7 @@ import ModificaEstadoSocioEspecial from "../ModificaEstadoSocioEspecial";
 import ModificaSociosEspeciales from "../ModificaSociosEspeciales";
 import EliminaSocioEspecial from "../EliminaSocioEspecial";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListSociosEspeciales(props) {
     const { listSocios, history, location, setRefreshCheckLogin, rowsPerPage, setRowsPerPage, page, setPage, totalSocios } = props;
@@ -102,18 +103,25 @@ function ListSociosEspeciales(props) {
             reorder: true
         },
         {
-            name: "Fecha de afiliación",
-            sortable: true,
-            center: true,
-            reorder: true,
-            selector: row => moment(row.fechaCreacion).format('LLL')
-        },
-        {
             name: "Correo",
             selector: row => row.correo,
             sortable: true,
             center: true,
             reorder: true
+        },
+        {
+            name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
         {
             name: "Acciones",

@@ -3,6 +3,8 @@ import moment from "moment";
 import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListDeudaSocio(props) {
     const { listAbonos, listPrestamos, history, location, setRefreshCheckLogin } = props;
@@ -58,56 +60,39 @@ function ListDeudaSocio(props) {
         },
         {
             name: "Total préstamo",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamo)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.prestamo),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Total abono",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.abono)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.abono),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Saldo actual",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamo - row.abono)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.prestamo - row.abono),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
-        }
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
     ];
 
     return (

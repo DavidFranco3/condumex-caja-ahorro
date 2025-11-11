@@ -21,6 +21,7 @@ import {
 import { getRazonSocial } from '../../../api/auth'
 import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function BusquedaSocios(props) {
   const {
@@ -73,7 +74,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
     setListSociosEncontrados(formatModelSocios(listSocios))
   }
@@ -94,7 +95,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -114,7 +115,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -134,7 +135,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -154,7 +155,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -174,7 +175,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -194,7 +195,7 @@ function BusquedaSocios(props) {
         icon: "error",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     }
   }
 
@@ -208,7 +209,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
       setLoading(false)
     } else if (tipo === 'ficha') {
       obtenerEmpleadoPorFicha(ficha)
@@ -221,7 +222,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     } else if (tipo === 'nombre') {
       obtenerEmpleadoPorNombre(nombre)
     }
@@ -237,7 +238,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     } else if (tipo === 'ficha') {
       obtenerSindicalizadoPorFicha(formData.ficha)
     }
@@ -249,7 +250,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     } else if (tipo === 'nombre') {
       obtenerSindicalizadoPorNombre(nombre)
     }
@@ -265,7 +266,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     } else if (tipo === 'ficha') {
       obtenerEspecialPorFicha(ficha)
     }
@@ -277,7 +278,7 @@ function BusquedaSocios(props) {
         icon: "warning",
         showConfirmButton: false,
         timer: 1600,
-    });
+      });
     } else if (tipo === 'nombre') {
       obtenerEspecialPorNombre(nombre)
     }
@@ -329,11 +330,18 @@ function BusquedaSocios(props) {
       reorder: false
     },
     {
-      name: "Fecha de afiliación",
+      name: "Fecha de registro",
+      selector: row => formatFecha(row.fechaCreacion),
       sortable: false,
       center: true,
-      reorder: false,
-      selector: row => moment(row.fechaCreacion).format('LL')
+      reorder: false
+    },
+    {
+      name: "Fecha de actualizacion",
+      selector: row => formatFecha(row.fechaActualizacion),
+      sortable: false,
+      center: true,
+      reorder: false
     },
     {
       name: "Seleccionar",
@@ -360,16 +368,16 @@ function BusquedaSocios(props) {
 
 
   useEffect(() => {
-      const timeout = setTimeout(() => {
-          setRows(listSociosEncontrados);
-          setPending(false);
-      }, 0);
-      return () => clearTimeout(timeout);
+    const timeout = setTimeout(() => {
+      setRows(listSociosEncontrados);
+      setPending(false);
+    }, 0);
+    return () => clearTimeout(timeout);
   }, []);
 
   const paginationComponentOptions = {
-      rowsPerPageText: 'Filas por página',
-      rangeSeparatorText: 'de'
+    rowsPerPageText: 'Filas por página',
+    rangeSeparatorText: 'de'
   };
 
   const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
@@ -383,17 +391,17 @@ function BusquedaSocios(props) {
               <h3>Socios encontrados</h3>
               <Container fluid>
                 <DataTable
-                    columns={columns}
-                    noDataComponent="No hay registros para mostrar"
-                    data={listSociosEncontrados}
-                    progressPending={pending}
-                    paginationComponentOptions={paginationComponentOptions}
-                    paginationResetDefaultPage={resetPaginationToogle}
-                    customStyles={estilos}
-                    sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
-                    pagination
+                  columns={columns}
+                  noDataComponent="No hay registros para mostrar"
+                  data={listSociosEncontrados}
+                  progressPending={pending}
+                  paginationComponentOptions={paginationComponentOptions}
+                  paginationResetDefaultPage={resetPaginationToogle}
+                  customStyles={estilos}
+                  sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
+                  pagination
                 />
-            </Container>
+              </Container>
             </Row>
             <Row>
               <Button

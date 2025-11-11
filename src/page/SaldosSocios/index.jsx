@@ -325,7 +325,9 @@ function formatModelInteresesSocios(data) {
             monto: data.rendimiento,
             patrimonio: 0,
             prestamo: 0,
-            abono: 0
+            abono: 0,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;
@@ -339,7 +341,9 @@ function formatModelPatrimonioSocios(data) {
             monto: 0,
             patrimonio: data.patrimonio,
             prestamo: 0,
-            abono: 0
+            abono: 0,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;
@@ -353,7 +357,9 @@ function formatModelAportacionesSocios(data) {
             monto: data.aportacion,
             patrimonio: 0,
             prestamo: 0,
-            abono: 0
+            abono: 0,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;
@@ -367,7 +373,9 @@ function formatModelPrestamosSocios(data) {
             monto: 0,
             patrimonio: 0,
             prestamo: data.prestamo,
-            abono: 0
+            abono: 0,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;
@@ -381,7 +389,9 @@ function formatModelAbonosSocios(data) {
             monto: 0,
             patrimonio: 0,
             prestamo: 0,
-            abono: data.abono
+            abono: data.abono,
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;

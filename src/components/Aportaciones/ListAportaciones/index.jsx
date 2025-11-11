@@ -8,6 +8,8 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import EliminaAportaciones from "../EliminaAportaciones";
 import ModificaAportaciones from "../ModificaAportaciones";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListAportaciones(props) {
   const { listAportaciones, history, location, setRefreshCheckLogin } = props;
@@ -37,25 +39,24 @@ function ListAportaciones(props) {
     },
     {
       name: "Aportación",
-      selector: row => (
-          <>
-              ${''}
-              {new Intl.NumberFormat('es-MX', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-              }).format(row.aportacion)} MXN
-          </>
-      ),
+      selector: row => formatMoneda(row.aportacion),
       sortable: false,
       center: true,
       reorder: false
-  },
+    },
     {
       name: "Fecha de registro",
+      selector: row => formatFecha(row.fechaCreacion),
       sortable: false,
       center: true,
-      reorder: false,
-      selector: row => moment(row.fechaCreacion).format('LL')
+      reorder: false
+    },
+    {
+      name: "Fecha de actualizacion",
+      selector: row => formatFecha(row.fechaActualizacion),
+      sortable: false,
+      center: true,
+      reorder: false
     },
     {
       name: "Acciones",

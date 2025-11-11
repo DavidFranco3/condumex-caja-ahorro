@@ -3,8 +3,9 @@ import DataTable from "react-data-table-component";
 import { CSVLink } from "react-csv";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
+import { formatMoneda } from "./FormatMoneda";
 
-const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false }) => {
+const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, title }) => {
     const [filterValue, setFilterValue] = useState("");
     const [filteredData, setFilteredData] = useState(datos);
     const [visibleColumns, setVisibleColumns] = useState(columnas.map(col => col.name));
@@ -44,32 +45,66 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false }) =
         setIsExporting(true);
         setTimeout(() => {
             const doc = new jsPDF();
-            const tableColumn = columnas.filter(col => visibleColumns.includes(col.name)).map(col => col.name);
+
+            const columnasFiltradas = columnas.filter(
+                col => visibleColumns.includes(col.name) && col.name !== "Acciones"
+            );
+
+            const tableColumn = columnasFiltradas.map(col => col.name);
+
             const tableRows = datos.map(row => {
-                const rowData = columnas.filter(col => visibleColumns.includes(col.name)).map(col => {
+                const rowData = columnasFiltradas.map(col => {
                     let value;
-                    if (typeof col.selector === 'function') {
-                        value = col.selector(row);
+
+                    if (typeof col.selector === "function") {
+                        try {
+                            value = col.selector(row);
+                        } catch {
+                            value = "";
+                        }
                     } else {
                         value = row[col.selector];
                     }
-                    const formattedValue = value !== undefined && value !== null && typeof value === 'object'
-                        ? JSON.stringify(value)
-                        : value || "";
-                    return formattedValue;
+
+                    if (value && typeof value === "object") {
+                        if (value.props && value.props.children) {
+                            value = Array.isArray(value.props.children)
+                                ? value.props.children.join("")
+                                : value.props.children;
+                        } else {
+                            value = "";
+                        }
+                    }
+
+                    if (col.name === "Monto" && row.monto !== undefined) {
+                        value = `{formatMoneda(row.monto)`;
+                    }
+
+                    return value || "";
                 });
                 return rowData;
             });
+
             autoTable(doc, {
                 head: [tableColumn],
                 body: tableRows,
                 startY: 20,
-                theme: 'grid',
+                theme: "grid",
                 styles: {
-                    halign: 'justify',
-                }
+                    halign: "center",
+                    valign: "middle",
+                },
+                headStyles: {
+                    halign: "center",
+                    valign: "middle",
+                    fillColor: [240, 240, 240],
+                    textColor: 20,
+                    fontStyle: "bold",
+                },
             });
-            doc.save("data.pdf");
+
+            // 🧾 Usa la prop title para nombrar el archivo
+            doc.save(`${title || "data"}.pdf`);
             setIsExporting(false);
         }, 100);
     };
@@ -481,7 +516,11 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false }) =
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
 
                             <div className="action-buttons">
-                                <CSVLink data={datos} filename="data.csv" style={{ textDecoration: 'none' }}>
+                                <CSVLink
+                                    data={datos}
+                                    filename={`${title || "data"}.csv`}
+                                    style={{ textDecoration: 'none' }}
+                                >
                                     <button className="btn-action btn-csv">
                                         <i className="fas fa-file-csv" />
                                         <span>CSV</span>

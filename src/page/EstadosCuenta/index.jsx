@@ -28,6 +28,19 @@ import { map } from "lodash";
 import moment from "moment";
 import 'moment/locale/es';
 import { listarPeriodo } from '../../api/periodos';
+import { formatFecha } from '../../components/Generales/FormatFecha';
+import { formatMoneda } from '../../components/Generales/FormatMoneda';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faChartLine,
+    faUsers,
+    faPercent,
+    faHandHoldingDollar,
+    faArrowCircleDown,
+    faUserXmark,
+    faWallet,
+    faBuildingColumns
+} from "@fortawesome/free-solid-svg-icons";
 
 function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const [tab, setTab] = useState('general')
@@ -152,15 +165,6 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
             setRazonSocialElegida(getRazonSocial)
         }
     }, []);
-
-    const { locale } = useLocale()
-    const formatDigit = (number) => toDigit({ locale, number })
-    const formatDate = (date) =>
-        new Intl.DateTimeFormat(locale, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        }).format(new Date(date))
 
     // Cerrado de sesión automatico
     useEffect(() => {
@@ -339,16 +343,17 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
         }
     }
 
-    const Card = ({ title, value }) => {
+    const Card = ({ title, value, icon }) => {
+
         return (
-            <div className="flex flex-col items-center py-4 shadow-xl shadow-blue-500/40">
-                <span className="inline-block font-normal py-4">{title}</span>
-                <span className="inline-block font-semibold font-mono text-xl">
-                    {toDigit({ number: value, locale: 'es-MX' })}
-                </span>
+            <div className="bg-zinc-900 p-5 rounded-2xl shadow-md flex flex-col items-center justify-center border border-zinc-800 hover:scale-105 transition-transform duration-200">
+                {icon && <div className="mb-2 text-2xl">{icon}</div>}
+                <h2 className="text-zinc-400 text-sm font-medium">{title}</h2>
+                <p className="text-white text-xl font-bold mt-1">{formatMoneda(value)}</p>
             </div>
-        )
-    }
+        );
+    };
+
 
     const Button = ({ variant = 'blue', onClick, children }) => {
         return (
@@ -427,10 +432,10 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                     {index + 1}
                 </td>
                 <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap text-center">
-                    {moment(createdAt).format('LL')}
+                    {formatFecha(createdAt)}
                 </td>
                 <td className="text-sm text-gray-900 font-medium font-mono px-3 py-2 whitespace-nowrap text-center">
-                    {formatDigit(monto)}
+                    {formatMoneda(monto)}
                 </td>
             </tr>
         )
@@ -443,7 +448,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
 
                 </td>
                 <td className=" font-bold font-mono text-md px-3 py-2 whitespace-nowrap text-center">
-                    {title} {formatDigit(total)}
+                    {title} {formatMoneda(total)}
                 </td>
             </tr>
         )
@@ -559,53 +564,60 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                         }
                         {!loading ? (
                             <Suspense fallback={< Spinner />}>
-                                <div className="p-5 space-x-5">
-                                    <div className="grid grid-cols-3 gap-4">
+
+                                <div className="p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                                    <Card
+                                        title="Aportaciones"
+                                        value={statementsByRazon.contributions}
+                                        icon={<FontAwesomeIcon icon={faChartLine} className="text-emerald-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Deudas de los socios"
+                                        value={statementsByRazon.loans - statementsByRazon.payment}
+                                        icon={<FontAwesomeIcon icon={faUsers} className="text-sky-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Intereses"
+                                        value={statementsByRazon.yields}
+                                        icon={<FontAwesomeIcon icon={faPercent} className="text-yellow-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Préstamos"
+                                        value={statementsByRazon.loans}
+                                        icon={<FontAwesomeIcon icon={faHandHoldingDollar} className="text-blue-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Retiros"
+                                        value={statementsByRazon.withdrawals}
+                                        icon={<FontAwesomeIcon icon={faArrowCircleDown} className="text-red-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Bajas"
+                                        value={statementsByRazon.layoffs}
+                                        icon={<FontAwesomeIcon icon={faUserXmark} className="text-pink-400 text-xl" />}
+                                    />
+
+                                    <Card
+                                        title="Abonos"
+                                        value={statementsByRazon.payment}
+                                        icon={<FontAwesomeIcon icon={faWallet} className="text-purple-400 text-xl" />}
+                                    />
+
+                                    {razonSocialElegida === "Asociación de Empleados Sector Cables A.C." && (
                                         <Card
-                                            title="Aportaciones"
-                                            value={statementsByRazon.contributions}
+                                            title="Patrimonio"
+                                            value={statementsByRazon.patrimony}
+                                            icon={<FontAwesomeIcon icon={faBuildingColumns} className="text-orange-400 text-xl" />}
                                         />
-                                        <Card title="Deudas de los socios"
-                                            value={statementsByRazon.loans - statementsByRazon.payment}
-                                        />
-                                        <Card
-                                            title="Intereses"
-                                            value={statementsByRazon.yields}
-                                        />
-                                    </div>
+                                    )}
+
                                 </div>
-                                <div className="p-5 space-x-5">
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <Card title="Préstamos"
-                                            value={statementsByRazon.loans}
-                                        />
-                                        <Card
-                                            title="Retiros"
-                                            value={statementsByRazon.withdrawals}
-                                        />
-                                        <Card title="Bajas"
-                                            value={statementsByRazon.layoffs}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="p-5 space-x-5">
-                                    <div className="grid grid-cols-3 gap-4">
-                                        <Card title="Abonos"
-                                            value={statementsByRazon.payment}
-                                        />
-                                        {
-                                            razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
-                                            (
-                                                <>
-                                                    <Card
-                                                        title="Patrimonio"
-                                                        value={statementsByRazon.patrimony}
-                                                    />
-                                                </>
-                                            )
-                                        }
-                                    </div>
-                                </div>
+
                             </Suspense>
                         ) : (
                             <Lottie
@@ -831,7 +843,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                                                                     Saldo a favor
                                                                 </td>
                                                                 <td className="text-right font-bold font-mono text-md px-3 py-2 whitespace-nowrap">
-                                                                    {formatDigit(statementsBySocio.contributions.total + statementsBySocio.patrimony.total + statementsBySocio.yields.total)}
+                                                                    {formatMoneda(statementsBySocio.contributions.total + statementsBySocio.patrimony.total + statementsBySocio.yields.total)}
                                                                 </td>
                                                             </tr>
                                                             <tr className="bg-gray-50">
@@ -839,7 +851,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                                                                     Saldo deudor
                                                                 </td>
                                                                 <td align="center" className="text-right font-bold font-mono text-md px-3 py-2 whitespace-nowrap">
-                                                                    {formatDigit(statementsBySocio.loans.total - statementsBySocio.payment.total)}
+                                                                    {formatMoneda(statementsBySocio.loans.total - statementsBySocio.payment.total)}
                                                                 </td>
                                                             </tr>
 

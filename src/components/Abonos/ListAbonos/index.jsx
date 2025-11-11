@@ -7,6 +7,8 @@ import { faTrashCan, faBars } from "@fortawesome/free-solid-svg-icons";
 import { Badge, Dropdown } from "react-bootstrap";
 import EliminaAbonos from "../EliminaAbonos";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListAbonos(props) {
     const { listAbonos, history, location, setRefreshCheckLogin } = props;
@@ -36,22 +38,21 @@ function ListAbonos(props) {
         },
         {
             name: "Abono",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.abono)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.abono),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Fecha de registro",
-            selector: row => moment(row.fechaCreacion).format('LL'),
+            selector: row => formatFecha(row.fechaCreacion),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
             sortable: false,
             center: true,
             reorder: false

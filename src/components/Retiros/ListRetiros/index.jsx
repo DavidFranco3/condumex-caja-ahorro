@@ -8,6 +8,8 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import EliminaRetiros from "../EliminaRetiros";
 import ModificaRetiros from "../ModificaRetiros";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListRetiros(props) {
   const { listRetiros, history, location, setRefreshCheckLogin } = props;
@@ -39,25 +41,24 @@ function ListRetiros(props) {
     },
     {
       name: "Retiro",
-      selector: row => (
-        <>
-          ${''}
-          {new Intl.NumberFormat('es-MX', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }).format(row.retiro)} MXN
-        </>
-      ),
+      selector: row => formatMoneda(row.retiro),
       sortable: false,
       center: true,
       reorder: false
     },
     {
       name: "Fecha de registro",
+      selector: row => formatFecha(row.fechaCreacion),
       sortable: false,
       center: true,
-      reorder: false,
-      selector: row => moment(row.fechaCreacion).format('LL')
+      reorder: false
+    },
+    {
+      name: "Fecha de actualizacion",
+      selector: row => formatFecha(row.fechaActualizacion),
+      sortable: false,
+      center: true,
+      reorder: false
     },
     {
       name: "Acciones",

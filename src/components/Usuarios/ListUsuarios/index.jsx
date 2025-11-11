@@ -9,6 +9,7 @@ import "./ListUsuarios.scss";
 import ModificaUsuarios from "../ModificaUsuarios";
 import EliminaUsuarios from "../EliminaUsuarios";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListUsuarios(props) {
     const { listUsuarios, history, location, setRefreshCheckLogin } = props;
@@ -40,10 +41,17 @@ function ListUsuarios(props) {
         },
         {
             name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
         {
             name: "Acciones",
@@ -108,7 +116,7 @@ function ListUsuarios(props) {
 
     return (
         <>
-           <DataTablecustom datos={listUsuarios} columnas={columns} title={"Usuarios"} />
+            <DataTablecustom datos={listUsuarios} columnas={columns} title={"Usuarios"} />
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
                 {contentModal}

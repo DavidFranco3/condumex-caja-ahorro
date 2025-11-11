@@ -9,6 +9,7 @@ import "./ListSociosEmpleados.scss";
 import ModificaSociosEmpleados from "../ModificaSociosEmpleados";
 import EliminaSocioEmpleado from "../EliminaSocioEmpleado";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListSociosEmpleados(props) {
     const { listSocios, history, location, setRefreshCheckLogin } = props;
@@ -46,11 +47,18 @@ function ListSociosEmpleados(props) {
             reorder: false
         },
         {
-            name: "Fecha de afiliación",
+            name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
         {
             name: "Acciones",
@@ -115,7 +123,7 @@ function ListSociosEmpleados(props) {
 
     return (
         <>
-           <DataTablecustom datos={listSocios} columnas={columns} title={"Socios empleados"} />
+            <DataTablecustom datos={listSocios} columnas={columns} title={"Socios empleados"} />
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
                 {contentModal}

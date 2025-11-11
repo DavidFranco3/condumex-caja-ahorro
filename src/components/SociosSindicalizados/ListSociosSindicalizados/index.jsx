@@ -8,6 +8,7 @@ import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import ModificaSociosSindicalizados from "../ModificaSociosSindicalizados";
 import EliminaSocioSindicalizado from "../EliminaSocioSindicalizado";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListSociosSindicalizados(props) {
     const { CSV, listSocios, history, location, setRefreshCheckLogin } = props;
@@ -45,11 +46,18 @@ function ListSociosSindicalizados(props) {
             reorder: false
         },
         {
-            name: "Fecha de afiliación",
+            name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
         {
             name: "Acciones",

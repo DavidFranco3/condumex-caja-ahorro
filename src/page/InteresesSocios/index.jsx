@@ -179,6 +179,8 @@ function formatModelInteresesSocios(data) {
         dataTemp.push({
             fichaSocio: String(data.fichaSocio),
             monto: parseFloat(data.rendimiento).toFixed(2),
+            fechaCreacion: data.createdAt,
+            fechaActualizacion: data.updatedAt
         });
     });
     return dataTemp;
@@ -195,7 +197,7 @@ function formatModelPeriodos(data) {
             tipo: data.tipo,
             fechaInicio: data.fechaInicio,
             fechaCierre: data.fechaCierre,
-            fechaRegistro: data.createdAt,
+            fechaCreacion: data.createdAt,
             fechaActualizacion: data.updatedAt
         });
     });

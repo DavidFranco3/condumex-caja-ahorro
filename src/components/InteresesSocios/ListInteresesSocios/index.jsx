@@ -8,6 +8,8 @@ import { Button, Col, Form } from "react-bootstrap";
 import DataTablecustom from '../../Generales/DataTable';
 import { exportCSVFile } from "../../../utils/exportCSV";
 import Swal from "sweetalert2";
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListInteresesSocios(props) {
     const { listInteresesSocios, history, location, setRefreshCheckLogin } = props;
@@ -62,15 +64,21 @@ function ListInteresesSocios(props) {
         },
         {
             name: "Monto",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.monto)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.monto),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
             sortable: false,
             center: true,
             reorder: false
@@ -79,20 +87,7 @@ function ListInteresesSocios(props) {
 
     return (
         <>
-            <Col sm="7">
-                <Button
-                    className="btnMasivo"
-                    style={{ marginRight: '10px' }}
-                    onClick={() => {
-                        generacionCSV()
-                    }}
-                >
-                    <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
-                </Button>
-            </Col>
-
             <DataTablecustom datos={listInteresesSocios} columnas={columns} title={"Intereses de los socios"} />
-
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
                 {contentModal}

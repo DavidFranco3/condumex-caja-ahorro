@@ -7,6 +7,8 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "react-bootstrap";
 import DataTablecustom from '../../Generales/DataTable';
 import EliminaBajaSocios from "../EliminarBajaSocios";
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListBajaSocios(props) {
     const { listBajasSocios, history, location, setRefreshCheckLogin } = props;
@@ -43,25 +45,24 @@ function ListBajaSocios(props) {
         },
         {
             name: "Total",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.total)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.total),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
         {
             name: "Acciones",

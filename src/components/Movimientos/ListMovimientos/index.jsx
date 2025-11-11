@@ -3,6 +3,8 @@ import moment from 'moment';
 import 'moment/dist/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListMovimientos(props) {
     const { listMovimientos } = props;
@@ -29,90 +31,42 @@ function ListMovimientos(props) {
         },
         {
             name: "Aportación",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.aportacion)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.aportacion),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Préstamo",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamo)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.prestamo),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Patrimonio",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.patrimonio)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.patrimonio),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Interés",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.rendimiento)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.rendimiento),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Retiro",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.retiro)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.retiro),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Abono",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.abono)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.abono),
             sortable: false,
             center: true,
             reorder: false
@@ -126,10 +80,17 @@ function ListMovimientos(props) {
         },
         {
             name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
             sortable: false,
             center: true,
-            reorder: false,
-            selector: row => moment(row.fechaCreacion).format('LL')
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
+            sortable: false,
+            center: true,
+            reorder: false
         },
     ];
 

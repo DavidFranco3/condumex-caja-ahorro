@@ -9,6 +9,8 @@ import { estilos } from "../../../utils/tableStyled";
 import { exportCSVFile } from "../../../utils/exportCSV";
 import Swal from "sweetalert2";
 import DataTablecustom from '../../Generales/DataTable';
+import { formatMoneda } from '../../Generales/FormatMoneda';
+import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListSaldosSocios(props) {
     const { listInteresesSocios, listAportacionesSocios, listPatrimoniosSocios, listPrestamosSocios, listAbonosSocios, listBajasSocios, history, location, setRefreshCheckLogin } = props;
@@ -88,45 +90,35 @@ function ListSaldosSocios(props) {
         },
         {
             name: "Ahorro",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.monto)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.monto),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Patrimonio",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.patrimonio)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.patrimonio),
             sortable: false,
             center: true,
             reorder: false
         },
         {
             name: "Saldo deudor",
-            selector: row => (
-                <>
-                    ${''}
-                    {new Intl.NumberFormat('es-MX', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }).format(row.prestamo - row.abono)} MXN
-                </>
-            ),
+            selector: row => formatMoneda(row.prestamo - row.abono),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+                {
+            name: "Fecha de registro",
+            selector: row => formatFecha(row.fechaCreacion),
+            sortable: false,
+            center: true,
+            reorder: false
+        },
+        {
+            name: "Fecha de actualizacion",
+            selector: row => formatFecha(row.fechaActualizacion),
             sortable: false,
             center: true,
             reorder: false
@@ -135,19 +127,6 @@ function ListSaldosSocios(props) {
 
     return (
         <>
-
-            <Col sm="7">
-                <Button
-                    className="btnMasivo"
-                    style={{ marginRight: '10px' }}
-                    onClick={() => {
-                        generacionCSV()
-                    }}
-                >
-                    <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
-                </Button>
-            </Col>
-
             <DataTablecustom datos={listInteresesSinDuplicados} columnas={columns} title={"Saldos de los socios"} />
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>

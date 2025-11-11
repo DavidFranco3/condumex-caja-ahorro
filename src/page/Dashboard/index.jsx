@@ -154,11 +154,6 @@ function Dashboard(props) {
           title={'Ajustes'}
         />
         <ItemCard
-          path={'/respaldo-informacion'}
-          logo={LogoBackup}
-          title={'Respaldos'}
-        />
-        <ItemCard
           path={'/usuarios'}
           logo={LogoUsuarios}
           title={'Usuarios'}
