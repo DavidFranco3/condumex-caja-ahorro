@@ -118,17 +118,6 @@ Swal.fire({
                     </Col>
                     <Col xs={6} md={8}>
                         <div style={{ float: 'right' }}>
-
-                            <Button
-                                className="btnMasivo"
-                                style={{ marginRight: '10px' }}
-                                onClick={() => {
-                                    generacionCSV()
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faFileExcel} /> Descargar CSV
-                            </Button>
-
                             <Button
                                 className="btnMasivo"
                                 style={{ marginRight: '10px' }}

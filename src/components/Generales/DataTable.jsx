@@ -12,6 +12,15 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
     const [showModal, setShowModal] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
 
+    const csvContent = datos
+        .map(item => {
+            const fichaSocio = item.fichaSocio
+            const retiro = Number(item.retiro).toFixed(2)
+            const fecha = item.fechaCreacion
+            return `${fichaSocio},${retiro},${fecha}`
+        })
+        .join("\n") // cada fila en una nueva línea
+
     const handleFilterChange = (event) => {
         const searchValue = event.target.value.trim();
         setFilterValue(searchValue);
@@ -517,7 +526,7 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
 
                             <div className="action-buttons">
                                 <CSVLink
-                                    data={datos}
+                                    data={csvContent}
                                     filename={`${title || "data"}.csv`}
                                     style={{ textDecoration: 'none' }}
                                 >
