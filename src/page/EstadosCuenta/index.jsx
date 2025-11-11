@@ -349,7 +349,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
             <div className="bg-zinc-900 p-5 rounded-2xl shadow-md flex flex-col items-center justify-center border border-zinc-800 hover:scale-105 transition-transform duration-200">
                 {icon && <div className="mb-2 text-2xl">{icon}</div>}
                 <h2 className="text-zinc-400 text-sm font-medium">{title}</h2>
-                <p className="text-white text-xl font-bold mt-1">{formatMoneda(value)}</p>
+                <p className="text-zinc-900 dark:text-white text-xl font-bold">{formatMoneda(value)}</p>
             </div>
         );
     };
@@ -636,7 +636,7 @@ function EstadosCuenta({ setRefreshCheckLogin, location }) {
                         <div className="block pt-4 space-x-5">
                             <div className="flex justify-between">
                                 <div className="flex justify-start items-center space-x-4">
-                                    <Button variant="emerald" onClick={handleSearchSocio}>
+                                    <Button onClick={handleSearchSocio}>
                                         Buscar socio
                                     </Button>
                                 </div>

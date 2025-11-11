@@ -62,6 +62,7 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
         setIsExporting(true);
         setTimeout(() => {
             const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.getWidth();
 
             const columnasFiltradas = columnas.filter(
                 col => visibleColumns.includes(col.name) && col.name !== "Acciones"
@@ -93,10 +94,6 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                         }
                     }
 
-                    if (col.name === "Monto" && row.monto !== undefined) {
-                        value = `{formatMoneda(row.monto)`;
-                    }
-
                     return value || "";
                 });
                 return rowData;
@@ -105,7 +102,7 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
             autoTable(doc, {
                 head: [tableColumn],
                 body: tableRows,
-                startY: 20,
+                startY: 30, // 👈 más margen superior para la primera página
                 theme: "grid",
                 styles: {
                     halign: "center",
@@ -118,9 +115,34 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                     textColor: 20,
                     fontStyle: "bold",
                 },
+                didDrawPage: (data) => {
+                    const pageCount = doc.internal.getNumberOfPages();
+                    const pageSize = doc.internal.pageSize;
+                    const pageHeight = pageSize.height || pageSize.getHeight();
+
+                    // 🏷️ Encabezado
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(16);
+                    doc.text(title || "Reporte", pageWidth / 2, 15, { align: "center" });
+
+                    // 📦 Ajustar margen superior para páginas siguientes
+                    if (data.pageNumber > 1) {
+                        data.settings.margin.top = 30; // asegura espacio entre encabezado y tabla
+                    }
+
+                    // 📄 Pie de página
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(10);
+                    doc.text(
+                        `Página ${data.pageNumber} de ${pageCount}`,
+                        pageWidth / 2,
+                        pageHeight - 10,
+                        { align: "center" }
+                    );
+                },
+                margin: { top: 30 }, // 👈 margen superior general
             });
 
-            // 🧾 Usa la prop title para nombrar el archivo
             doc.save(`${title || "data"}.pdf`);
             setIsExporting(false);
         }, 100);
