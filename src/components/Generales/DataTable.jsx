@@ -12,14 +12,22 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
     const [showModal, setShowModal] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
 
-    const csvContent = datos
-        .map(item => {
-            const fichaSocio = item.fichaSocio
-            const retiro = Number(item.retiro).toFixed(2)
-            const fecha = item.fechaCreacion
-            return `${fichaSocio},${retiro},${fecha}`
-        })
-        .join("\n") // cada fila en una nueva línea
+    // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
+    const keys = Object.keys(datos[0]).filter(k => k !== "id" && k !== "tipo" && k !== "folio" && k !== "fechaActualizacion")
+
+    // 🔹 Construye el CSV manualmente
+    const csvContent = datos.map(item => {
+        return keys
+            .map(key => {
+                const value = item[key]
+                // Formatea solo si es número
+                if (typeof value === "number" || (!isNaN(value) && value !== "")) {
+                    return Number(value).toFixed(2)
+                }
+                return value ?? "" // evita "undefined"
+            })
+            .join(",")
+    }).join("\n")
 
     const handleFilterChange = (event) => {
         const searchValue = event.target.value.trim();

@@ -9,7 +9,6 @@ import BajaSocios from '../page/BajaSocios'
 import CalculadoraInteres from '../page/CalculadoraInteres'
 import Movimientos from '../page/Movimientos'
 import EstadosCuenta from '../page/EstadosCuenta'
-import RespaldosAutomaticos from '../page/RespaldosAutomaticos'
 import Rendimientos from '../page/Rendimientos'
 import Saldos from '../page/Saldos'
 import Patrimonio from '../page/Patrimonio'
@@ -40,10 +39,6 @@ const configRouting = [
   {
     path: '/periodos',
     page: Periodos,
-  },
-  {
-    path: '/respaldo-informacion',
-    page: RespaldosAutomaticos,
   },
   {
     path: '/estados-de-cuenta',
