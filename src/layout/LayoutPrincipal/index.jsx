@@ -35,21 +35,24 @@ function LayoutPrincipal(props) {
         setRefreshCheckLogin(true);
     }
 
-    // Para almacenar en localstorage la razon social
+    const [razonSocialElegida, setRazonSocialElegida] = useState(getRazonSocial() || "");
+
+    // Almacenar razón social
     const almacenaRazonSocial = (razonSocial) => {
-        if (razonSocial === "Asociación de Empleados Sector Cables A.C." || razonSocial === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.") {
-            setRazonSocial(razonSocial)
+        if (
+            razonSocial === "Asociación de Empleados Sector Cables A.C." ||
+            razonSocial === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."
+        ) {
+            setRazonSocial(razonSocial);
+            setRazonSocialElegida(razonSocial); // ✅ actualiza el estado también
+            window.location.reload(); // si realmente necesitas recargar
         }
-        window.location.reload()
-    }
+    };
 
-    // Almacena la razón social, si ya fue elegida
-    const [razonSocialElegida, setRazonSocialElegida] = useState("");
-
+    // useEffect actualizado
     useEffect(() => {
-        if (getRazonSocial()) {
-            setRazonSocialElegida(getRazonSocial)
-        }
+        const razon = getRazonSocial();
+        if (razon) setRazonSocialElegida(razon);
     }, []);
 
     // Cerrado de sesión automatico
@@ -82,8 +85,16 @@ function LayoutPrincipal(props) {
 
     return (
         <>
-            <Disclosure as="nav"
-                className={razonSocialElegida === "Asociación de Empleados Sector Cables A.C." ? "bg-black" : razonSocialElegida === "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C." ? "bg-orange-900" : "bg-black"}
+            <Disclosure
+                as="nav"
+                className={
+                    razonSocialElegida === "Asociación de Empleados Sector Cables A.C."
+                        ? "bg-black"
+                        : razonSocialElegida ===
+                            "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."
+                            ? "bg-orange-900"
+                            : "bg-black"
+                }
             >
                 {({ open }) => (
                     <>
