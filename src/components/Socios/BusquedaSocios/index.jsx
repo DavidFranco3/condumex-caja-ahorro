@@ -22,6 +22,7 @@ import { getRazonSocial } from '../../../api/auth'
 import DataTable from "react-data-table-component";
 import { estilos } from "../../../utils/tableStyled";
 import { formatFecha } from '../../Generales/FormatFecha';
+import DataTablecustom from '../../Generales/DataTable';
 
 function BusquedaSocios(props) {
   const {
@@ -389,19 +390,7 @@ function BusquedaSocios(props) {
           <div className="listadoSociosEncontrados">
             <Row>
               <h3>Socios encontrados</h3>
-              <Container fluid>
-                <DataTable
-                  columns={columns}
-                  noDataComponent="No hay registros para mostrar"
-                  data={listSociosEncontrados}
-                  progressPending={pending}
-                  paginationComponentOptions={paginationComponentOptions}
-                  paginationResetDefaultPage={resetPaginationToogle}
-                  customStyles={estilos}
-                  sortIcon={<FontAwesomeIcon icon={faArrowDownLong} />}
-                  pagination
-                />
-              </Container>
+              <DataTablecustom datos={listSociosEncontrados} columnas={columns} title={"Socios encontrados"} />
             </Row>
             <Row>
               <Button

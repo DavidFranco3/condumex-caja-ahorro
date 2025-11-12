@@ -12,8 +12,6 @@ import EliminaSociosSindicalizadosMasivo from "../../components/SociosSindicaliz
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
-import { exportCSVFile } from "../../utils/exportCSV";
-import moment from "moment";
 import { formatFecha } from '../../components/Generales/FormatFecha';
 
 function Sindicalizados(props) {
@@ -41,23 +39,6 @@ function Sindicalizados(props) {
             console.log(e)
         }
     }, [location]);
-
-    const generacionCSV = () => {
-        try {
-Swal.fire({
-                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
-                        icon: "info",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-            const timer = setTimeout(() => {
-            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_SINDICALIZADOS");
-        }, 5600);
-        return () => clearTimeout(timer);
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);

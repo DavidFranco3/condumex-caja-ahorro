@@ -13,7 +13,6 @@ import BasicModal from "../../components/Modal/BasicModal";
 import { getTokenApi, isExpiredToken, logoutApi } from "../../api/auth";
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";
-import { exportCSVFile } from "../../utils/exportCSV";
 import moment from "moment";
 
 function Empleados(props) {
@@ -42,39 +41,22 @@ function Empleados(props) {
         }
     }, [location]);
 
-    const generacionCSV = () => {
-        try {
-Swal.fire({
-                        title: "Estamos empaquetando tu respaldo, espere por favor ....",
-                        icon: "info",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-            const timer = setTimeout(() => {
-            exportCSVFile(listSociosCSV, "LISTA_SOCIOS_EMPLEADOS");
-        }, 5600);
-        return () => clearTimeout(timer);
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
     // Cerrado de sesión automatico
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                 Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                 Swal.fire({
-                        title: "Sesión cerrrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                Swal.fire({
+                    title: "Sesión expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesión cerrrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
@@ -86,11 +68,6 @@ Swal.fire({
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
-
-    // Para controlar la paginación
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [page, setPage] = useState(1);
-    const [totalSociosEmpleados, setTotalSociosEmpleados] = useState(0);
 
     // Para el registro de socios
     const registroSocios = (content) => {
