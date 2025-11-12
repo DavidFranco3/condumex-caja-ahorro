@@ -1,18 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
-import moment from 'moment';
-import 'moment/dist/locale/es';
-import BasicModal from "../../Modal/BasicModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { Button, Col, Form } from "react-bootstrap";
 import DataTablecustom from '../../Generales/DataTable';
-import { exportCSVFile } from "../../../utils/exportCSV";
-import Swal from "sweetalert2";
 import { formatMoneda } from '../../Generales/FormatMoneda';
 import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListInteresesSocios(props) {
-    const { listInteresesSocios, history, location, setRefreshCheckLogin } = props;
+    const { listInteresesSocios } = props;
 
     const listInteresesSinDuplicados = listInteresesSocios.reduce((acumulador, valorActual) => {
         const elementoYaExiste = acumulador.find(elemento => elemento.fichaSocio == valorActual.fichaSocio);
@@ -31,28 +22,6 @@ function ListInteresesSocios(props) {
 
         return [...acumulador, valorActual];
     }, []);
-
-    const generacionCSV = () => {
-        try {
-            Swal.fire({
-                title: "Estamos empaquetando tu respaldo, espere por favor ....",
-                icon: "info",
-                showConfirmButton: false,
-                timer: 1600,
-            });
-            const timer = setTimeout(() => {
-                exportCSVFile(listInteresesSinDuplicados, "LISTA_SOCIOS_SINDICALIZADOS");
-            }, 5600);
-            return () => clearTimeout(timer);
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    // Para hacer uso del modal
-    const [showModal, setShowModal] = useState(false);
-    const [contentModal, setContentModal] = useState(null);
-    const [titulosModal, setTitulosModal] = useState(null);
 
     const columns = [
         {
@@ -87,11 +56,7 @@ function ListInteresesSocios(props) {
 
     return (
         <>
-            <DataTablecustom datos={listInteresesSocios} columnas={columns} title={"Intereses de los socios"} />
-
-            <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
-                {contentModal}
-            </BasicModal>
+            <DataTablecustom datos={listInteresesSinDuplicados} columnas={columns} title={"Intereses de los socios"} />
         </>
     );
 }

@@ -1,13 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import moment from 'moment';
-import 'moment/dist/locale/es';
+import { useState } from 'react';
 import BasicModal from "../../Modal/BasicModal";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDownLong, faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { Badge, Container, Button, Col, Form } from "react-bootstrap";
-import { estilos } from "../../../utils/tableStyled";
-import { exportCSVFile } from "../../../utils/exportCSV";
-import Swal from "sweetalert2";
 import DataTablecustom from '../../Generales/DataTable';
 import { formatMoneda } from '../../Generales/FormatMoneda';
 import { formatFecha } from '../../Generales/FormatFecha';
@@ -56,24 +48,6 @@ function ListSaldosSocios(props) {
             },
         ];
     }, []);
-
-
-    const generacionCSV = () => {
-        try {
-            Swal.fire({
-                title: "Estamos empaquetando tu respaldo, espere por favor ....",
-                icon: "info",
-                showConfirmButton: false,
-                timer: 1600,
-            });
-            const timer = setTimeout(() => {
-                exportCSVFile(listInteresesSinDuplicados, "LISTA_SOCIOS_SINDICALIZADOS");
-            }, 5600);
-            return () => clearTimeout(timer);
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);

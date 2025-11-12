@@ -2,16 +2,13 @@ import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from "../../api/auth";
 import Swal from "sweetalert2";
-import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { Alert, Col, Row, Spinner, Form } from "react-bootstrap";
 import ListDeudaSocio from '../../components/DeudaSocio/ListDeudaSocio';
 import { listarPrestamoPeriodo } from "../../api/prestamos";
 import { listarAbonosPeriodo } from '../../api/abonos';
 import BasicModal from "../../components/Modal/BasicModal";
 import Lottie from 'react-lottie-player';
 import AnimacionLoading from '../../assets/json/loading.json';
-import EliminaDeudaSocioMasivo from '../../components/DeudaSocio/EliminaDeudaSocioMasivo';
 import { listarPeriodo } from '../../api/periodos';
 import { map } from "lodash";
 
