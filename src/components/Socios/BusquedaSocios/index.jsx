@@ -19,8 +19,6 @@ import {
   obtenerSociosEspecialesByNombre,
 } from '../../../api/sociosEspeciales'
 import { getRazonSocial } from '../../../api/auth'
-import DataTable from "react-data-table-component";
-import { estilos } from "../../../utils/tableStyled";
 import { formatFecha } from '../../Generales/FormatFecha';
 import DataTablecustom from '../../Generales/DataTable';
 
