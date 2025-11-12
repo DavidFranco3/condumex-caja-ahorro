@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import BasicModal from "../../components/Modal/BasicModal";
 import Empleados from "../Empleados";
 import Sindicalizados from "../Sindicalizados";
-import SociosEspeciales from "../SociosEspeciales";
 import Lottie from "react-lottie-player"
 import AnimacionLoading from "../../assets/json/loading.json";
 import "./Socios.scss"
@@ -23,18 +22,18 @@ function Socios(props) {
     useEffect(() => {
         if (getTokenApi()) {
             if (isExpiredToken(getTokenApi())) {
-                 Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                 Swal.fire({
-                        title: "Sesión cerrrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                Swal.fire({
+                    title: "Sesión expirada",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+                Swal.fire({
+                    title: "Sesión cerrrada por seguridad",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
                 logoutApi();
                 setRefreshCheckLogin(true);
             }
@@ -106,28 +105,17 @@ function Socios(props) {
                                     )
                                     :
                                     (
-                                        razonSocialElegida === "CONDUMEX S.A. DE C.V." ?
-                                            (
-                                                <>
-                                                    {/* Especiales */}
-                                                    <SociosEspeciales
-                                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                                    />
-                                                </>
-                                            )
-                                            :
-                                            (
-                                                <>
-                                                    <Lottie
-                                                        loop={true}
-                                                        play={true}
-                                                        animationData={AnimacionLoading}
-                                                    />
-                                                </>
-                                            )
+                                        <>
+                                            <Lottie
+                                                loop={true}
+                                                play={true}
+                                                animationData={AnimacionLoading}
+                                            />
+                                        </>
                                     )
                             )
                     )
+
             }
 
             <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>

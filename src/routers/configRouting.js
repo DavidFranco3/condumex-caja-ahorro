@@ -8,7 +8,6 @@ import BajaSocios from '../page/BajaSocios'
 import Movimientos from '../page/Movimientos'
 import EstadosCuenta from '../page/EstadosCuenta'
 import Rendimientos from '../page/Rendimientos'
-import Saldos from '../page/Saldos'
 import Patrimonio from '../page/Patrimonio'
 import Abonos from '../page/Abonos'
 import DeudaSocio from '../page/DeudaSocio'
@@ -45,10 +44,6 @@ const configRouting = [
   {
     path: '/movimientos',
     page: Movimientos,
-  },
-  {
-    path: '/saldos',
-    page: Saldos,
   },
   {
     path: '/abonos',

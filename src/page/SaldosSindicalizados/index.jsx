@@ -2,7 +2,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { withRouter } from "../../utils/withRouter";
 import {getRazonSocial, getTokenApi, isExpiredToken, logoutApi} from "../../api/auth";
 import Swal from "sweetalert2";
-import { Alert, Row, Col, Spinner } from "react-bootstrap"
+import { Spinner } from "react-bootstrap"
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json"
 import "./SaldosSindicalizados.scss"
