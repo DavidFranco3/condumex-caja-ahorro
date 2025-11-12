@@ -1,7 +1,3 @@
-import { useState } from 'react';
-import moment from "moment";
-import 'moment/locale/es';
-import BasicModal from "../../Modal/BasicModal";
 import DataTablecustom from '../../Generales/DataTable';
 import { formatMoneda } from '../../Generales/FormatMoneda';
 import { formatFecha } from '../../Generales/FormatFecha';
@@ -36,12 +32,6 @@ function ListDeudaSocio(props) {
             },
         ];
     }, []);
-    // Configura el idioma a español
-    moment.locale("es");
-    // Para hacer uso del modal
-    const [showModal, setShowModal] = useState(false);
-    const [contentModal, setContentModal] = useState(null);
-    const [titulosModal, setTitulosModal] = useState(null);
 
     const columns = [
         {
@@ -98,10 +88,6 @@ function ListDeudaSocio(props) {
     return (
         <>
             <DataTablecustom datos={listDeudaSocio} columnas={columns} title={"Deuda de socios"} />
-
-            <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
-                {contentModal}
-            </BasicModal>
         </>
     );
 }

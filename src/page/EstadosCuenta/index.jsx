@@ -14,19 +14,15 @@ import Lottie from 'react-lottie-player';
 import BasicModal from '../../components/Modal/BasicModal';
 import BusquedaSocios from '../../components/Socios/BusquedaSocios';
 import AnimacionLoading from '../../assets/json/loading.json';
-import { toDigit } from '../../components/utils/NumberToDigis';
 import {
     getStatementsBySocio,
     getStatementsByRazon,
     urlDownloadPDF,
     sendEmail,
 } from '../../api/statements';
-import { useLocale } from '../../hooks/useLocale';
 import { listarSociosEmpleados } from "../../api/sociosEmpleados";
 import { listarSocioSindicalizado } from "../../api/sociosSindicalizados";
 import { map } from "lodash";
-import moment from "moment";
-import 'moment/locale/es';
 import { listarPeriodo } from '../../api/periodos';
 import { formatFecha } from '../../components/Generales/FormatFecha';
 import { formatMoneda } from '../../components/Generales/FormatMoneda';
@@ -44,9 +40,6 @@ import {
 
 function EstadosCuenta({ setRefreshCheckLogin, location }) {
     const [tab, setTab] = useState('general')
-
-    // Configura el idioma a español
-    moment.locale("es");
 
     // Almacena los datos de los abonos
     const [listSociosSindicalizados, setListSociosSindicalizados] = useState(null);

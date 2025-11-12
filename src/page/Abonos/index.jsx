@@ -17,6 +17,7 @@ import AnimacionLoading from '../../assets/json/loading.json';
 import { listarPeriodo } from '../../api/periodos';
 import { map } from "lodash";
 import "./Abonos.scss";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Abonos(props) {
     const { setRefreshCheckLogin, location, history } = props;
@@ -24,6 +25,9 @@ function Abonos(props) {
     const [showModal, setShowModal] = useState(false);
     const [contentModal, setContentModal] = useState(null);
     const [titulosModal, setTitulosModal] = useState(null);
+
+    const parametros = useParams();
+    const { periodo } = parametros
 
     //Para el registro de Rendimientos
     const eliminaAbonosMasivo = (content) => {
@@ -80,7 +84,7 @@ function Abonos(props) {
     useEffect(() => {
         try {
             // Inicia listado de detalles de los articulos vendidos
-            listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+            listarAbonosPeriodo(getRazonSocial(), periodo).then(response => {
                 const { data } = response;
                 // console.log(data)
                 if (!listAbonos && data) {
@@ -132,48 +136,6 @@ function Abonos(props) {
         })
         setListaFechas(listaFechasTemp);
     }, [listAbonos]);
-
-    // Para almacenar las sucursales registradas
-    const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
-
-    const cargarListaPeriodos = () => {
-        try {
-            listarPeriodo(getRazonSocial()).then(response => {
-                const { data } = response;
-                //console.log(data)
-                const dataTemp = formatModelPeriodos(data);
-                //console.log(data)
-                setPeriodosRegistrados(dataTemp);
-            })
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
-    useEffect(() => {
-        cargarListaPeriodos();
-    }, []);
-
-    // Almacena la razón social, si ya fue elegida
-    const [periodoElegido, setPeriodoElegido] = useState("");
-
-    // Para almacenar en localstorage la razon social
-    const almacenaPeriodo = (periodo) => {
-        if (periodo != "Elige una opción") {
-            setPeriodo(periodo)
-        }
-        window.location.reload()
-    }
-
-    const guardarPeriodoElegido = () => {
-        if (getPeriodo()) {
-            setPeriodoElegido(getPeriodo)
-        }
-    }
-
-    useEffect(() => {
-        guardarPeriodoElegido();
-    }, []);
 
     return (
         <>
@@ -256,29 +218,6 @@ function Abonos(props) {
                 </Row>
             </Alert>
 
-            <Row>
-                <Col xs={6} md={4}>
-
-                </Col>
-                <Col xs={6} md={4}>
-                    <Form.Control
-                        as="select"
-                        aria-label="indicadorPeriodo"
-                        name="periodo"
-                        className="periodo"
-                        defaultValue={periodoElegido}
-                        onChange={(e) => {
-                            almacenaPeriodo(e.target.value)
-                        }}
-                    >
-                        <option>Elige una opción</option>
-                        {map(periodosRegistrados, (periodo, index) => (
-                            <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
-                        ))}
-                    </Form.Control>
-                </Col>
-            </Row>
-
             {
                 listAbonos ?
                     (
@@ -309,22 +248,6 @@ function Abonos(props) {
 }
 
 function formatModelAbonos(data) {
-    const dataTemp = []
-    data.forEach(data => {
-        dataTemp.push({
-            id: data._id,
-            folio: data.folio,
-            fichaSocio: String(data.fichaSocio),
-            tipo: data.tipo,
-            abono: String(data.abono),
-            fechaCreacion: data.createdAt,
-            fechaActualizacion: data.updatedAt
-        });
-    });
-    return dataTemp;
-}
-
-function formatModelAbonos2(data) {
     const dataTemp = []
     data.forEach(data => {
         dataTemp.push({

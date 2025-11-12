@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import moment from "moment";
-import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
@@ -12,9 +10,6 @@ import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListPeriodos(props) {
     const { listPeriodos, history, location, setRefreshCheckLogin } = props;
-
-    // Configura el idioma a español
-    moment.locale("es");
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);
@@ -30,7 +25,7 @@ function ListPeriodos(props) {
             reorder: false
         },
         {
-            name: "Abono",
+            name: "Nombre",
             selector: row => row.nombre,
             sortable: false,
             center: true,

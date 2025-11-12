@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import moment from "moment";
-import 'moment/locale/es';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge } from "react-bootstrap";
@@ -13,11 +11,6 @@ import { formatFecha } from '../../Generales/FormatFecha';
 
 function ListSociosEmpleados(props) {
     const { listSocios, history, location, setRefreshCheckLogin } = props;
-
-    //console.log(listSocios)
-
-    // Configura el idioma a español
-    moment.locale("es");
 
     // Para hacer uso del modal
     const [showModal, setShowModal] = useState(false);

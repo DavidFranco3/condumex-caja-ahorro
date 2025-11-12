@@ -4,13 +4,13 @@ import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, set
 import Swal from "sweetalert2";
 import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faEye, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
 import { listarPatrimoniosPeriodo } from "../../api/patrimonio";
-import ListPatrimonios from "../../components/Patrimonio/Listar";
-import RegistroPatrimonio from "../../components/Patrimonio/Registrar";
+import ListPatrimonios from "../../components/Patrimonio/ListPatrimonios";
+import RegistroPatrimonio from "../../components/Patrimonio/RegistroPatrimonios";
 import BasicModal from "../../components/Modal/BasicModal";
-import CargaMasivaPatrimonio from '../../components/Patrimonio/Cargar';
-import EliminaPatrimonioMasivo from '../../components/Patrimonio/EliminaMasivo';
+import CargaMasivaPatrimonio from '../../components/Patrimonio/CargaMasivaPatrimonios';
+import EliminaPatrimonioMasivo from '../../components/Patrimonio/EliminaPatrimoniosMasivo';
 import RestaurarPatrimonios from '../../components/Patrimonio/RestaurarPatrimonios';
 import Lottie from "react-lottie-player";
 import AnimacionLoading from "../../assets/json/loading.json";

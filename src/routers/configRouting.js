@@ -1,12 +1,10 @@
 // Importación de páginas principales
 import Dashboard from '../page/Dashboard'
 import Socios from '../page/Socios'
-import AjusteParametros from '../page/AjusteParametros'
 import Aportaciones from '../page/Aportaciones'
 import Prestamos from '../page/Prestamos'
 import Retiros from '../page/Retiros'
 import BajaSocios from '../page/BajaSocios'
-import CalculadoraInteres from '../page/CalculadoraInteres'
 import Movimientos from '../page/Movimientos'
 import EstadosCuenta from '../page/EstadosCuenta'
 import Rendimientos from '../page/Rendimientos'
@@ -49,10 +47,6 @@ const configRouting = [
     page: Movimientos,
   },
   {
-    path: '/calculadora-de-intereses',
-    page: CalculadoraInteres,
-  },
-  {
     path: '/saldos',
     page: Saldos,
   },
@@ -79,10 +73,6 @@ const configRouting = [
   {
     path: '/aportaciones',
     page: Aportaciones,
-  },
-  {
-    path: '/ajuste-de-parametros',
-    page: AjusteParametros,
   },
   {
     path: '/socios',
