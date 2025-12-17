@@ -13,7 +13,12 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
     const [isExporting, setIsExporting] = useState(false);
 
     // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
-    const keys = Object.keys(datos[0]).filter(k => k !== "id" && k !== "tipo" && k !== "folio" && k !== "fechaActualizacion")
+    const keys = datos.length > 0
+        ? Object.keys(datos[0]).filter(
+            k => k !== "id" && k !== "tipo" && k !== "folio" && k !== "fechaActualizacion"
+        )
+        : [];
+
 
     // 🔹 Construye el CSV manualmente
     const csvContent = datos.map(item => {

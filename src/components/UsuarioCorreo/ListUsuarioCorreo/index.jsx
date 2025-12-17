@@ -24,7 +24,7 @@ function ListUsuarioCorreo(props) {
             center: true,
             reorder: false
         },
-                {
+        {
             name: "Password",
             selector: row => row.password,
             sortable: false,
