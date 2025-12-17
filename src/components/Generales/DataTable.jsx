@@ -21,18 +21,18 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
 
 
     // 🔹 Construye el CSV manualmente
-    const csvContent = datos.map(item => {
-        return keys
-            .map(key => {
-                const value = item[key]
-                // Formatea solo si es número
+    const csvData = [
+        keys,
+        ...datos.map(item =>
+            keys.map(key => {
+                const value = item[key];
                 if (typeof value === "number" || (!isNaN(value) && value !== "")) {
-                    return Number(value).toFixed(2)
+                    return Number(value).toFixed(2);
                 }
-                return value ?? "" // evita "undefined"
+                return value ?? "";
             })
-            .join(",")
-    }).join("\n")
+        )
+    ];
 
     const handleFilterChange = (event) => {
         const searchValue = event.target.value.trim();
@@ -561,7 +561,7 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
 
                             <div className="action-buttons">
                                 <CSVLink
-                                    data={csvContent}
+                                    data={csvData}
                                     filename={`${title || "data"}.csv`}
                                     style={{ textDecoration: 'none' }}
                                 >
