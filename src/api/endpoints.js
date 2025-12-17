@@ -13,6 +13,16 @@ export const ENDPOINTActualizarUsuario = '/usuarios/actualizar'
 export const ENDPOINTDeshabilitaUsuario = '/usuarios/deshabilitar'
 export const ENDPOINTListarUsuariosPaginacion = '/usuarios/listarPaginando'
 
+// UsuarioCorreos
+export const ENDPOINTRegistraUsuarioCorreo = '/usuarioCorreos/registro'
+export const ENDPOINTListarUsuarioCorreos = '/usuarioCorreos/listar'
+export const ENDPOINTTotalUsuarioCorreos = '/usuarioCorreos/total'
+export const ENDPOINTObtenerUsuarioCorreo = '/usuarioCorreos/obtener'
+export const ENDPOINTEliminarUsuarioCorreo = '/usuarioCorreos/eliminar'
+export const ENDPOINTActualizarUsuarioCorreo = '/usuarioCorreos/actualizar'
+export const ENDPOINTDeshabilitaUsuarioCorreo = '/usuarioCorreos/deshabilitar'
+export const ENDPOINTListarUsuarioCorreosPaginacion = '/usuarioCorreos/listarPaginando'
+
 // Correos
 export const ENDPOINTEnviarCorreos = '/correos/enviar'
 export const ENDPOINTEnviarEspecialCorreos = '/correos/enviarCorreo'

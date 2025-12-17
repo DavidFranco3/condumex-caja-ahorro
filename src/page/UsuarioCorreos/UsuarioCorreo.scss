@@ -1,0 +1,50 @@
+@use "../../scss/index" as *;
+
+.almacenes {
+  width: 100%;
+  text-align: center;
+  //font-size: 30px;
+}
+
+.fade.alert.alert-primary.show {
+  background-color: $background-alert !important;
+  border-radius: 15px !important;
+  border-color: $font-light !important;
+  margin-top: 10px;
+  box-shadow: 0 0px 0px $border-dark inset, 0 0 8px $border-dark;
+
+  h1 {
+    color: $font-dark !important;
+  }
+}
+
+
+.btnMasivo {
+  //background-color: $tonalidad-azul !important;
+  float: right !important;
+  border-radius: 20px !important;
+  color: $font-light !important;
+
+  .btn.btn-primary {
+    color: $font-light !important;
+
+    &:hover {
+      color: $font-light !important;
+    }
+  }
+}
+
+.btnRegistro {
+    //background-color: $tonalidad-azul !important;
+    float: right !important;
+    border-radius: 20px !important;
+    color: $font-light !important;
+  
+    .btn.btn-primary {
+      color: $font-light !important;
+  
+      &:hover {
+        color: $font-light !important;
+      }
+    }
+  }

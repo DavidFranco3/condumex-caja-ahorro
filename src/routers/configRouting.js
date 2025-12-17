@@ -15,6 +15,7 @@ import Periodos from '../page/Periodos'
 import InteresesSocios from '../page/InteresesSocios'
 import SaldosSocios from '../page/SaldosSocios'
 import Usuarios from '../page/Usuarios'
+import UsuarioCorreos from '../page/UsuarioCorreos'
 
 const configRouting = [
   {
@@ -76,6 +77,10 @@ const configRouting = [
   {
     path: '/usuarios',
     page: Usuarios,
+  },
+    {
+    path: '/usuarioCorreos',
+    page: UsuarioCorreos,
   },
   {
     path: '/',

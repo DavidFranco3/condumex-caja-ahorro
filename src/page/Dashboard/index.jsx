@@ -21,6 +21,7 @@ import LogoAbonos from '../../assets/png/abonos.png';
 import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
 import LogoSaldosSocios from '../../assets/png/saldosSocios.png';
 import LogoUsuarios from '../../assets/png/usuarios.png';
+import LogoUsuarioCorreos from '../../assets/png/usuarioCorreos.png';
 import './Dashboard.scss';
 
 function Dashboard(props) {
@@ -157,6 +158,11 @@ function Dashboard(props) {
           path={'/usuarios'}
           logo={LogoUsuarios}
           title={'Usuarios'}
+        />
+                <ItemCard
+          path={'/usuarioCorreos'}
+          logo={LogoUsuarioCorreos}
+          title={'Usuario de correos'}
         />
       </div>
       
