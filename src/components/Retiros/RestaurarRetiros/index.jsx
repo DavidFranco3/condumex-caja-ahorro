@@ -14,14 +14,6 @@ const RestaurarRetiros = ({ setShowModal, history }) => {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)
@@ -29,12 +21,12 @@ const RestaurarRetiros = ({ setShowModal, history }) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         if (dataFile.length === 0) {
-             Swal.fire({
-                        title: 'No hay datos para cargar',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+            Swal.fire({
+                title: 'No hay datos para cargar',
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             return;
         }
 
@@ -103,11 +95,11 @@ const RestaurarRetiros = ({ setShowModal, history }) => {
                 setDataFile(data.filter(({ fichaSocio, retiro, createdAt }) => fichaSocio && retiro && createdAt));
             };
             reader.onerror = (_evt) => Swal.fire({
-                    title: "Error al leer el archivo",
-                    icon: "error",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });;
+                title: "Error al leer el archivo",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 

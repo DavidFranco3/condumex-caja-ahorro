@@ -65,32 +65,24 @@ function RegistroPrestamos(props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const onSubmit = (e) => {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
             Swal.fire({
-            title: "Debe elegir un socio",
-            icon: "warning",
-            showConfirmButton: false,
-            timer: 1600,
-        });;
+                title: "Debe elegir un socio",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         } else {
             if (!formData.prestamo || !formData.tasaInteres) {
                 Swal.fire({
-            title: "Faltan datos",
-            icon: "warning",
-            showConfirmButton: false,
-            timer: 1600,
-        });;
+                    title: "Faltan datos",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });;
             } else {
                 setLoading(true)
 
@@ -108,7 +100,7 @@ function RegistroPrestamos(props) {
                         prestamo: formData.prestamo,
                         prestamoTotal: interesGenerado,
                         tasaInteres: formData.tasaInteres,
-                        createdAt: formData.fecha == "" ? fechaActual : formData.fecha
+                        createdAt: formData.fecha
                     }
 
                     registraPrestamos(dataTemp).then(response => {
@@ -120,12 +112,12 @@ function RegistroPrestamos(props) {
 
                         actualizacionDeudaSocio(fichaSocioElegido, "0", interesGenerado, "Prestamo", formData.fecha);
 
-                         Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                        Swal.fire({
+                            title: data.mensaje,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
 
                         setTimeout(() => {
                             history({
@@ -258,7 +250,7 @@ function RegistroPrestamos(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
                                     name="fecha"
                                 />
@@ -363,10 +355,23 @@ function RegistroPrestamos(props) {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
+
 function initialFormData() {
     return {
         prestamo: "",
-        fecha: ""
+        fecha: `${fecha}T${hora}`
     }
 
 }

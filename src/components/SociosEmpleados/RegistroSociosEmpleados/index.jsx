@@ -5,7 +5,7 @@ import { isEmailValid } from "../../../utils/validations";
 import queryString from "query-string";
 import { obtenerFichaActualSociosEmpleados, registraSociosEmpleados } from "../../../api/sociosEmpleados";
 
-function RegistroSociosEmpleados (props) {
+function RegistroSociosEmpleados(props) {
     const { setShowModal, history, location } = props;
 
     const cancelarRegistro = () => {
@@ -34,24 +34,16 @@ function RegistroSociosEmpleados (props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha +"T"+ hora);
-
     const onSubmit = (e) => {
         e.preventDefault()
 
         if (!formData.ficha || !formData.nombre || !formData.tipo) {
             Swal.fire({
-                    title: "Completa el formulario",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
+                title: "Completa el formulario",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             if (!isEmailValid(formData.correo)) {
                 Swal.fire({
@@ -67,7 +59,7 @@ function RegistroSociosEmpleados (props) {
                     nombre: formData.nombre,
                     tipo: formData.tipo,
                     correo: formData.correo,
-                    createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
+                    createdAt: formData.fecha,
                     estado: "true"
                 }
 
@@ -75,11 +67,11 @@ function RegistroSociosEmpleados (props) {
                     registraSociosEmpleados(dataTemp).then(response => {
                         const { data } = response;
                         Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                            title: data.mensaje,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
                         setLoading(false)
                         history({
                             search: queryString.stringify(""),
@@ -89,22 +81,22 @@ function RegistroSociosEmpleados (props) {
                         console.log(e)
                         if (e.message === 'Network Error') {
                             //console.log("No hay internet")
-                             Swal.fire({
-                        title: "Conexión al servidor no disponible",
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                            Swal.fire({
+                                title: "Conexión al servidor no disponible",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                            });
                             setLoading(false);
                         } else {
                             if (e.response && e.response.status === 401) {
                                 const { mensaje } = e.response.data;
-                                 Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+                                Swal.fire({
+                                    title: mensaje,
+                                    icon: "error",
+                                    showConfirmButton: false,
+                                    timer: 1600,
+                                });;
                                 setLoading(false);
                             }
                         }
@@ -181,17 +173,17 @@ function RegistroSociosEmpleados (props) {
                         </Form.Group>
                     </Row>
 
-                        <Row className="mb-3">
+                    <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                                <Form.Control
+                            <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />                            
+                            />
                         </Form.Group>
                     </Row>
 
@@ -224,15 +216,27 @@ function RegistroSociosEmpleados (props) {
     );
 }
 
-function initialFormData () {
+    const hoy = new Date();
+
+    const fecha = [
+        hoy.getFullYear(),
+        String(hoy.getMonth() + 1).padStart(2, "0"),
+        String(hoy.getDate()).padStart(2, "0"),
+    ].join("-");
+
+    const hora = [
+        String(hoy.getHours()).padStart(2, "0"),
+        String(hoy.getMinutes()).padStart(2, "0"),
+    ].join(":");
+
+function initialFormData() {
     return {
         ficha: "",
         nombre: "",
         tipo: "Asociación de Empleados Sector Cables A.C.",
         correo: "",
-        fecha: "",
+        fecha: `${fecha}T${hora}`,
     }
-
 }
 
 export default RegistroSociosEmpleados;

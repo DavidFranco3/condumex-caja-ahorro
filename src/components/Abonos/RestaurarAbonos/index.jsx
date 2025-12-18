@@ -12,14 +12,6 @@ const RestaurarAbonos = ({ setShowModal, history }) => {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)

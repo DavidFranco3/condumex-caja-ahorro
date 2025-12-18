@@ -82,24 +82,16 @@ function RegistroBajaSocios(props) {
     const [patrimonioSocioElegido, setPatrimonioSocioElegido] = useState(0);
     const [totalEntregarSocioElegido, setTotalEntregarSocioElegido] = useState(0);
 
-    const hoy = new Date();
-    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const onSubmit = (e) => {
         e.preventDefault()
 
         if (!fichaSocioElegido) {
             Swal.fire({
-            title: "Debe elegir un socio",
-            icon: "warning",
-            showConfirmButton: false,
-            timer: 1600,
-        });
+                title: "Debe elegir un socio",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             setLoading(true)
             // Realiza registro de la aportación
@@ -119,7 +111,7 @@ function RegistroBajaSocios(props) {
                     patrimonio: patrimonioSocioElegido,
                     rendimiento: rendimientoSocioElegido,
                     total: total,
-                    createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
+                    createdAt: formData.fecha,
                 }
 
                 registraBajaSocios(dataTemp).then(response => {
@@ -412,7 +404,7 @@ function RegistroBajaSocios(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
                                     name="fecha"
                                 />
@@ -453,10 +445,22 @@ function RegistroBajaSocios(props) {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
 
 function initialFormData() {
     return {
-        fecha: ""
+        fecha: `${fecha}T${hora}`
     }
 
 }

@@ -18,24 +18,16 @@ function RegistroUsuarios(props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-    // const fecha = hoy.getDate() + '-' + ( hoy.getMonth() + 1 ) + '-' + hoy.getFullYear() + " " + hora;
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const onSubmit = (e) => {
         e.preventDefault()
 
         if (!formData.nombre || !formData.correo) {
             Swal.fire({
-                    title: "Completa el formulario",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
+                title: "Completa el formulario",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
             if (!isEmailValid(formData.correo)) {
                 Swal.fire({
@@ -52,7 +44,7 @@ function RegistroUsuarios(props) {
                     correo: formData.correo,
                     telefonoCelular: formData.telefonoCelular,
                     password: formData.password,
-                    createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
+                    createdAt: formData.fecha,
                     estado: "true"
                 }
 
@@ -60,11 +52,11 @@ function RegistroUsuarios(props) {
                     registraUsuarios(dataTemp).then(response => {
                         const { data } = response;
                         Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                            title: data.mensaje,
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
                         setLoading(false)
                         history({
                             search: queryString.stringify(""),
@@ -74,22 +66,22 @@ function RegistroUsuarios(props) {
                         console.log(e)
                         if (e.message === 'Network Error') {
                             //console.log("No hay internet")
-                             Swal.fire({
-                        title: "Conexión al servidor no disponible",
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                            Swal.fire({
+                                title: "Conexión al servidor no disponible",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                            });
                             setLoading(false);
                         } else {
                             if (e.response && e.response.status === 401) {
                                 const { mensaje } = e.response.data;
-                                 Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+                                Swal.fire({
+                                    title: mensaje,
+                                    icon: "error",
+                                    showConfirmButton: false,
+                                    timer: 1600,
+                                });;
                                 setLoading(false);
                             }
                         }
@@ -168,7 +160,7 @@ function RegistroUsuarios(props) {
                             </Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
                             />
@@ -204,14 +196,26 @@ function RegistroUsuarios(props) {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
+
 function initialFormData() {
     return {
         nombre: "",
         apellidos: "",
         correo: "",
-        fecha: "",
+        fecha: `${fecha}T${hora}`,
     }
-
 }
 
 export default RegistroUsuarios;

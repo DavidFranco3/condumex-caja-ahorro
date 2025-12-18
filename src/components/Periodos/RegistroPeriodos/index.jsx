@@ -42,67 +42,59 @@ function RegistroPeriodos(props) {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const onSubmit = (e) => {
         e.preventDefault()
 
-            if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
-                Swal.fire({
-            title: "Faltan datos",
-            icon: "warning",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            } else {
+        if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
+            Swal.fire({
+                title: "Faltan datos",
+                icon: "warning",
+                showConfirmButton: false,
+                timer: 1600,
+            });
+        } else {
 
-                setLoading(true)
-                // Realiza registro de la aportación
-                obtenerFolioActualPeriodo().then(response => {
+            setLoading(true)
+            // Realiza registro de la aportación
+            obtenerFolioActualPeriodo().then(response => {
+                const { data } = response;
+                const { folio } = data;
+                // console.log(data)
+
+                const dataTemp = {
+                    folio: folio,
+                    nombre: formData.nombre,
+                    tipo: getRazonSocial(),
+                    fechaInicio: formData.fechaInicio,
+                    fechaCierre: formData.fechaCierre,
+                }
+
+                registraPeriodos(dataTemp).then(response => {
                     const { data } = response;
-                    const { folio } = data;
-                    // console.log(data)
 
-                    const dataTemp = {
-                        folio: folio,
-                        nombre: formData.nombre,
-                        tipo: getRazonSocial(),
-                        fechaInicio: formData.fechaInicio,
-                        fechaCierre: formData.fechaCierre,
-                    }
-
-                    registraPeriodos(dataTemp).then(response => {
-                        const { data } = response;
-
-                         Swal.fire({
+                    Swal.fire({
                         title: data.mensaje,
                         icon: "success",
                         showConfirmButton: false,
                         timer: 1600,
                     });
-                        setTimeout(() => {
-                            setLoading(false)
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
-
-                    }).catch(e => {
-                        console.log(e)
-                    })
+                    setTimeout(() => {
+                        setLoading(false)
+                        history({
+                            search: queryString.stringify(""),
+                        });
+                        setShowModal(false)
+                    }, 2000)
 
                 }).catch(e => {
                     console.log(e)
                 })
 
-            }
+            }).catch(e => {
+                console.log(e)
+            })
+
+        }
     }
 
     const onChange = e => {

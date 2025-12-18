@@ -11,14 +11,6 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
 
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)
@@ -52,7 +44,7 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                 periodo: periodo,
                 prestamoTotal: prestamo,
                 tasaInteres: 0,
-                createdAt: formData.fecha == "" ? fechaActual : formData.fecha,
+                createdAt: formData.fecha,
             }
             await registraPrestamos(dataPrestamos);
 
@@ -137,7 +129,7 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                                 onChange={handleChange}
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fecha == "" ? fechaActual : formData.fecha}
+                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
                             />
@@ -194,11 +186,24 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
+
 function initialFormData() {
     return {
         fichaSocio: "",
         prestamo: "",
-        fecha: ""
+        fecha: `${fecha}T${hora}`
     }
 
 }

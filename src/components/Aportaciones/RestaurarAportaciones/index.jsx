@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import queryString from "query-string";
 import { getRazonSocial, getPeriodo } from '../../../api/auth';
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos';
-import { obtenerFolioActualAportaciones, registraAportacionesSocios} from "../../../api/aportaciones";
+import { obtenerFolioActualAportaciones, registraAportacionesSocios } from "../../../api/aportaciones";
 import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
 import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
@@ -13,14 +13,6 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
     // Para almacenar los datos del formulario
     const [formData, setFormData] = useState(initialFormData());
 
-    const hoy = new Date();
-
-    const fecha = hoy.getDate() < 10 ? hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + "0" + hoy.getDate() : hoy.getFullYear() + '-' + (hoy.getMonth() + 1) + '-' + hoy.getDate();
-
-    const hora = hoy.getHours() < 10 ? "0" + hoy.getHours() + ':' + hoy.getMinutes() : hoy.getMinutes() < 10 ? hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() < 10 && hoy.getMinutes() < 10 ? "0" + hoy.getHours() + ':' + "0" + hoy.getMinutes() : hoy.getHours() + ':' + hoy.getMinutes();
-
-    const [fechaActual, setFechaActual] = useState(fecha + "T" + hora);
-
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)
@@ -28,12 +20,12 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         if (dataFile.length === 0) {
-             Swal.fire({
-                        title: 'No hay datos para cargar',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+            Swal.fire({
+                title: 'No hay datos para cargar',
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             return;
         }
 
@@ -42,7 +34,7 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
         setLoading(true);
         for (const { fichaSocio, aportacion, createdAt } of dataFile) {
             const fecha = createdAt.split("T");
-            console.log(new Date (fecha[0]))
+            console.log(new Date(fecha[0]))
             const responseFolio = await obtenerFolioActualAportaciones();
             const { data: { folio } } = responseFolio;
             const dataAportacion = {
@@ -84,30 +76,30 @@ const RestaurarAportaciones = ({ setShowModal, history }) => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-      
+
         const { files } = e.target;
         if (files.length > 0) {
-          const [file] = files;
-          const reader = new FileReader();
-          reader.readAsText(file, 'UTF-8');
-          reader.onload = (evt) => {
-            const { result } = evt.target;
-            const lines = result.split('\n'); // Cambiar el delimitador de línea a '\n'
-            const data = lines.map(line => {
-                const [fichaSocio, aportacion, createdAt] = line.split(',');
-                return { fichaSocio, aportacion, createdAt}
-            });
-            setDataFile(data.filter(({ fichaSocio, aportacion, createdAt }) => fichaSocio && aportacion && createdAt));
-          };
-          reader.onerror = (_evt) => Swal.fire({
-                    title: "Error al leer el archivo",
-                    icon: "error",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });;
+            const [file] = files;
+            const reader = new FileReader();
+            reader.readAsText(file, 'UTF-8');
+            reader.onload = (evt) => {
+                const { result } = evt.target;
+                const lines = result.split('\n'); // Cambiar el delimitador de línea a '\n'
+                const data = lines.map(line => {
+                    const [fichaSocio, aportacion, createdAt] = line.split(',');
+                    return { fichaSocio, aportacion, createdAt }
+                });
+                setDataFile(data.filter(({ fichaSocio, aportacion, createdAt }) => fichaSocio && aportacion && createdAt));
+            };
+            reader.onerror = (_evt) => Swal.fire({
+                title: "Error al leer el archivo",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
-      };
-    
+    };
+
     const Loading = () => (
         !loading ? 'Cargar' : <Spinner animation='border' />
     )
