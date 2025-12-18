@@ -1,16 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { CSVLink } from "react-csv";
 import { jsPDF } from "jspdf";
-import autoTable from 'jspdf-autotable';
-import { formatMoneda } from "./FormatMoneda";
+import autoTable from "jspdf-autotable";
 
-const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, title }) => {
+const DataTablecustom = ({
+    datos = [],
+    columnas = [],
+    hiddenOptions = false,
+    expandableRows = false,
+    expandableRowsComponent = null,
+    expandableRowExpanded = null,
+    title,
+    ...otherProps
+}) => {
     const [filterValue, setFilterValue] = useState("");
     const [filteredData, setFilteredData] = useState(datos);
-    const [visibleColumns, setVisibleColumns] = useState(columnas.map(col => col.name));
+    const [visibleColumns, setVisibleColumns] = useState(columnas.map((col) => col.name));
     const [showModal, setShowModal] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
+    const [stickyColumns, setStickyColumns] = useState([]);
+    const [columnWidths, setColumnWidths] = useState({});
+    const tableRef = useRef(null);
 
     // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
     const keys = datos.length > 0
@@ -18,7 +29,6 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
             k => k !== "id" && k !== "tipo" && k !== "folio" && k !== "fechaActualizacion"
         )
         : [];
-
 
     // 🔹 Construye el CSV manualmente
     const csvContent = datos.map(item => {
@@ -154,79 +164,296 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
     };
 
     const handleColumnVisibilityChange = (columnName) => {
-        setVisibleColumns(prevVisibleColumns =>
+        setVisibleColumns((prevVisibleColumns) =>
             prevVisibleColumns.includes(columnName)
-                ? prevVisibleColumns.filter(name => name !== columnName)
+                ? prevVisibleColumns.filter((name) => name !== columnName)
                 : [...prevVisibleColumns, columnName]
         );
     };
 
     const selectAllColumns = () => {
-        setVisibleColumns(columnas.map(col => col.name));
+        setVisibleColumns(columnas.map((col) => col.name));
     };
 
     const deselectAllColumns = () => {
         setVisibleColumns([]);
     };
 
-    const filteredColumns = columnas.filter(col => visibleColumns.includes(col.name));
+    // ✅ Columnas visibles memoizadas
+    const filteredColumns = useMemo(
+        () => columnas.filter((col) => visibleColumns.includes(col.name)),
+        [columnas, visibleColumns]
+    );
+
+    // ✅ Columnas sticky en orden visual
+    const orderedStickyColumns = useMemo(
+        () => filteredColumns.filter((col) => stickyColumns.includes(col.name)),
+        [filteredColumns, stickyColumns]
+    );
+
+    const toggleStickyColumn = (name) => {
+        setStickyColumns((prev) => {
+            const isSticky = prev.includes(name);
+            if (isSticky) {
+                return prev.filter((colName) => colName !== name);
+            } else {
+                if (prev.length < 3) {
+                    return [...prev, name];
+                }
+                return prev; // límite de 3 columnas fijas
+            }
+        });
+    };
+
+    // ✅ Medir anchos usando la PRIMERA FILA de datos (más real que el header)
+    useEffect(() => {
+        if (!tableRef.current) return;
+
+        const firstRow = tableRef.current.querySelector(".rdt_TableRow");
+        if (!firstRow) return; // si no hay filas, no medimos
+
+        const rowCells = firstRow.querySelectorAll(".rdt_TableCell");
+        if (!rowCells.length) return;
+
+        const newWidths = {};
+
+        filteredColumns.forEach((col, index) => {
+            if (rowCells[index]) {
+                const width = rowCells[index].getBoundingClientRect().width;
+                newWidths[col.name] = width;
+            }
+        });
+
+        const oldKeys = Object.keys(columnWidths);
+        const newKeys = Object.keys(newWidths);
+
+        const sameLength = oldKeys.length === newKeys.length;
+        const sameValues =
+            sameLength &&
+            newKeys.every((key) => columnWidths[key] === newWidths[key]);
+
+        if (!sameValues) {
+            setColumnWidths(newWidths);
+        }
+    }, [filteredColumns, columnWidths, filteredData.length]);
+
+    // ✅ Calcular offsets en cadena según el orden visual de las columnas sticky
+    const stickyOffsets = useMemo(() => {
+        const offsets = {};
+        let currentOffset = 0;
+
+        orderedStickyColumns.forEach((col) => {
+            offsets[col.name] = currentOffset;
+            currentOffset += columnWidths[col.name] || 0;
+        });
+
+        return offsets;
+    }, [orderedStickyColumns, columnWidths]);
+
+    // ✅ Estilos dinámicos de columnas sticky (con z-index por orden)
+    const dynamicStyles = useMemo(() => {
+        return orderedStickyColumns
+            .map((col, orderIndex) => {
+                const index = filteredColumns.findIndex((c) => c.name === col.name);
+                const offset = stickyOffsets[col.name];
+
+                if (index === -1 || offset === undefined) return "";
+
+                const zBase = 20 + orderIndex; // más grande para que no se pisen
+
+                return `
+                    .rdt_TableCol:nth-child(${index + 1}),
+                    .rdt_TableCell:nth-child(${index + 1}) {
+                        position: sticky !important;
+                        left: ${offset}px;
+                        z-index: ${zBase};
+                        background-color: #f1f3f5;
+                        background-clip: padding-box;
+                    }
+                    .rdt_TableCol:nth-child(${index + 1}) {
+                        z-index: ${zBase + 1};
+                    }
+                `;
+            })
+            .join("");
+    }, [orderedStickyColumns, stickyOffsets, filteredColumns]);
+
+    const processedColumns = filteredColumns.map((col) => {
+        // quitar props internas de react-data-table que NO deben ir al DOM
+        const {
+            right,
+            center,
+            compact,
+            wrap,
+            grow,
+            maxWidth,
+            minWidth,
+            width,
+            reorder,   // si existe
+            ...safeProps
+        } = col;
+
+        const isSticky = stickyColumns.includes(col.name);
+        const canBeMadeSticky = isSticky || stickyColumns.length < 3;
+
+        return {
+            ...safeProps,
+            name: (
+                <div className="custom-header-wrapper">
+                    <label className="custom-checkbox-label">
+                        <input
+                            type="checkbox"
+                            className="custom-checkbox-input"
+                            checked={isSticky}
+                            disabled={!canBeMadeSticky}
+                            onChange={() => toggleStickyColumn(col.name)}
+                        />
+                        <span className="custom-checkbox-checkmark">
+                            <i className="fas fa-thumbtack"></i>
+                        </span>
+                    </label>
+                    <span className="custom-header-name">{col.name}</span>
+                </div>
+            ),
+        };
+    });
+
 
     const customStyles = {
         headRow: {
             style: {
-                backgroundColor: '#f8f9fa',
-                borderBottom: '2px solid #dee2e6',
-                fontWeight: '600',
-                fontSize: '14px',
-                color: '#495057',
-                minHeight: '52px',
+                backgroundColor: "#f8f9fa",
+                borderBottom: "2px solid #dee2e6",
+                fontWeight: "600",
+                fontSize: "14px",
+                color: "#495057",
+                minHeight: "52px",
             },
         },
         headCells: {
             style: {
-                paddingLeft: '16px',
-                paddingRight: '16px',
+                paddingLeft: "16px",
+                paddingRight: "16px",
+                whiteSpace: "nowrap",
+                justifyContent: "center",
+                textAlign: "center",
             },
         },
         rows: {
             style: {
-                fontSize: '13px',
-                color: '#212529',
-                minHeight: '48px',
-                '&:hover': {
-                    backgroundColor: '#f1f3f5',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s ease',
+                fontSize: "13px",
+                color: "#212529",
+                minHeight: "48px",
+                "&:hover": {
+                    backgroundColor: "#f1f3f5",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s ease",
                 },
             },
             stripedStyle: {
-                backgroundColor: '#f8f9fa',
+                backgroundColor: "#f8f9fa",
             },
         },
         cells: {
             style: {
-                paddingLeft: '16px',
-                paddingRight: '16px',
+                paddingLeft: "16px",
+                paddingRight: "16px",
+                justifyContent: "center",
+                textAlign: "center",
             },
         },
         pagination: {
             style: {
-                borderTop: '1px solid #dee2e6',
-                fontSize: '13px',
-                minHeight: '56px',
-                backgroundColor: '#ffffff',
+                borderTop: "1px solid #dee2e6",
+                fontSize: "13px",
+                minHeight: "56px",
+                backgroundColor: "#ffffff",
             },
         },
     };
 
     return (
-        <section className="datatable-container">
+        <section className="datatable-container" ref={tableRef}>
             <style>{`
                 .datatable-container {
                     background: #ffffff;
                     border-radius: 8px;
                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                     padding: 20px;
+                    overflow-x: auto; /* Necesario para sticky */
+                }
+
+                ${dynamicStyles}
+
+                .sticky-info-label {
+                    font-size: 12px;
+                    color: #6c757d;
+                    margin-bottom: 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+
+                .custom-header-wrapper {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .custom-checkbox-label {
+                    position: relative;
+                    cursor: pointer;
+                    width: 18px;
+                    height: 18px;
+                }
+
+                .custom-checkbox-input {
+                    position: absolute;
+                    opacity: 0;
+                    cursor: pointer;
+                    height: 0;
+                    width: 0;
+                }
+
+                .custom-checkbox-checkmark {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 18px;
+                    width: 18px;
+                    background-color: #e9ecef;
+                    border-radius: 4px;
+                    transition: all 0.2s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #adb5bd;
+                }
+
+                .custom-checkbox-label:hover .custom-checkbox-checkmark {
+                    background-color: #dee2e6;
+                }
+
+                .custom-checkbox-input:checked ~ .custom-checkbox-checkmark {
+                    background-color: #0d6efd;
+                    color: white;
+                }
+
+                .custom-checkbox-input:disabled ~ .custom-checkbox-checkmark {
+                    background-color: #f8f9fa;
+                    cursor: not-allowed;
+                    opacity: 0.7;
+                }
+
+                .custom-checkbox-checkmark .fa-thumbtack {
+                    font-size: 10px;
+                    transition: transform 0.2s ease;
+                }
+
+                .custom-checkbox-input:checked
+                    ~ .custom-checkbox-checkmark
+                    .fa-thumbtack {
+                    transform: rotate(45deg);
                 }
 
                 .search-bar-container {
@@ -544,8 +771,22 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
             `}</style>
 
             <div className="search-bar-container" hidden={hiddenOptions}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: "16px",
+                        }}
+                    >
                         <div className="search-input-wrapper">
                             <i className="fa fa-search search-icon" />
                             <input
@@ -557,8 +798,14 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                             />
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "12px",
+                                flexWrap: "wrap",
+                            }}
+                        >
                             <div className="action-buttons">
                                 <CSVLink
                                     data={csvContent}
@@ -577,7 +824,9 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                                     disabled={isExporting}
                                 >
                                     <i className="fas fa-file-pdf" />
-                                    <span>{isExporting ? 'Exportando...' : 'PDF'}</span>
+                                    <span>
+                                        {isExporting ? "Exportando..." : "PDF"}
+                                    </span>
                                 </button>
 
                                 <button
@@ -593,8 +842,17 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                 </div>
             </div>
 
+            <div className="sticky-info-label">
+                <i className="fas fa-info-circle"></i>
+                <span>
+                    Use la chincheta (<i className="fas fa-thumbtack"></i>) en el
+                    encabezado de una columna para fijarla. Puede fijar hasta 3
+                    columnas.
+                </span>
+            </div>
+
             <DataTable
-                columns={filteredColumns}
+                columns={processedColumns}
                 data={filteredData}
                 pagination
                 paginationPerPage={10}
@@ -603,52 +861,92 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                 highlightOnHover
                 pointerOnHover
                 responsive
-                filterValue={filterValue}
-                onFilterValueChange={handleFilterChange}
-                clearOnFilter
                 onRowDoubleClicked={handleDoubleClick}
                 customStyles={customStyles}
+                expandableRows={expandableRows}
+                expandableRowsComponent={expandableRowsComponent}
+                expandableRowExpanded={expandableRowExpanded}
+                {...otherProps}
                 noDataComponent={
-                    <div style={{ padding: '40px', textAlign: 'center', color: '#6c757d' }}>
-                        <i className="fas fa-inbox" style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }} />
-                        <p style={{ margin: 0, fontSize: '14px' }}>No se encontraron registros</p>
+                    <div
+                        style={{
+                            padding: "40px",
+                            textAlign: "center",
+                            color: "#6c757d",
+                        }}
+                    >
+                        <i
+                            className="fas fa-inbox"
+                            style={{
+                                fontSize: "48px",
+                                marginBottom: "16px",
+                                opacity: 0.5,
+                            }}
+                        />
+                        <p style={{ margin: 0, fontSize: "14px" }}>
+                            No se encontraron registros
+                        </p>
                     </div>
                 }
             />
 
             {/* Modal personalizado */}
             {showModal && (
-                <div className="modal-overlay" onClick={() => setShowModal(false)}>
-                    <div className="modal-content-custom" onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="modal-overlay"
+                    onClick={() => setShowModal(false)}
+                >
+                    <div
+                        className="modal-content-custom"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="modal-header-custom">
                             <h5 className="modal-title-custom">
                                 <i className="fas fa-columns" />
                                 Gestionar Columnas
                             </h5>
-                            <button className="modal-close-btn" onClick={() => setShowModal(false)}>
+                            <button
+                                className="modal-close-btn"
+                                onClick={() => setShowModal(false)}
+                            >
                                 <i className="fas fa-times" />
                             </button>
                         </div>
 
                         <div className="modal-body-custom">
                             <div className="column-actions">
-                                <button className="btn-column-action" onClick={selectAllColumns}>
+                                <button
+                                    className="btn-column-action"
+                                    onClick={selectAllColumns}
+                                >
                                     <i className="fas fa-check-double" />
                                     Seleccionar Todo
                                 </button>
-                                <button className="btn-column-action" onClick={deselectAllColumns}>
+                                <button
+                                    className="btn-column-action"
+                                    onClick={deselectAllColumns}
+                                >
                                     <i className="fas fa-times" />
                                     Deseleccionar Todo
                                 </button>
                             </div>
 
-                            {columnas.map(col => (
-                                <div key={col.name} className="column-checkbox-wrapper">
+                            {columnas.map((col) => (
+                                <div
+                                    key={col.name}
+                                    className="column-checkbox-wrapper"
+                                >
                                     <label className="column-checkbox">
                                         <input
                                             type="checkbox"
-                                            checked={visibleColumns.includes(col.name)}
-                                            onChange={() => handleColumnVisibilityChange(col.name)}
+                                            checked={visibleColumns.includes(
+                                                col.name
+                                            )}
+                                            onChange={() =>
+                                                handleColumnVisibilityChange(
+                                                    col.name
+                                                )
+                                            }
                                         />
                                         {col.name}
                                     </label>
@@ -657,10 +955,16 @@ const DataTablecustom = ({ datos = [], columnas = [], hiddenOptions = false, tit
                         </div>
 
                         <div className="modal-footer-custom">
-                            <button className="btn-modal btn-modal-light" onClick={() => setShowModal(false)}>
+                            <button
+                                className="btn-modal btn-modal-light"
+                                onClick={() => setShowModal(false)}
+                            >
                                 Cerrar
                             </button>
-                            <button className="btn-modal btn-modal-primary" onClick={() => setShowModal(false)}>
+                            <button
+                                className="btn-modal btn-modal-primary"
+                                onClick={() => setShowModal(false)}
+                            >
                                 <i className="fas fa-check" />
                                 Aplicar
                             </button>
