@@ -194,11 +194,24 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
+
 function initialFormData() {
     return {
         fichaSocio: "",
         patrimonio: "",
-        createdAt: ""
+        fecha: `${fecha}T${hora}`,
     }
 
 }

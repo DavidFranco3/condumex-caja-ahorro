@@ -237,20 +237,22 @@ function RegistroAbonos(props) {
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
-                                Fecha de registro
+                                Tipo de abono
                             </Form.Label>
-                            <InputGroup className="mb-3">
-                                <Form.Control
-                                    className="mb-3"
-                                    type="datetime-local"
-                                    placeholder="Fecha"
-                                    isInvalid={!!errors.fecha}
-                                    {...register("fecha", { required: "La fecha es obligatoria" })}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.fecha?.message}
-                                </Form.Control.Feedback>
-                            </InputGroup>
+                            <Form.Control
+                                className="mb-3"
+                                as="select"
+                                isInvalid={!!errors.tipo}
+                                {...register("tipo", { required: "Selecciona un tipo" })}
+                            >
+                                <option value="">Elige una opción</option>
+                                <option value="aportaciones">Aportaciones</option>
+                                <option value="intereses">Intereses</option>
+                                <option value="dinero propio">Dinero propio</option>
+                            </Form.Control>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.tipo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridAbono">
@@ -279,22 +281,20 @@ function RegistroAbonos(props) {
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
                             <Form.Label>
-                                Tipo de abono
+                                Fecha de registro
                             </Form.Label>
-                            <Form.Control
-                                className="mb-3"
-                                as="select"
-                                isInvalid={!!errors.tipo}
-                                {...register("tipo", { required: "Selecciona un tipo" })}
-                            >
-                                <option value="">Elige una opción</option>
-                                <option value="aportaciones">Aportaciones</option>
-                                <option value="intereses">Intereses</option>
-                                <option value="dinero propio">Dinero propio</option>
-                            </Form.Control>
-                            <Form.Control.Feedback type="invalid">
-                                {errors.tipo?.message}
-                            </Form.Control.Feedback>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    placeholder="Fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
+                            </InputGroup>
                         </Form.Group>
                     </Row>
 
