@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
@@ -11,7 +12,10 @@ import { registroAportacionInicial } from "../../Aportaciones/RegistroBajaSocioA
 
 const CargaMasivaRetiros = ({ setShowModal, history }) => {
 
-        const [formData, setFormData] = useState(initialFormData());
+        // const [formData, setFormData] = useState(initialFormData());
+        const { register, handleSubmit, formState: { errors } } = useForm({
+                defaultValues: initialFormData()
+        });
 
         const [loading, setLoading] = useState(false);
         const [dataFile, setDataFile] = useState([]);
@@ -19,8 +23,8 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
 
         const handleCancel = () => setShowModal(false)
 
-        const handleSubmit = async (evt) => {
-                evt.preventDefault();
+        const onSubmit = async (data) => {
+                // evt.preventDefault();
                 if (dataFile.length === 0) {
                         Swal.fire({
                                 title: 'No hay datos para cargar',
@@ -43,7 +47,7 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                                 periodo: periodo,
                                 retiro,
                                 tipo: razonSocial,
-                                createdAt: formData.fecha,
+                                createdAt: data.fecha,
                         }
 
                         await registraRetiros(dataRetiro);
@@ -53,7 +57,7 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                         registroMovimientosSaldosSocios(fichaSocio, "0", "0", "0", "0", "0", retiro, "0", "Retiro");
 
                         let retiro2 = retiro * parseInt("-1");
-                        await registroAportacionInicial(fichaSocio, retiro2, formData.fecha);
+                        await registroAportacionInicial(fichaSocio, retiro2, data.fecha);
 
                         // Registra Saldos
                         await registroSaldoInicial(fichaSocio, retiro, "0", "0", folio, "Retiro");
@@ -62,24 +66,25 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                         setCount(oldCount => oldCount + 1);
                 }
 
-                Swal.fire({
-                        title: "Retiros registrados con exito",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                });
                 setDataFile([]);
                 setLoading(false);
                 history({
                         search: queryString.stringify(''),
                 });
                 setShowModal(false);
+
+                Swal.fire({
+                        title: "Retiros registrados con exito",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                });
         }
 
 
         const handleChange = (e) => {
 
-                setFormData({ ...formData, [e.target.name]: e.target.value });
+                // setFormData({ ...formData, [e.target.name]: e.target.value });
 
                 const { files } = e.target;
                 if (files.length > 0) {
@@ -114,7 +119,7 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
         return (
                 <>
                         <div className='contenidoFormularioPrincipal'>
-                                <Form>
+                                <Form onSubmit={handleSubmit(onSubmit)}>
                                         <Form.Group as={Row} className='botones pt-3'>
                                                 <Col sm={5}>
                                                         <Form.Label>Seleccione el fichero:</Form.Label>
@@ -135,13 +140,15 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                                                 <Col sm={7}>
 
                                                         <Form.Control
-                                                                onChange={handleChange}
                                                                 className="mb-3"
                                                                 type="datetime-local"
-                                                                defaultValue={formData.fecha}
                                                                 placeholder="Fecha"
-                                                                name="fecha"
+                                                                isInvalid={!!errors.fecha}
+                                                                {...register("fecha", { required: "La fecha es obligatoria" })}
                                                         />
+                                                        <Form.Control.Feedback type="invalid">
+                                                                {errors.fecha?.message}
+                                                        </Form.Control.Feedback>
                                                 </Col>
                                         </Form.Group>
                                         {
@@ -172,7 +179,6 @@ const CargaMasivaRetiros = ({ setShowModal, history }) => {
                                                                 type='submit'
                                                                 variant='success'
                                                                 className='registrar'
-                                                                onClick={handleSubmit}
                                                                 disabled={loading}
                                                         >
                                                                 <Loading />

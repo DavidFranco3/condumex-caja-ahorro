@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
@@ -29,78 +30,81 @@ const initialFormData = ({ id, folio, fichaSocio, prestamo, prestamoTotal, tasaI
 
 function ModificaPrestamos({ datos, setShowModal, history }) {
 
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
 
-    const [interesGenerado, setInteresGenerado] = useState(0);
+    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
-    const calcularIntereses = () => {
-        const prestamo = document.getElementById("prestamo").value;
-        const tasaInteres = document.getElementById("tasaInteres").value;
-        const tempInteres = parseFloat(tasaInteres) / 100;
-        const tempInteresGenerado = parseFloat(prestamo) * tempInteres;
-        const aPagar = parseFloat(prestamo) + tempInteresGenerado;
-        setInteresGenerado(aPagar);
+    const prestamoValue = watch("prestamo");
+    const tasaInteresValue = watch("tasaInteres");
+
+    // Calculate total dynamically
+    let totalPagar = 0;
+    if (prestamoValue && tasaInteresValue) {
+        const tempInteres = parseFloat(tasaInteresValue) / 100;
+        const tempInteresGenerado = parseFloat(prestamoValue) * tempInteres;
+        totalPagar = parseFloat(prestamoValue) + tempInteresGenerado;
     }
 
     const handleCancel = () => setShowModal(false);
 
-    const handleChange = (evt) => {
-        setFormData({ ...formData, [evt.target.name]: evt.target.value });
-    }
+    // console.log(formData.createdAt)
 
-    console.log(formData.createdAt)
+    const handleUpdate = async (data) => {
+        // event.preventDefault();
 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        if (!formData.prestamo || !formData.createdAt || !formData.tasaInteres) {
-            Swal.fire({
-            title: "Faltan datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            return;
-        }
+        // Validations handled by react-hook-form
 
         setLoading(true);
-        const total = interesGenerado - formData.prestamoTotal;
+        // Recalculate based on current data
+        const currentInteres = parseFloat(data.tasaInteres) / 100;
+        const currentInteresGenerado = parseFloat(data.prestamo) * currentInteres;
+        const currentTotal = parseFloat(data.prestamo) + currentInteresGenerado;
+
+        const total = currentTotal - data.prestamoTotal; // I assume data.prestamoTotal is from initial data? No, it should be the old total? 
+        // Wait, logic in original code: const total = interesGenerado - formData.prestamoTotal;
+        // formData.prestamoTotal comes from initialFormData(datos), so it is the previous total.
+        // So we need to access the original data or keep it. 'datos' prop is available.
+
+        const oldTotal = datos.prestamoTotal;
+        const diffTotal = currentTotal - oldTotal;
+
         const dataTemp = {
-            fichaSocio: formData.fichaSocio,
-            prestamo: formData.prestamo,
-            prestamoTotal: interesGenerado,
-            tasaInteres: formData.tasaInteres,
-            createdAt: formData.createdAt
+            fichaSocio: data.fichaSocio,
+            prestamo: data.prestamo,
+            prestamoTotal: currentTotal,
+            tasaInteres: data.tasaInteres,
+            createdAt: data.createdAt
         }
 
-        const response = await actualizaPrestamos(formData.id, dataTemp);
+        const response = await actualizaPrestamos(data.id, dataTemp);
         const { status, data: { mensaje } } = response;
 
-        registroMovimientosSaldosSocios(formData.fichaSocio, "0", "0", formData.prestamo, "0", "0", "0", "0", "Modificación Prestamo");
+        registroMovimientosSaldosSocios(data.fichaSocio, "0", "0", data.prestamo, "0", "0", "0", "0", "Modificación Prestamo");
 
-        actualizacionDeudaSocio(formData.fichaSocio, "0", total, "Modificación prestamo", formData.createdAt);
+        actualizacionDeudaSocio(data.fichaSocio, "0", diffTotal, "Modificación prestamo", data.createdAt);
 
         if (status === 200) {
-            Swal.fire({
-                        title: mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-            setTimeout(() => {
             history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
-        }, 2000);
+
+            Swal.fire({
+                title: mensaje,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
-             Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+            Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 
@@ -111,8 +115,7 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
     return (
         <>
             <div className='contenidoFormularioPrincipal'>
-                <Form onChange=
-                    {handleChange}>
+                <Form onSubmit={handleSubmit(handleUpdate)}>
 
                     <Row className='mb-3'>
                         <Form.Group as={Col} controlId="formGridFicha">
@@ -123,8 +126,9 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Folio"
                                 name="folio"
-                                defaultValue={formData.folio}
+                                defaultValue={datos.folio}
                                 disabled
+                                {...register("folio")}
                             />
                         </Form.Group>
 
@@ -136,8 +140,9 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Ficha del socio"
                                 name="fichaSocio"
-                                defaultValue={formData.fichaSocio}
+                                defaultValue={datos.fichaSocio}
                                 disabled
+                                {...register("fichaSocio")}
                             />
                         </Form.Group>
                     </Row>
@@ -151,10 +156,13 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.createdAt}
                                     placeholder="Fecha"
-                                    name="createdAt"
+                                    isInvalid={!!errors.createdAt}
+                                    {...register("createdAt", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.createdAt?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -166,13 +174,15 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                 <InputGroup.Text>$</InputGroup.Text>
                                 <Form.Control
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     placeholder="Escribe el monto del prestamo"
-                                    name="prestamo"
                                     id="prestamo"
-                                    onChange={(e) => { calcularIntereses(e.target.value) }}
-                                    defaultValue={formData.prestamo}
+                                    isInvalid={!!errors.prestamo}
+                                    {...register("prestamo", { required: "El prestamo es obligatorio" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.prestamo?.message}
+                                </Form.Control.Feedback>
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
                             </InputGroup>
                         </Form.Group>
@@ -186,13 +196,15 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                             <InputGroup className="mb-3">
                                 <Form.Control
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     placeholder="Escribe la tasa de interes"
-                                    name="tasaInteres"
                                     id="tasaInteres"
-                                    onChange={(e) => { calcularIntereses(e.target.value) }}
-                                    defaultValue={formData.tasaInteres}
+                                    isInvalid={!!errors.tasaInteres}
+                                    {...register("tasaInteres", { required: "La tasa es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.tasaInteres?.message}
+                                </Form.Control.Feedback>
                                 <InputGroup.Text>%</InputGroup.Text>
                             </InputGroup>
                         </Form.Group>
@@ -209,8 +221,7 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                     name="totalpagar"
                                     id="totalPagar"
                                     step="0.01"
-                                    value={interesGenerado}
-                                    onChange={(e) => { calcularAbono(e.target.value) }}
+                                    value={totalPagar ? totalPagar.toFixed(2) : ""}
                                     disabled
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
@@ -224,7 +235,6 @@ function ModificaPrestamos({ datos, setShowModal, history }) {
                                 type='submit'
                                 variant='success'
                                 className='registrar'
-                                onClick={handleUpdate}
                                 disabled={loading}
                             >
                                 <Loading />

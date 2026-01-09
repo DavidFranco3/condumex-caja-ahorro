@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
@@ -13,94 +14,72 @@ function RegistroUsuarios(props) {
     }
 
     // Para controlar la animación
+    // Para controlar la animación
     const [loading, setLoading] = useState(false);
 
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const onSubmit = (data) => {
+        setLoading(true)
+        const dataTemp = {
+            nombre: data.nombre,
+            apellidos: data.apellidos,
+            correo: data.correo,
+            telefonoCelular: data.telefonoCelular, // Note: telefonoCelular was in dataTemp but not in form inputs explicitly in original? Checking original... it was not in JSX inputs, but in dataTemp. I'll keep it if it's in defaultValues or just undefined.
+            password: data.password,
+            createdAt: data.fecha,
+            estado: "true"
+        }
 
-        if (!formData.nombre || !formData.correo) {
-            Swal.fire({
-                title: "Completa el formulario",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
-        } else {
-            if (!isEmailValid(formData.correo)) {
+        try {
+            registraUsuarios(dataTemp).then(response => {
+                const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
                 Swal.fire({
-                    title: "Escriba un correo valido",
-                    icon: "warning",
+                    title: data.mensaje,
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
-                setLoading(true)
-                const dataTemp = {
-                    nombre: formData.nombre,
-                    apellidos: formData.apellidos,
-                    correo: formData.correo,
-                    telefonoCelular: formData.telefonoCelular,
-                    password: formData.password,
-                    createdAt: formData.fecha,
-                    estado: "true"
-                }
-
-                try {
-                    registraUsuarios(dataTemp).then(response => {
-                        const { data } = response;
+            }).catch(e => {
+                console.log(e)
+                if (e.message === 'Network Error') {
+                    //console.log("No hay internet")
+                    Swal.fire({
+                        title: "Conexión al servidor no disponible",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                    setLoading(false);
+                } else {
+                    if (e.response && e.response.status === 401) {
+                        const { mensaje } = e.response.data;
                         Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
+                            title: mensaje,
+                            icon: "error",
                             showConfirmButton: false,
                             timer: 1600,
-                        });
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }).catch(e => {
-                        console.log(e)
-                        if (e.message === 'Network Error') {
-                            //console.log("No hay internet")
-                            Swal.fire({
-                                title: "Conexión al servidor no disponible",
-                                icon: "error",
-                                showConfirmButton: false,
-                                timer: 1600,
-                            });
-                            setLoading(false);
-                        } else {
-                            if (e.response && e.response.status === 401) {
-                                const { mensaje } = e.response.data;
-                                Swal.fire({
-                                    title: mensaje,
-                                    icon: "error",
-                                    showConfirmButton: false,
-                                    timer: 1600,
-                                });;
-                                setLoading(false);
-                            }
-                        }
-                    })
-                } catch (e) {
-                    console.log(e)
+                        });;
+                        setLoading(false);
+                    }
                 }
-            }
+            })
+        } catch (e) {
+            console.log(e)
         }
-    }
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -111,9 +90,12 @@ function RegistroUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el nombre"
-                                name="nombre"
-                                defaultValue={formData.nombre}
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridApellidos">
                             <Form.Label>
@@ -122,9 +104,12 @@ function RegistroUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el apellidos"
-                                name="apellidos"
-                                defaultValue={formData.apellidos}
+                                isInvalid={!!errors.apellidos}
+                                {...register("apellidos", { required: "El apellido es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.apellidos?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
                     {/* Tipo de socio, correo */}
@@ -136,9 +121,18 @@ function RegistroUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el correo"
-                                name="correo"
-                                defaultValue={formData.correo}
+                                isInvalid={!!errors.correo}
+                                {...register("correo", {
+                                    required: "El correo es obligatorio",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, // Basic email regex
+                                        message: "Correo no válido"
+                                    }
+                                })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.correo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridPassword">
                             <Form.Label>
@@ -147,9 +141,12 @@ function RegistroUsuarios(props) {
                             <Form.Control
                                 type="password"
                                 placeholder="Escribe el password"
-                                name="password"
-                                defaultValue={formData.password}
+                                isInvalid={!!errors.password}
+                                {...register("password", { required: "La contraseña es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -160,10 +157,13 @@ function RegistroUsuarios(props) {
                             </Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
-                                name="fecha"
+                                isInvalid={!!errors.fecha}
+                                {...register("fecha", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fecha?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

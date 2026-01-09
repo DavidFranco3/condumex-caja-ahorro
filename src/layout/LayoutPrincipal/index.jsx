@@ -92,7 +92,7 @@ function LayoutPrincipal(props) {
                         ? "bg-black"
                         : razonSocialElegida ===
                             "Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C."
-                            ? "bg-orange-900"
+                            ? "bg-red-700"
                             : "bg-black"
                 }
             >

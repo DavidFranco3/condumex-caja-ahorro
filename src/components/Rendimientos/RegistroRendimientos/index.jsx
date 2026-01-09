@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import "./RegistroRendimientos.scss"
 import { Button, Col, Form, Row, Spinner, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,82 +57,70 @@ function RegistroRendimientos({ setShowModal, history }) {
     const [fichaSocioElegido, setFichaSocioElegido] = useState("");
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
 
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+        defaultValues: initialFormData()
+    });
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-
-        if (!fichaSocioElegido) {
-            Swal.fire({
-                title: "Debe elegir un socio",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
+    // Update form value when fichaSocioElegido changes
+    useEffect(() => {
+        if (fichaSocioElegido) {
+            setValue("fichaSocio", fichaSocioElegido);
+            clearErrors("fichaSocio");
         } else {
-            if (!formData.rendimiento) {
+            setValue("fichaSocio", "");
+        }
+    }, [fichaSocioElegido, setValue, clearErrors]);
+
+    const onSubmit = (data) => {
+
+
+        setLoading(true)
+        // Realiza registro de la aportación
+        obtenerFolioActualRendimientos().then(response => {
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+            // console.log(data)
+
+            const dataTemp = {
+                folio: folio,
+                fichaSocio: fichaSocioElegido,
+                tipo: getRazonSocial(),
+                periodo: getPeriodo(),
+                rendimiento: data.rendimiento,
+                createdAt: data.fecha
+
+            }
+
+            registraRendimientosSocios(dataTemp).then(() => {
+                // Registra movimientos
+                registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", data.rendimiento, "0", "0", "Interés")
+
+                // Registra Saldos
+                registroSaldoInicial(fichaSocioElegido, "0", "0", data.rendimiento, folio, "Interés")
+
+                actualizacionSaldosSocios(fichaSocioElegido, "0", "0", data.rendimiento, folio, "Interés")
+
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
                 Swal.fire({
-                    title: "Faltan datos",
-                    icon: "warning",
+                    title: "Registro exitoso",
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
 
-                setLoading(true)
-                // Realiza registro de la aportación
-                obtenerFolioActualRendimientos().then(response => {
-                    const { data } = response;
-                    const { folio } = data;
-                    // console.log(data)
+            }).catch(ex => {
+                console.error(ex)
+                setLoading(false)
+            })
 
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        tipo: getRazonSocial(),
-                        periodo: getPeriodo(),
-                        rendimiento: formData.rendimiento,
-                        createdAt: formData.fecha
-
-                    }
-
-                    registraRendimientosSocios(dataTemp).then(() => {
-                        // Registra movimientos
-                        registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", formData.rendimiento, "0", "0", "Interés")
-
-                        // Registra Saldos
-                        registroSaldoInicial(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
-
-                        actualizacionSaldosSocios(fichaSocioElegido, "0", "0", formData.rendimiento, folio, "Interés")
-
-                        Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1600,
-                        });
-                        setTimeout(() => {
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
-
-                    }).catch(ex => {
-                        console.error(ex)
-                    })
-
-                }).catch(exx => {
-                    console.error(exx)
-                })
-
-            }
-        }
-    }
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        }).catch(exx => {
+            console.error(exx)
+            setLoading(false)
+        })
     }
 
     const eliminaBusqueda = () => {
@@ -143,7 +132,19 @@ function RegistroRendimientos({ setShowModal, history }) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -159,6 +160,8 @@ function RegistroRendimientos({ setShowModal, history }) {
                             />
                         </Form.Group>
 
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
+
                         {
                             fichaSocioElegido ?
                                 (
@@ -170,7 +173,6 @@ function RegistroRendimientos({ setShowModal, history }) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Ficha del socio"
-                                                name="nombre"
                                                 defaultValue={fichaSocioElegido}
                                                 disabled
                                             />
@@ -183,7 +185,6 @@ function RegistroRendimientos({ setShowModal, history }) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Nombre del socio"
-                                                name="nombre"
                                                 defaultValue={nombreSocioElegido}
                                                 disabled
                                             />
@@ -235,10 +236,13 @@ function RegistroRendimientos({ setShowModal, history }) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -253,10 +257,13 @@ function RegistroRendimientos({ setShowModal, history }) {
                                     min="0"
                                     step="0.01"
                                     placeholder="Rendimiento"
-                                    name="rendimiento"
-                                    defaultValue={formData.rendimiento}
+                                    isInvalid={!!errors.rendimiento}
+                                    {...register("rendimiento", { required: "El rendimiento es obligatorio" })}
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.rendimiento?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>

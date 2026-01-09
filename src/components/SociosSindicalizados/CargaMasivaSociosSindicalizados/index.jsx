@@ -18,22 +18,22 @@ const CargaMasivaSociosSindicalizados = ({ setShowModal, history }) => {
         const handleSubmit = async (evt) => {
                 evt.preventDefault();
                 if (dataFile.length === 0) {
-                         Swal.fire({
-                        title: 'No hay datos para cargar',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                        Swal.fire({
+                                title: 'No hay datos para cargar',
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                        });
                         return;
                 }
 
                 if (!formData.fecha) {
                         Swal.fire({
-                    title: "Por favor selecciona una fecha",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
+                                title: "Por favor selecciona una fecha",
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 1600,
+                        });
                         return;
                 }
                 setLoading(true);
@@ -58,6 +58,13 @@ const CargaMasivaSociosSindicalizados = ({ setShowModal, history }) => {
                         search: queryString.stringify(''),
                 });
                 setShowModal(false);
+
+                Swal.fire({
+                        title: "Socios registrados con exito",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                });
         }
 
 
@@ -82,11 +89,11 @@ const CargaMasivaSociosSindicalizados = ({ setShowModal, history }) => {
                         }
 
                         reader.onerror = (_evt) => Swal.fire({
-                    title: "Error al leer el archivo",
-                    icon: "error",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
+                                title: "Error al leer el archivo",
+                                icon: "error",
+                                showConfirmButton: false,
+                                timer: 1600,
+                        });
 
                 }
         }

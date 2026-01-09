@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
@@ -10,7 +11,10 @@ import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/Actual
 
 const CargaMasivaAportaciones = ({ setShowModal, history }) => {
 
-    const [formData, setFormData] = useState(initialFormData());
+    // const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
@@ -18,8 +22,8 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
 
     const handleCancel = () => setShowModal(false)
 
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
+    const onSubmit = async (data) => {
+        // evt.preventDefault(); handled by RHF
 
         if (dataFile.length === 0) {
             Swal.fire({
@@ -45,7 +49,7 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
                 aportacion,
                 tipo: razonSocial,
                 periodo: periodo,
-                createdAt: formData.fecha,
+                createdAt: data.fecha,
             }
 
             await registraAportacionesSocios(dataAportacion);
@@ -60,12 +64,6 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
             // increment count for render value in progress bar
             setCount(oldCount => oldCount + 1);
         }
-        Swal.fire({
-            title: "Abonos registrados con exito",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1600,
-        });
         setDataFile([]);
         setLoading(false);
 
@@ -75,12 +73,18 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
 
         setShowModal(false);
 
+        Swal.fire({
+            title: "Aportaciones registradas con exito",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1600,
+        });
+
     }
 
 
     const handleChange = (e) => {
-
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        // setFormData({ ...formData, [e.target.name]: e.target.value })
 
         const { files } = e.target;
 
@@ -120,7 +124,7 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
     return (
         <>
             <div className='contenidoFormularioPrincipal'>
-                <Form>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     <Form.Group as={Row} className='botones pt-3'>
                         <Col sm={5}>
@@ -142,13 +146,15 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
                         <Col sm={7}>
 
                             <Form.Control
-                                onChange={handleChange}
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
-                                name="fecha"
+                                isInvalid={!!errors.fecha}
+                                {...register("fecha", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fecha?.message}
+                            </Form.Control.Feedback>
 
                         </Col>
                     </Form.Group>
@@ -180,7 +186,6 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
                                 type='submit'
                                 variant='success'
                                 className='registrar'
-                                onClick={handleSubmit}
                                 disabled={loading}
                             >
                                 <Loading />

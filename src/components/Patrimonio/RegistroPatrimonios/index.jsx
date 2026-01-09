@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { obtenerFolioActualPatrimonio, registraPatrimonio } from "../../../api/patrimonio";
 import { Button, Col, Form, InputGroup, Row, Spinner, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -55,86 +56,67 @@ function RegistroPatrimonios(props) {
     const [idSocioElegido, setIdSocioElegido] = useState("");
     const [fichaSocioElegido, setFichaSocioElegido] = useState("");
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
-    const onSubmit = (e) => {
-        e.preventDefault()
 
-        if (!fichaSocioElegido) {
-            Swal.fire({
-                title: "Debe elegir un socio",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });;
+    const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+        defaultValues: initialFormData()
+    });
+
+    // Update form value when fichaSocioElegido changes
+    useEffect(() => {
+        if (fichaSocioElegido) {
+            setValue("fichaSocio", fichaSocioElegido);
+            clearErrors("fichaSocio");
         } else {
-            if (!formData.patrimonio || !formData.fecha) {
-                Swal.fire({
-                    title: "Faltan datos",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });;
-            } else {
-                setLoading(true)
+            setValue("fichaSocio", "");
+        }
+    }, [fichaSocioElegido, setValue, clearErrors]);
 
-                // Realiza el registro del patrimonio
+    const onSubmit = (data) => {
 
-                obtenerFolioActualPatrimonio().then(response => {
 
-                    const { data } = response;
-                    const { folio } = data;
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        periodo: getPeriodo(),
-                        tipo: getRazonSocial(),
-                        patrimonio: formData.patrimonio,
-                        createdAt: formData.fecha
-                    }
+        setLoading(true)
 
-                    registraPatrimonio(dataTemp).then(response => {
-                        const { data } = response;
-                        Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1600,
-                        });
+        // Realiza el registro del patrimonio
 
-                        // Registro de movimientos
-                        registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", formData.patrimonio, "0", "0", "0", "Patrimonio")
+        obtenerFolioActualPatrimonio().then(response => {
 
-                        // Registra Saldos
-                        registroSaldoInicial(fichaSocioElegido, "0", formData.patrimonio, "0", folio, "Patrimonio");
-
-                        actualizacionSaldosSocios(fichaSocioElegido, "0", formData.patrimonio, "0", folio, "Patrimonio");
-
-                        setTimeout(() => {
-                            setLoading(false)
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 1500)
-
-                    }).catch(e => {
-                        console.log()
-                    })
-
-                    // Modificar movimientos para enviar el generado interesGenerado
-
-                }).catch(e => {
-                    console.log(e)
-                })
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+            const dataTemp = {
+                folio: folio,
+                fichaSocio: fichaSocioElegido,
+                periodo: getPeriodo(),
+                tipo: getRazonSocial(),
+                patrimonio: data.patrimonio,
+                createdAt: data.fecha
             }
 
-        }
-    }
+            registraPatrimonio(dataTemp).then(response => {
+                const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+            }).catch(e => {
+                console.log(e)
+                setLoading(false)
+            })
+
+            // Modificar movimientos para enviar el generado interesGenerado
+
+        }).catch(e => {
+            console.log(e)
+            setLoading(false)
+        })
     }
 
     const eliminaBusqueda = () => {
@@ -146,7 +128,19 @@ function RegistroPatrimonios(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -162,6 +156,8 @@ function RegistroPatrimonios(props) {
                             />
                         </Form.Group>
 
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
+
                         {
                             fichaSocioElegido ?
                                 (
@@ -173,7 +169,6 @@ function RegistroPatrimonios(props) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Ficha del socio"
-                                                name="ficha"
                                                 defaultValue={fichaSocioElegido}
                                                 disabled
                                             />
@@ -187,7 +182,6 @@ function RegistroPatrimonios(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Nombre del socio"
-                                                    name="nombre"
                                                     defaultValue={nombreSocioElegido}
                                                     disabled
                                                 />
@@ -242,10 +236,13 @@ function RegistroPatrimonios(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>
@@ -263,10 +260,13 @@ function RegistroPatrimonios(props) {
                                     min="0"
                                     step="0.01"
                                     placeholder="Escribe el monto del patrimonio"
-                                    name="patrimonio"
-                                    defaultValue={formData.patrimonio}
+                                    isInvalid={!!errors.patrimonio}
+                                    {...register("patrimonio", { required: "El patrimonio es obligatorio" })}
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.patrimonio?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
                     </Row>
@@ -305,10 +305,23 @@ function RegistroPatrimonios(props) {
     );
 }
 
+const hoy = new Date();
+
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
+
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
+
 function initialFormData() {
     return {
         patrimonio: "",
-        createdAt: ""
+        fecha: `${fecha}T${hora}`,
     }
 
 }

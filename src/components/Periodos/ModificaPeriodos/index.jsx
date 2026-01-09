@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaPeriodos } from '../../../api/periodos';
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha);
+    const date = new Date(fecha);
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 const initialFormData = ({ id, folio, nombre, fechaInicio, fechaCierre, fechaCreacion }) => (
@@ -24,35 +25,26 @@ const initialFormData = ({ id, folio, nombre, fechaInicio, fechaCierre, fechaCre
     }
 )
 
-function ModificaPeriodos ({ datos, setShowModal, history }) {
+function ModificaPeriodos({ datos, setShowModal, history }) {
 
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
 
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
     const handleCancel = () => setShowModal(false);
 
-    const handleChange = (evt) => {
-        setFormData({ ...formData, [evt.target.name]: evt.target.value });
-    }
+    const handleUpdate = async (data) => {
+        // event.preventDefault();
 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
-            Swal.fire({
-            title: "Faltan datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            return;
-        }
+        // Validations handled by react-hook-form
 
         setLoading(true);
 
-        const response = await actualizaPeriodos(formData.id, formData);
-        
+        const response = await actualizaPeriodos(data.id, data);
+
         // Registra movimientos        
         const { status, data: { mensaje } } = response;
 
@@ -60,22 +52,22 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
 
         if (status === 200) {
             Swal.fire({
-                        title: mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                title: mensaje,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
         } else {
-             Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+            Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 
@@ -86,7 +78,7 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={handleChange} onSubmit={handleUpdate}>
+                <Form onSubmit={handleSubmit(handleUpdate)}>
 
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
@@ -96,8 +88,9 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
                             <Form.Control
                                 className="mb-3"
                                 type="text"
-                                value={formData.folio}
+                                defaultValue={datos.folio}
                                 disabled
+                                {...register("folio")}
                             />
                         </Form.Group>
 
@@ -108,10 +101,13 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
                             <Form.Control
                                 className="mb-3"
                                 type="text"
-                                defaultValue={formData.nombre}
                                 placeholder="Nombre"
-                                name="nombre"
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -123,10 +119,13 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
                             <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fechaInicio}
                                 placeholder="Fecha de inicio"
-                                name="fechaInicio"
+                                isInvalid={!!errors.fechaInicio}
+                                {...register("fechaInicio", { required: "La fecha de inicio es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fechaInicio?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
@@ -136,10 +135,13 @@ function ModificaPeriodos ({ datos, setShowModal, history }) {
                             <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fechaCierre}
                                 placeholder="Fecha de cierre"
-                                name="fechaCierre"
+                                isInvalid={!!errors.fechaCierre}
+                                {...register("fechaCierre", { required: "La fecha de cierre es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fechaCierre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

@@ -23,17 +23,17 @@ function EliminaUsuario(props) {
         try {
             eliminaUsuario(id).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),
                 });
                 setShowModal(false)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             }).catch(e => {
                 console.log(e)
             })

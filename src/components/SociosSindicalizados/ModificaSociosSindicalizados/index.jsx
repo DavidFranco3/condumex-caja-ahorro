@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
@@ -34,88 +35,70 @@ function ModificaSociosSindicalizados(props) {
     const [loading, setLoading] = useState(false);
 
     // Para almacenar la información
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-console.log(formData)
-        if (!formData.nombre || !formData.ficha || !formData.createdAt) {
-            Swal.fire({
-                    title: "Completa el formulario",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
-        } else {
-            if (!isEmailValid(formData.correo)) {
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
+
+    const onSubmit = (data) => {
+        // Validation logic can be simplified as we use register with rules
+
+        setLoading(true)
+        const dataTemp = {
+            ficha: data.ficha,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            correo: data.correo,
+        }
+
+        try {
+            actualizaSocioSindicalizado(id, dataTemp).then(response => {
+                const { data } = response;
                 Swal.fire({
-                    title: "Escriba un correo valido",
-                    icon: "warning",
+                    title: data.mensaje,
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
-                setLoading(true)
-                const dataTemp = {
-                    ficha: formData.ficha,
-                    nombre: formData.nombre,
-                    tipo: formData.tipo,
-                    correo: formData.correo,
-                }
-
-                try {
-                    actualizaSocioSindicalizado(id, dataTemp).then(response => {
-                        const { data } = response;
-                        Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }).catch(e => {
-                        console.log(e)
-                        if (e.message === 'Network Error') {
-                            //console.log("No hay internet")
-                             Swal.fire({
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+            }).catch(e => {
+                console.log(e)
+                if (e.message === 'Network Error') {
+                    //console.log("No hay internet")
+                    Swal.fire({
                         title: "Conexión al servidor no disponible",
                         icon: "error",
                         showConfirmButton: false,
                         timer: 1600,
                     });
-                            setLoading(false);
-                        } else {
-                            if (e.response && e.response.status === 401) {
-                                const { mensaje } = e.response.data;
-                                 Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
-                                setLoading(false);
-                            }
-                        }
-                    })
-                } catch (e) {
-                    console.log(e)
+                    setLoading(false);
+                } else {
+                    if (e.response && e.response.status === 401) {
+                        const { mensaje } = e.response.data;
+                        Swal.fire({
+                            title: mensaje,
+                            icon: "error",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });;
+                        setLoading(false);
+                    }
                 }
-            }
+            })
+        } catch (e) {
+            console.log(e)
         }
-    }
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -125,8 +108,9 @@ console.log(formData)
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="ficha"
-                                defaultValue={formData.ficha}
+                                defaultValue={formData.ficha} // Keep defaultValue or use react-hook-form value if watched, but here it's static initial
+                                readOnly
+                                {...register("ficha")}
                             />
                         </Form.Group>
 
@@ -137,9 +121,12 @@ console.log(formData)
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el nombre"
-                                name="nombre"
-                                defaultValue={formData.nombre}
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
                     {/* Tipo de socio, correo */}
@@ -150,9 +137,8 @@ console.log(formData)
                             </Form.Label>
                             <Form.Control
                                 as="select"
-                                defaultValue={formData.tipo}
-                                name="tipo"
                                 disabled
+                                {...register("tipo")}
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>
@@ -167,9 +153,18 @@ console.log(formData)
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el correo"
-                                name="correo"
-                                defaultValue={formData.correo !== "No especificado" ? formData.correo : ""}
+                                isInvalid={!!errors.correo}
+                                {...register("correo", {
+                                    required: "El correo es obligatorio",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Dirección de correo inválida"
+                                    }
+                                })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.correo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -180,10 +175,13 @@ console.log(formData)
                             </Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.createdAt}
                                 placeholder="Fecha"
-                                name="createdAt"
+                                isInvalid={!!errors.createdAt}
+                                {...register("createdAt", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.createdAt?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

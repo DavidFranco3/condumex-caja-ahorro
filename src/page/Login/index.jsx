@@ -1,7 +1,6 @@
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import Swal from "sweetalert2";
-import { isEmailValid } from '../../utils/validations'
-import { size, values } from 'lodash'
 import { login, setTokenApi } from '../../api/auth'
 import { jwtDecode } from 'jwt-decode'
 import { obtenerUsuario } from '../../api/usuarios'
@@ -11,7 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import LogoCajadeAhorro from '../../assets/png/caja-de-ahorro-login.png'
 
 function Login({ setRefreshCheckLogin }) {
-  const [formData, setFormData] = useState(initialFormValue)
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [signInLoading, setSignInLoading] = useState(false)
 
   const [mostrarPassword, setMostrarPassword] = useState(false)
@@ -19,99 +18,71 @@ function Login({ setRefreshCheckLogin }) {
     setMostrarPassword((val) => !val)
   }
 
-  const onSubmit = async (e) => {
-    e.preventDefault()
+  const onSubmit = (data) => {
+    const { correo, password } = data;
 
-    let validCount = 0
-    values(formData).some((value) => {
-      value && validCount++
-      return null
-    })
-
-    if (validCount !== size(formData)) {
-       Swal.fire({
-                        title: 'Completa todos los campos del formulario.',
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-    } else {
-      if (!isEmailValid(formData.correo)) {
-        Swal.fire({
-                        title: 'Correo no valido',
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-      } else {
-        setSignInLoading(true)
-        try {
-          login(formData)
-            .then((response) => {
-              const {
-                data: { token },
-              } = response
-              setTokenApi(token)
-              const { _ } = jwtDecode(token)
-              const idUdsuario = _
-              try {
-                obtenerUsuario(idUdsuario).then(
-                  ({ data: { nombre, apellidos } }) => {
-                    setRefreshCheckLogin(true)
-                    Swal.fire({
-                        title: 'Bienvenido ' + nombre + ' ' + apellidos,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                  }
-                )
-              } catch (ex) {
+    setSignInLoading(true)
+    try {
+      login({ correo, password })
+        .then((response) => {
+          const {
+            data: { token },
+          } = response
+          setTokenApi(token)
+          const { _ } = jwtDecode(token)
+          const idUdsuario = _
+          try {
+            obtenerUsuario(idUdsuario).then(
+              ({ data: { nombre, apellidos } }) => {
+                setRefreshCheckLogin(true)
                 Swal.fire({
-                        title: 'Error al obtener el usuario',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                  title: 'Bienvenido ' + nombre + ' ' + apellidos,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1600,
+                });
               }
-            })
-            .catch((ex) => {
-              if (ex.message === 'Network Error') {
-                 Swal.fire({
-                        title: 'Conexión al servidor no disponible',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                setSignInLoading(false)
-              } else {
-                if (ex.response && ex.response.status === 401) {
-                  const { mensaje } = ex.response.data
-                   Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                  setSignInLoading(false)
-                }
-              }
-            })
-        } catch (ex) {
-          Swal.fire({
-                        title: 'Error al iniciar sesion',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-          setSignInLoading(false)
-        }
-      }
+            )
+          } catch (ex) {
+            Swal.fire({
+              title: 'Error al obtener el usuario',
+              icon: "error",
+              showConfirmButton: false,
+              timer: 1600,
+            });
+          }
+        })
+        .catch((ex) => {
+          if (ex.message === 'Network Error') {
+            Swal.fire({
+              title: 'Conexión al servidor no disponible',
+              icon: "error",
+              showConfirmButton: false,
+              timer: 1600,
+            });
+            setSignInLoading(false)
+          } else {
+            if (ex.response && ex.response.status === 401) {
+              const { mensaje } = ex.response.data
+              Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+              });
+              setSignInLoading(false)
+            }
+          }
+        })
+    } catch (ex) {
+      Swal.fire({
+        title: 'Error al iniciar sesion',
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1600,
+      });
+      setSignInLoading(false)
     }
-  }
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   return (
@@ -125,25 +96,38 @@ function Login({ setRefreshCheckLogin }) {
               alt="Caja de Ahorro"
               title="Caja de Ahorro"
             />
-            <form onSubmit={onSubmit} onChange={onChange}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-6">
                 <input
                   type="text"
-                  name="correo"
-                  defaultValue={formData.correo}
-                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  className={`form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.correo ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder="Correo electrónico"
+                  {...register("correo", {
+                    required: "El correo es obligatorio",
+                    pattern: {
+                      value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      message: "Correo no válido"
+                    }
+                  })}
                 />
+                {errors.correo && <span className="text-red-500 text-sm">{errors.correo.message}</span>}
               </div>
 
-              <div className="flex items-center mb-6">
-                <input
-                  type={mostrarPassword ? 'text' : 'password'}
-                  name="password"
-                  defaultValue={formData.password}
-                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                  placeholder="Contraseña"
-                />
+              <div className="flex flex-col mb-6">
+                <div className="flex items-center">
+                  <input
+                    type={mostrarPassword ? 'text' : 'password'}
+                    className={`form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                    placeholder="Contraseña"
+                    {...register("password", { required: "La contraseña es obligatoria" })}
+                  />
+                  <FontAwesomeIcon
+                    className="cursor-pointer py-2 -ml-6 z-10"
+                    icon={!mostrarPassword ? faEyeSlash : faEye}
+                    onClick={togglePasswordVisiblity}
+                  />
+                </div>
+                {errors.password && <span className="text-red-500 text-sm mt-1">{errors.password.message}</span>}
                 <FontAwesomeIcon
                   className="cursor-pointer py-2 -ml-6"
                   icon={!mostrarPassword ? faEyeSlash : faEye}
@@ -189,11 +173,11 @@ function Login({ setRefreshCheckLogin }) {
   )
 }
 
-function initialFormValue() {
-  return {
-    correo: '',
-    password: '',
-  }
-}
+// function initialFormValue() {
+//   return {
+//     correo: '',
+//     password: '',
+//   }
+// }
 
 export default Login

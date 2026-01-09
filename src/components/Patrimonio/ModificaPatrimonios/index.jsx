@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaPatrimonio } from '../../../api/patrimonio';
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
-import {actualizacionSaldosSocios} from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
+import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
 const fechaToCurrentTimezone = (fecha) => {
     const date = new Date(fecha);
@@ -17,173 +18,172 @@ const fechaToCurrentTimezone = (fecha) => {
 };
 
 const initialFormData = ({ id, folio, fichaSocio, patrimonio, fechaCreacion }) => (
-            {
-                id,
-                folio,
-                fichaSocio,
-                patrimonio,
-                createdAt: fechaToCurrentTimezone(fechaCreacion),
-            }
-    )
+    {
+        id,
+        folio,
+        fichaSocio,
+        patrimonio,
+        createdAt: fechaToCurrentTimezone(fechaCreacion),
+    }
+)
 
-function ModificaPatrimonios( { datos, setShowModal, history }) {
+function ModificaPatrimonios({ datos, setShowModal, history }) {
 
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
+
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
     const handleCancel = () => setShowModal(false);
 
-    const handleChange = (evt) => {
-        setFormData({...formData, [evt.target.name]: evt.target.value});
-    }
+    const handleUpdate = async (data) => {
+        // event.preventDefault();
 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        if (!formData.patrimonio || !formData.createdAt) {
-            Swal.fire({
-            title: "Faltan datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            return;
-        }
+        // Validations handled by react-hook-form
 
         setLoading(true)
 
-        const response = await actualizaPatrimonio(formData.id, formData);
-        const {status, data: {mensaje}} = response;
-        
-        registroMovimientosSaldosSocios(formData.fichaSocio, "0", "0", "0", formData.patrimonio, "0", "0", "0", "Modificacion patrimonio");
-        
+        const response = await actualizaPatrimonio(data.id, data);
+        const { status, data: { mensaje } } = response;
+
+        registroMovimientosSaldosSocios(data.fichaSocio, "0", "0", "0", data.patrimonio, "0", "0", "0", "Modificacion patrimonio");
+
         // Registra Saldos
-        registroSaldoInicial(formData.fichaSocio, "0", formData.patrimonio, "0", formData.folio, "Modificación patrimonio");
-        
-        actualizacionSaldosSocios(formData.fichaSocio, "0", formData.patrimonio, "0", formData.folio, "Modificación patrimonio");
+        registroSaldoInicial(data.fichaSocio, "0", data.patrimonio, "0", data.folio, "Modificación patrimonio");
+
+        actualizacionSaldosSocios(data.fichaSocio, "0", data.patrimonio, "0", data.folio, "Modificación patrimonio");
 
         setLoading(false);
 
         if (status === 200) {
-            Swal.fire({
-                        title: mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
             history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
+
+            Swal.fire({
+                title: mensaje,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         } else {
-             Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+            Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 
     const Loading = () => (
-            !loading ? 'Actualizar' : <Spinner animation='border' />
-            )
+        !loading ? 'Actualizar' : <Spinner animation='border' />
+    )
 
-            return (
-                    <>
-<div className='contenidoFormularioPrincipal'>
-    <Form onChange=
-            {handleChange}>
+    return (
+        <>
+            <div className='contenidoFormularioPrincipal'>
+                <Form onSubmit={handleSubmit(handleUpdate)}>
 
-        <Row className='mb-3'>
-            <Form.Group as={Col} controlId="formGridFicha">
-                <Form.Label>
-                    Folio
-                </Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Folio"
-                    name="folio"
-                    defaultValue={formData.folio}
-                    disabled
-                    />
-            </Form.Group>
+                    <Row className='mb-3'>
+                        <Form.Group as={Col} controlId="formGridFicha">
+                            <Form.Label>
+                                Folio
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Folio"
+                                name="folio"
+                                defaultValue={datos.folio}
+                                disabled
+                                {...register("folio")}
+                            />
+                        </Form.Group>
 
-            <Form.Group as={Col} controlId="formGridFicha">
-                <Form.Label>
-                    Ficha
-                </Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Ficha del socio"
-                    name="fichaSocio"
-                    defaultValue={formData.fichaSocio}
-                    disabled
-                    />
-            </Form.Group>
-        </Row>                   
+                        <Form.Group as={Col} controlId="formGridFicha">
+                            <Form.Label>
+                                Ficha
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Ficha del socio"
+                                name="fichaSocio"
+                                defaultValue={datos.fichaSocio}
+                                disabled
+                                {...register("fichaSocio")}
+                            />
+                        </Form.Group>
+                    </Row>
 
-        <Row className="mb-3">
-            <Form.Group as={Col} controlId="formGridFechaRegistro">
-                <Form.Label>
-                    Fecha de registro
-                </Form.Label>
-                <InputGroup className="mb-3">
-                    <Form.Control
-                        className="mb-3"
-                        type="datetime-local"
-                        defaultValue={formData.createdAt}
-                        placeholder="Fecha"
-                        name="createdAt"
-                        />
-                </InputGroup>
-            </Form.Group>
+                    <Row className="mb-3">
+                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                            <Form.Label>
+                                Fecha de registro
+                            </Form.Label>
+                            <InputGroup className="mb-3">
+                                <Form.Control
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    placeholder="Fecha"
+                                    isInvalid={!!errors.createdAt}
+                                    {...register("createdAt", { required: "La fecha es obligatoria" })}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.createdAt?.message}
+                                </Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
 
-            <Form.Group as={Col} controlId="formGridAportacion">
-                <Form.Label>
-                    Patrimonio
-                </Form.Label>
-                <InputGroup className="mb-3">
-                    <InputGroup.Text>$</InputGroup.Text>
-                    <Form.Control
-                        type="number"
-                        min="1"
-                        placeholder="Escribe el monto del patrimonio"
-                        name="patrimonio"
-                        defaultValue={formData.patrimonio}
-                        />
-                    <InputGroup.Text>.00 MXN</InputGroup.Text>
-                </InputGroup>
-            </Form.Group>
-            </Row>
+                        <Form.Group as={Col} controlId="formGridAportacion">
+                            <Form.Label>
+                                Patrimonio
+                            </Form.Label>
+                            <InputGroup className="mb-3">
+                                <InputGroup.Text>$</InputGroup.Text>
+                                <Form.Control
+                                    type="number"
+                                    min="0"
+                                    placeholder="Escribe el monto del patrimonio"
+                                    isInvalid={!!errors.patrimonio}
+                                    {...register("patrimonio", { required: "El patrimonio es obligatorio" })}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.patrimonio?.message}
+                                </Form.Control.Feedback>
+                                <InputGroup.Text>.00 MXN</InputGroup.Text>
+                            </InputGroup>
+                        </Form.Group>
+                    </Row>
 
-        <Form.Group as={Row} className='botones'>
-            <Col>
-            <Button
-                type='submit'
-                variant='success'
-                className='registrar'
-                onClick={handleUpdate}
-                disabled={loading}
-                >
-                <Loading />
-            </Button>
-            </Col>
-            <Col>
-            <Button
-                variant='danger'
-                className='cancelar'
-                onClick={handleCancel}
-                disabled={loading}
-                >
-                Cancelar
-            </Button>
-            </Col>
-        </Form.Group>
-    </Form>
-</div>
-</>
-);
+                    <Form.Group as={Row} className='botones'>
+                        <Col>
+                            <Button
+                                type='submit'
+                                variant='success'
+                                className='registrar'
+                                disabled={loading}
+                            >
+                                <Loading />
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                variant='danger'
+                                className='cancelar'
+                                onClick={handleCancel}
+                                disabled={loading}
+                            >
+                                Cancelar
+                            </Button>
+                        </Col>
+                    </Form.Group>
+                </Form>
+            </div>
+        </>
+    );
 }
 
 export default ModificaPatrimonios;

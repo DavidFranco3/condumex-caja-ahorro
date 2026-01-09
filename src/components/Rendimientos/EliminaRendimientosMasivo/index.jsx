@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaRendimientosMasivo} from "../../../api/rendimientos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaRendimientosMasivo } from "../../../api/rendimientos";
 import Swal from "sweetalert2";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../../api/auth';
 
 function EliminaRendimientoMasivo(props) {
-    
+
     const [formData, setFormData] = useState(initialFormData());
-    
+
     const { location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
     const cancelarEliminacion = () => {
@@ -19,48 +19,46 @@ function EliminaRendimientoMasivo(props) {
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
 
-     // Almacena la razón social, si ya fue elegida
-     const [razonSocialElegida, setRazonSocialElegida] = useState("");
+    // Almacena la razón social, si ya fue elegida
+    const [razonSocialElegida, setRazonSocialElegida] = useState("");
 
-     useEffect(() => {
-         if (getRazonSocial()) {
-             setRazonSocialElegida(getRazonSocial)
-         }
-     }, []);
+    useEffect(() => {
+        if (getRazonSocial()) {
+            setRazonSocialElegida(getRazonSocial)
+        }
+    }, []);
 
     const onSubmit = (e) => {
         e.preventDefault()
-        
-        if(!formData.fecha){
-Swal.fire({
-                        title: "Por favor selecciona una fecha",
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+
+        if (!formData.fecha) {
+            Swal.fire({
+                title: "Por favor selecciona una fecha",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             return;
         }
-        
+
         setLoading(true)
 
         try {
             eliminaRendimientosMasivo(formData.fecha, razonSocialElegida).then(response => {
-                
-                const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
 
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
+                const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
@@ -69,7 +67,7 @@ Swal.fire({
             console.log(e)
         }
     }
-    
+
     const onChange = e => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -86,22 +84,22 @@ Swal.fire({
                 </Alert>
 
                 <Form onChange={onChange} onSubmit={onSubmit}>
-                    
+
                     <Form.Group as={Row} controlId="formGridRendimientos">
-                            <Col sm={4}>
+                        <Col sm={4}>
                             <Form.Label>Selecciona una fecha:</Form.Label>
-                            </Col>
-                            <Col sm={8}>
+                        </Col>
+                        <Col sm={8}>
                             <Form.Control
                                 className="mb-3"
                                 type="date"
                                 defaultValue={formData.fecha}
                                 placeholder="Fecha"
                                 name="fecha"
-                                />
-                                </Col>
-                        </Form.Group>
-                    
+                            />
+                        </Col>
+                    </Form.Group>
+
 
                     <Form.Group as={Row} className="botones">
                         <Col>

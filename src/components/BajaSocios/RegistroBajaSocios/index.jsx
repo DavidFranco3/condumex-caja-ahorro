@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import queryString from "query-string";
 import { Button, Col, Form, Row, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -77,79 +78,87 @@ function RegistroBajaSocios(props) {
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
 
     // Para almacenar el rendimiento, prestamo, patrimonio y total a entregar del socio elegido
+    // Para almacenar el rendimiento, prestamo, patrimonio y total a entregar del socio elegido
     const [rendimientoSocioElegido, setRendimientoSocioElegido] = useState(0);
     const [aportacionSocioElegido, setAportacionSocioElegido] = useState(0);
     const [patrimonioSocioElegido, setPatrimonioSocioElegido] = useState(0);
     const [totalEntregarSocioElegido, setTotalEntregarSocioElegido] = useState(0);
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+        defaultValues: initialFormData()
+    });
 
-        if (!fichaSocioElegido) {
-            Swal.fire({
-                title: "Debe elegir un socio",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
+    // Update form value when fichaSocioElegido changes
+    useEffect(() => {
+        if (fichaSocioElegido) {
+            setValue("fichaSocio", fichaSocioElegido);
+            clearErrors("fichaSocio");
         } else {
-            setLoading(true)
-            // Realiza registro de la aportación
-            obtenerFolioActualBajaSocios().then(response => {
+            setValue("fichaSocio", "");
+        }
+    }, [fichaSocioElegido, setValue, clearErrors]);
+
+
+    const onSubmit = (data) => {
+
+
+        setLoading(true)
+        // Realiza registro de la aportación
+        obtenerFolioActualBajaSocios().then(response => {
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+
+            const total = parseFloat(aportacionSocioElegido) + parseFloat(patrimonioSocioElegido) + parseFloat(rendimientoSocioElegido);
+            // console.log(data)
+
+            const dataTemp = {
+                folio: folio,
+                fichaSocio: fichaSocioElegido,
+                tipo: getRazonSocial(),
+                periodo: getPeriodo(),
+                aportacion: aportacionSocioElegido,
+                patrimonio: patrimonioSocioElegido,
+                rendimiento: rendimientoSocioElegido,
+                total: total,
+                createdAt: data.fecha,
+            }
+
+            registraBajaSocios(dataTemp).then(response => {
                 const { data } = response;
-                const { folio } = data;
+                const aportacion2 = (aportacionSocioElegido * parseInt("-1"));
+                const patrimonio2 = (patrimonioSocioElegido * parseInt("-1"));
+                const rendimiento2 = (rendimientoSocioElegido * parseInt("-1"));
 
-                const total = parseFloat(aportacionSocioElegido) + parseFloat(patrimonioSocioElegido) + parseFloat(rendimientoSocioElegido);
-                // console.log(data)
+                registroAportacionInicial(fichaSocioElegido, aportacion2, data.fecha);
 
-                const dataTemp = {
-                    folio: folio,
-                    fichaSocio: fichaSocioElegido,
-                    tipo: getRazonSocial(),
-                    periodo: getPeriodo(),
-                    aportacion: aportacionSocioElegido,
-                    patrimonio: patrimonioSocioElegido,
-                    rendimiento: rendimientoSocioElegido,
-                    total: total,
-                    createdAt: formData.fecha,
-                }
+                registroPatrimonioInicial(fichaSocioElegido, patrimonio2, data.fecha);
 
-                registraBajaSocios(dataTemp).then(response => {
-                    const { data } = response;
-                    const aportacion2 = (aportacionSocioElegido * parseInt("-1"));
-                    const patrimonio2 = (patrimonioSocioElegido * parseInt("-1"));
-                    const rendimiento2 = (rendimientoSocioElegido * parseInt("-1"));
+                registroRendimientoInicial(fichaSocioElegido, rendimiento2, data.fecha);
 
-                    registroAportacionInicial(fichaSocioElegido, aportacion2, formData.fecha);
+                actualizacionSaldosSocios(fichaSocioElegido, aportacionSocioElegido, patrimonioSocioElegido, rendimientoSocioElegido, folio, "Baja Socio")
 
-                    registroPatrimonioInicial(fichaSocioElegido, patrimonio2, formData.fecha);
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                    registroRendimientoInicial(fichaSocioElegido, rendimiento2, formData.fecha);
-
-                    actualizacionSaldosSocios(fichaSocioElegido, aportacionSocioElegido, patrimonioSocioElegido, rendimientoSocioElegido, folio, "Baja Socio")
-
-                    Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                    setTimeout(() => {
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }, 2000)
-
-                }).catch(e => {
-                    console.log(e)
-                })
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
+                setLoading(false)
             })
-        }
+
+        }).catch(e => {
+            console.log(e)
+            setLoading(false)
+        })
     }
 
 
@@ -218,7 +227,19 @@ function RegistroBajaSocios(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onSubmit={onSubmit} onChange={onChange}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -234,6 +255,8 @@ function RegistroBajaSocios(props) {
                             />
                         </Form.Group>
 
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
+
                         {
                             fichaSocioElegido ?
                                 (
@@ -245,7 +268,6 @@ function RegistroBajaSocios(props) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Ficha del socio"
-                                                name="nombre"
                                                 defaultValue={fichaSocioElegido}
                                                 disabled
                                             />
@@ -404,10 +426,13 @@ function RegistroBajaSocios(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
                     </Row>

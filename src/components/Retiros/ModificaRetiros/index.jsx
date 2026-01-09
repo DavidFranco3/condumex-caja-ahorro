@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
@@ -27,56 +28,46 @@ const initialFormData = ({ id, folio, fichaSocio, retiro, fechaCreacion }) => (
 
 function ModificaRetiros({ datos, setShowModal, history }) {
 
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
 
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
     const handleCancel = () => setShowModal(false);
 
-    const handleChange = (evt) => {
-        setFormData({ ...formData, [evt.target.name]: evt.target.value });
-    }
+    const handleUpdate = async (data) => {
+        // event.preventDefault();
 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        if (!formData.retiro || !formData.createdAt) {
-            Swal.fire({
-            title: "Faltan datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            return;
-        }
+        // Validations handled by react-hook-form
 
         setLoading(true);
 
-        const response = await actualizaRetiros(formData.id, formData);
-        registroMovimientosSaldosSocios(formData.fichaSocio, "0", "0", "0", "0", "0", formData.retiro, "0", "Modificación retiro");
+        const response = await actualizaRetiros(data.id, data);
+        registroMovimientosSaldosSocios(data.fichaSocio, "0", "0", "0", "0", "0", data.retiro, "0", "Modificación retiro");
 
         const { status, data: { mensaje } } = response
 
         if (status === 200) {
+            history({
+                search: queryString.stringify(''),
+            });
+            setShowModal(false);
+
             Swal.fire({
                 title: mensaje,
                 icon: "success",
                 showConfirmButton: false,
                 timer: 1600,
             });
-            setTimeout(() => {
-                history({
-                    search: queryString.stringify(''),
-                });
-                setShowModal(false);
-            }, 2000)
         } else {
             Swal.fire({
-            title: mensaje,
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
         }
     };
 
@@ -87,7 +78,7 @@ function ModificaRetiros({ datos, setShowModal, history }) {
     return (
         <>
             <div className='contenidoFormularioPrincipal'>
-                <Form onChange={handleChange}>
+                <Form onSubmit={handleSubmit(handleUpdate)}>
 
                     <Row className='mb-3'>
                         <Form.Group as={Col} controlId="formGridFicha">
@@ -98,8 +89,9 @@ function ModificaRetiros({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Folio"
                                 name="folio"
-                                defaultValue={formData.folio}
+                                defaultValue={datos.folio}
                                 disabled
+                                {...register("folio")}
                             />
                         </Form.Group>
 
@@ -111,8 +103,9 @@ function ModificaRetiros({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Ficha del socio"
                                 name="fichaSocio"
-                                defaultValue={formData.fichaSocio}
+                                defaultValue={datos.fichaSocio}
                                 disabled
+                                {...register("fichaSocio")}
                             />
                         </Form.Group>
                     </Row>
@@ -128,10 +121,13 @@ function ModificaRetiros({ datos, setShowModal, history }) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.createdAt}
                                     placeholder="Fecha"
-                                    name="createdAt"
+                                    isInvalid={!!errors.createdAt}
+                                    {...register("createdAt", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.createdAt?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -147,9 +143,12 @@ function ModificaRetiros({ datos, setShowModal, history }) {
                                     min="0"
                                     step="0.01"
                                     placeholder="Escribe el retiro"
-                                    name="retiro"
-                                    defaultValue={formData.retiro}
+                                    isInvalid={!!errors.retiro}
+                                    {...register("retiro", { required: "El retiro es obligatorio" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.retiro?.message}
+                                </Form.Control.Feedback>
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
                             </InputGroup>
 
@@ -162,7 +161,6 @@ function ModificaRetiros({ datos, setShowModal, history }) {
                                 type='submit'
                                 variant='success'
                                 className='registrar'
-                                onClick={handleUpdate}
                                 disabled={loading}
                             >
                                 <Loading />

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { obtenerFolioActualPrestamo, registraPrestamos } from "../../../api/prestamos";
 import { Button, Col, Form, InputGroup, Row, Spinner, Badge } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,6 +27,7 @@ function RegistroPrestamos(props) {
     }
 
     // Para controlar la animación
+    // Para controlar la animación
     const [loading, setLoading] = useState(false);
     // Para cancelar el registro
     const cancelarRegistro = () => {
@@ -47,102 +49,92 @@ function RegistroPrestamos(props) {
             console.log(e)
         }
     }, []);
-    // Para almacenar y calcular lo que se debe pagar
-    const [interesGenerado, setInteresGenerado] = useState(0);
-    const calcularIntereses = () => {
-        const prestamo = document.getElementById("prestamo").value;
-        const tasaInteres = document.getElementById("tasaInteres").value;
-        const tempInteres = parseFloat(tasaInteres) / 100;
-        const tempInteresGenerado = parseFloat(prestamo) * tempInteres;
-        const aPagar = parseFloat(prestamo) + tempInteresGenerado;
-        setInteresGenerado(aPagar);
-    }
 
     // Para almacenar el id, ficha y nombre del socio elegido
     const [idSocioElegido, setIdSocioElegido] = useState("");
     const [fichaSocioElegido, setFichaSocioElegido] = useState("");
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const { register, handleSubmit, watch, setValue, formState: { errors }, clearErrors } = useForm({
+        defaultValues: initialFormData()
+    });
 
-        if (!fichaSocioElegido) {
-            Swal.fire({
-                title: "Debe elegir un socio",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });;
+    const prestamoValue = watch("prestamo");
+    const tasaInteresValue = watch("tasaInteres");
+    const [interesGenerado, setInteresGenerado] = useState(0);
+
+    // Calculate interest whenever prestamo or tasaInteres changes
+    useEffect(() => {
+        const p = parseFloat(prestamoValue) || 0;
+        const t = parseFloat(tasaInteresValue) || 0;
+        const tempInteres = t / 100;
+        const tempInteresGenerado = p * tempInteres;
+        const aPagar = p + tempInteresGenerado;
+        setInteresGenerado(aPagar);
+    }, [prestamoValue, tasaInteresValue]);
+
+    // Update form value when fichaSocioElegido changes
+    useEffect(() => {
+        if (fichaSocioElegido) {
+            setValue("fichaSocio", fichaSocioElegido);
+            clearErrors("fichaSocio");
         } else {
-            if (!formData.prestamo || !formData.tasaInteres) {
-                Swal.fire({
-                    title: "Faltan datos",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });;
-            } else {
-                setLoading(true)
+            setValue("fichaSocio", "");
+        }
+    }, [fichaSocioElegido, setValue, clearErrors]);
 
-                // Realiza el registro del prestamo
+    const onSubmit = (data) => {
 
-                obtenerFolioActualPrestamo().then(response => {
 
-                    const { data } = response;
-                    const { folio } = data;
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        tipo: getRazonSocial(),
-                        periodo: getPeriodo(),
-                        prestamo: formData.prestamo,
-                        prestamoTotal: interesGenerado,
-                        tasaInteres: formData.tasaInteres,
-                        createdAt: formData.fecha
-                    }
+        setLoading(true)
 
-                    registraPrestamos(dataTemp).then(response => {
-                        const { data } = response;
-                        // Registro de movimientos
-                        registroMovimientosSaldosSocios(fichaSocioElegido, "0", formData.prestamo, interesGenerado.toString(), "0", "0", "0", "0", "Prestamo");
+        // Realiza el registro del prestamo
+        obtenerFolioActualPrestamo().then(response => {
 
-                        registroDeudaSocioInicial(fichaSocioElegido, "0", interesGenerado, "Prestamo", formData.fecha);
-
-                        actualizacionDeudaSocio(fichaSocioElegido, "0", interesGenerado, "Prestamo", formData.fecha);
-
-                        Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1600,
-                        });
-
-                        setTimeout(() => {
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
-
-                    }).catch(e => {
-                        console.log()
-                    })
-
-                    // Modificar movimientos para enviar el generado interesGenerado
-
-                }).catch(e => {
-                    console.log(e)
-                })
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+            const dataTemp = {
+                folio: folio,
+                fichaSocio: fichaSocioElegido,
+                tipo: getRazonSocial(),
+                periodo: getPeriodo(),
+                prestamo: data.prestamo,
+                prestamoTotal: interesGenerado,
+                tasaInteres: data.tasaInteres,
+                createdAt: data.fecha
             }
 
-        }
-    }
+            registraPrestamos(dataTemp).then(response => {
+                const { data } = response;
+                // Registro de movimientos
+                registroMovimientosSaldosSocios(fichaSocioElegido, "0", data.prestamo, interesGenerado.toString(), "0", "0", "0", "0", "Prestamo");
 
+                registroDeudaSocioInicial(fichaSocioElegido, "0", interesGenerado, "Prestamo", data.fecha);
 
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+                actualizacionDeudaSocio(fichaSocioElegido, "0", interesGenerado, "Prestamo", data.fecha);
+
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
+
+            }).catch(e => {
+                console.log(e)
+                setLoading(false)
+            })
+
+        }).catch(e => {
+            console.log(e)
+            setLoading(false)
+        })
     }
 
     const eliminaBusqueda = () => {
@@ -154,21 +146,28 @@ function RegistroPrestamos(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFicha">
-                            <Form.Label>
-                                Folio
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="folio"
-                                defaultValue={folioActual}
-                                disabled
-                            />
+                            <Form.Label>Folio</Form.Label>
+                            <Form.Control type="text" name="folio" defaultValue={folioActual} disabled />
                         </Form.Group>
+
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
 
                         {
                             fichaSocioElegido ?
@@ -181,7 +180,6 @@ function RegistroPrestamos(props) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Ficha del socio"
-                                                name="ficha"
                                                 defaultValue={fichaSocioElegido}
                                                 disabled
                                             />
@@ -195,7 +193,6 @@ function RegistroPrestamos(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Nombre del socio"
-                                                    name="nombre"
                                                     defaultValue={nombreSocioElegido}
                                                     disabled
                                                 />
@@ -250,10 +247,13 @@ function RegistroPrestamos(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>
@@ -271,12 +271,13 @@ function RegistroPrestamos(props) {
                                     min="0"
                                     step="0.01"
                                     placeholder="Escribe el monto del prestamo"
-                                    name="prestamo"
-                                    id="prestamo"
-                                    onChange={(e) => { calcularIntereses(e.target.value) }}
-                                    defaultValue={formData.prestamo}
+                                    isInvalid={!!errors.prestamo}
+                                    {...register("prestamo", { required: "El prestamo es obligatorio" })}
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.prestamo?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>
@@ -293,12 +294,13 @@ function RegistroPrestamos(props) {
                                     type="number"
                                     min="0"
                                     placeholder="Escribe la tasa de interes"
-                                    name="tasaInteres"
-                                    id="tasaInteres"
-                                    onChange={(e) => { calcularIntereses(e.target.value) }}
-                                    defaultValue={formData.tasaInteres}
+                                    isInvalid={!!errors.tasaInteres}
+                                    {...register("tasaInteres", { required: "La tasa de interes es obligatoria" })}
                                 />
                                 <InputGroup.Text>%</InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.tasaInteres?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -313,8 +315,7 @@ function RegistroPrestamos(props) {
                                 <Form.Control
                                     placeholder="Escribe el total a pagar"
                                     name="totalpagar"
-                                    value={interesGenerado}
-                                    onChange={(e) => { calcularAbono(e.target.value) }}
+                                    value={interesGenerado.toFixed(2)} // Formatting for display
                                     disabled
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>

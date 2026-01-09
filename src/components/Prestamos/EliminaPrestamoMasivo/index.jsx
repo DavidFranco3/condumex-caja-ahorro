@@ -33,12 +33,12 @@ function EliminaPrestamoMasivo(props) {
         e.preventDefault()
 
         if (!formData.fecha) {
-Swal.fire({
-                        title: "Por favor selecciona una fecha",
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+            Swal.fire({
+                title: "Por favor selecciona una fecha",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             return;
         }
 
@@ -58,20 +58,18 @@ Swal.fire({
                 }
 
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)

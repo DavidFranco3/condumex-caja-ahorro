@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, InputGroup, Row, Spinner } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
 import { actualizaAbonos } from '../../../api/abonos';
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha);
+    const date = new Date(fecha);
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 const initialFormData = ({ id, folio, fichaSocio, abono, fechaCreacion }) => (
@@ -24,60 +25,51 @@ const initialFormData = ({ id, folio, fichaSocio, abono, fechaCreacion }) => (
     }
 )
 
-function ModificaAbonos ({ datos, setShowModal, history }) {
+function ModificaAbonos({ datos, setShowModal, history }) {
 
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
     const [loading, setLoading] = useState(false);
 
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
     const handleCancel = () => setShowModal(false);
 
-    const handleChange = (evt) => {
-        setFormData({ ...formData, [evt.target.name]: evt.target.value });
-    }
+    const handleUpdate = async (data) => {
+        // event.preventDefault(); -> Handled
 
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        if (!formData.createdAt || !formData.abono) {
-            Swal.fire({
-            title: "Faltan datos",
-            icon: "error",
-            showConfirmButton: false,
-            timer: 1600,
-        });
-            return;
-        }
+        // Validations handled by react-hook-form
 
         setLoading(true);
 
-        const response = await actualizaAbonos(formData.id, formData);
-        
+        const response = await actualizaAbonos(data.id, data);
+
         // Registra movimientos
-        registroMovimientosSaldosSocios(formData.fichaSocio, "0", "0", "0", "0", "0", "0", formData.abono, "Modificación abono")
-        
+        registroMovimientosSaldosSocios(data.fichaSocio, "0", "0", "0", "0", "0", "0", data.abono, "Modificación abono")
+
         const { status, data: { mensaje } } = response;
 
         setLoading(false);
 
         if (status === 200) {
             Swal.fire({
-                        title: mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                title: mensaje,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1600,
+            });
             history({
                 search: queryString.stringify(''),
             });
             setShowModal(false);
         } else {
-             Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
+            Swal.fire({
+                title: mensaje,
+                icon: "error",
+                showConfirmButton: false,
+                timer: 1600,
+            });;
         }
     };
 
@@ -88,7 +80,7 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
     return (
         <>
             <div className='contenidoFormularioPrincipal'>
-                <Form onChange={handleChange}>
+                <Form onSubmit={handleSubmit(handleUpdate)}>
 
                     <Row className='mb-3'>
                         <Form.Group as={Col} controlId="formGridFicha">
@@ -99,8 +91,9 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Folio"
                                 name="folio"
-                                defaultValue={formData.folio}
+                                defaultValue={datos.folio}
                                 disabled
+                                {...register("folio")}
                             />
                         </Form.Group>
 
@@ -112,12 +105,13 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
                                 type="text"
                                 placeholder="Ficha del socio"
                                 name="fichaSocio"
-                                defaultValue={formData.fichaSocio}
+                                defaultValue={datos.fichaSocio}
                                 disabled
+                                {...register("fichaSocio")}
                             />
                         </Form.Group>
-                    </Row>                   
-                                        
+                    </Row>
+
                     <Row className="mb-3">
 
                         <Form.Group as={Col} controlId="formGridFechaRegistro">
@@ -126,12 +120,15 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
                             </Form.Label>
                             <InputGroup className="mb-3">
                                 <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={formData.createdAt}
-                                placeholder="Fecha"
-                                name="createdAt"
+                                    className="mb-3"
+                                    type="datetime-local"
+                                    placeholder="Fecha"
+                                    isInvalid={!!errors.createdAt}
+                                    {...register("createdAt", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.createdAt?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>
@@ -148,22 +145,24 @@ function ModificaAbonos ({ datos, setShowModal, history }) {
                                     min="0"
                                     step=".0.01"
                                     placeholder="Escribe el abono"
-                                    name="abono"
-                                    defaultValue={formData.abono}
+                                    isInvalid={!!errors.abono}
+                                    {...register("abono", { required: "El abono es obligatorio" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.abono?.message}
+                                </Form.Control.Feedback>
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
                             </InputGroup>
 
                         </Form.Group>
                     </Row>
-                    
+
                     <Form.Group as={Row} className='botones'>
                         <Col>
                             <Button
                                 type='submit'
                                 variant='success'
                                 className='registrar'
-                                onClick={handleUpdate}
                                 disabled={loading}
                             >
                                 <Loading />

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import BasicModal from "../../Modal/BasicModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Badge } from "react-bootstrap";
-import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { Badge, Dropdown } from "react-bootstrap";
+import { faPenToSquare, faTrashCan, faBars } from '@fortawesome/free-solid-svg-icons';
 import "./ListUsuarios.scss";
 import ModificaUsuarios from "../ModificaUsuarios";
 import EliminaUsuarios from "../EliminaUsuarios";
@@ -51,40 +51,45 @@ function ListUsuarios(props) {
             cell: row => (
                 <>
                     <div className="flex justify-end items-center space-x-4">
-                        <Badge
-                            bg="success"
-                            className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                modificacionUsuario(
-                                    <ModificaUsuarios
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg" />
-                        </Badge>
-                        <Badge
-                            bg="danger"
-                            className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
-                            onClick={() => {
-                                eliminacionUsuario(
-                                    <EliminaUsuarios
-                                        datos={row}
-                                        location={location}
-                                        history={history}
-                                        setShowModal={setShowModal}
-                                        setRefreshCheckLogin={setRefreshCheckLogin}
-                                    />
-                                )
-                            }}
-                        >
-                            <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
-                        </Badge>
+                        <Dropdown>
+                            <Dropdown.Toggle className="botonDropdown" id="dropdown-basic">
+                                <FontAwesomeIcon icon={faBars} />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item
+                                    className="editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        modificacionUsuario(
+                                            <ModificaUsuarios
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <span style={{ color: '#007bff' }}><FontAwesomeIcon icon={faPenToSquare} className="text-lg" /> Editar</span>
+                                </Dropdown.Item>
+                                <Dropdown.Item
+                                    className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
+                                    onClick={() => {
+                                        eliminacionUsuario(
+                                            <EliminaUsuarios
+                                                datos={row}
+                                                location={location}
+                                                history={history}
+                                                setShowModal={setShowModal}
+                                                setRefreshCheckLogin={setRefreshCheckLogin}
+                                            />
+                                        )
+                                    }}
+                                >
+                                    <span className="text-red-600" style={{ color: 'red' }}><FontAwesomeIcon icon={faTrashCan} className="text-lg" /> Eliminar</span>
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
                 </>
             ),

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import {Button, Col, Form, Row, Spinner} from "react-bootstrap";
+import { useForm } from 'react-hook-form';
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import queryString from "query-string";
-import {cambiaEstadoSocioEmpleado} from "../../../api/sociosEmpleados";
+import { cambiaEstadoSocioEmpleado } from "../../../api/sociosEmpleados";
 
 function ModificaEstadoSocioEmpleado(props) {
     const { datos, setShowModal, history, location } = props;
@@ -15,8 +16,13 @@ function ModificaEstadoSocioEmpleado(props) {
         setShowModal(false)
     }
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    // Para almacenar la información
+    // const [formData, setFormData] = useState(initialFormData(datos));
+
+    const { handleSubmit } = useForm();
+
+    const onSubmit = (data) => {
+        // e.preventDefault() -> Handled
         setLoading(true)
 
         const dataTemp = {
@@ -26,17 +32,17 @@ function ModificaEstadoSocioEmpleado(props) {
         try {
             cambiaEstadoSocioEmpleado(id, dataTemp).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),
                 });
                 setShowModal(false)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             }).catch(e => {
                 console.log(e)
             })
@@ -48,7 +54,7 @@ function ModificaEstadoSocioEmpleado(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -83,9 +89,9 @@ function ModificaEstadoSocioEmpleado(props) {
                                 Tipo de socio
                             </Form.Label>
                             <Form.Control as="select"
-                                          defaultValue={tipo}
-                                          name="tipo"
-                                          disabled
+                                defaultValue={tipo}
+                                name="tipo"
+                                disabled
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>

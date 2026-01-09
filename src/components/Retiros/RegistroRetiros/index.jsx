@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import queryString from "query-string";
 import { Button, Col, Form, Row, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,89 +61,76 @@ function RegistroRetiros(props) {
     const [fichaSocioElegido, setFichaSocioElegido] = useState("");
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
 
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+        defaultValues: initialFormData()
+    });
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-
-        if (!fichaSocioElegido) {
-            Swal.fire({
-                title: "Debe elegir un socio",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
+    // Update form value when fichaSocioElegido changes
+    useEffect(() => {
+        if (fichaSocioElegido) {
+            setValue("fichaSocio", fichaSocioElegido);
+            clearErrors("fichaSocio");
         } else {
-            if (!formData.retiro || !formData.tipo) {
+            setValue("fichaSocio", "");
+        }
+    }, [fichaSocioElegido, setValue, clearErrors]);
+
+    const onSubmit = (data) => {
+
+
+        setLoading(true)
+
+        // Realiza registro de la aportación
+        obtenerFolioActualRetiros().then(response => {
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+
+            let retiro = data.retiro * parseInt("-1");
+
+            const dataTemp = {
+                folio: folio,
+                fichaSocio: fichaSocioElegido,
+                tipo: getRazonSocial(),
+                periodo: getPeriodo(),
+                retiro: data.retiro,
+                createdAt: data.fecha
+            }
+
+            registraRetiros(dataTemp).then(response => {
+                const { data } = response;
+
+                // Registra movimientos
+                registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", "0", data.retiro, "0", "Retiro")
+
+                actualizacionSaldosSocios(fichaSocioElegido, data.retiro, "0", "0", folio, "Retiro")
+
+                if (data.tipo == "aportaciones") {
+                    registroAportacionInicial(fichaSocioElegido, retiro, data.fecha);
+                } else if (data.tipo == "intereses") {
+                    registroRendimientoInicial(fichaSocioElegido, retiro, data.fecha);
+                }
+
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
                 Swal.fire({
-                    title: "Faltan datos",
-                    icon: "warning",
+                    title: data.mensaje,
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
 
-                setLoading(true)
-                // Realiza registro de la aportación
-                obtenerFolioActualRetiros().then(response => {
-                    const { data } = response;
-                    const { folio } = data;
-                    // console.log(data)
+            }).catch(e => {
+                console.log(e)
+                setLoading(false)
+            })
 
-                    let retiro = formData.retiro * parseInt("-1");
-
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        tipo: getRazonSocial(),
-                        periodo: getPeriodo(),
-                        retiro: formData.retiro,
-                        createdAt: formData.fecha
-                    }
-
-                    registraRetiros(dataTemp).then(response => {
-                        const { data } = response;
-
-                        // Registra movimientos
-                        registroMovimientosSaldosSocios(fichaSocioElegido, "0", "0", "0", "0", "0", formData.retiro, "0", "Retiro")
-
-                        actualizacionSaldosSocios(fichaSocioElegido, formData.retiro, "0", "0", folio, "Retiro")
-
-                        if (formData.tipo == "aportaciones") {
-                            registroAportacionInicial(fichaSocioElegido, retiro, formData.fecha);
-                        } else if (formData.tipo == "intereses") {
-                            registroRendimientoInicial(fichaSocioElegido, retiro, formData.fecha);
-                        }
-
-                        Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1600,
-                        });
-                        setTimeout(() => {
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
-
-                    }).catch(e => {
-                        console.log(e)
-                    })
-
-                }).catch(e => {
-                    console.log(e)
-                })
-
-            }
-        }
-    }
-
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        }).catch(e => {
+            console.log(e)
+            setLoading(false)
+        })
     }
 
     const eliminaBusqueda = () => {
@@ -154,21 +142,28 @@ function RegistroRetiros(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFicha">
-                            <Form.Label>
-                                Folio
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="folio"
-                                defaultValue={folioActual}
-                                disabled
-                            />
+                            <Form.Label>Folio</Form.Label>
+                            <Form.Control type="text" name="folio" defaultValue={folioActual} disabled />
                         </Form.Group>
+
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
 
                         {
                             fichaSocioElegido ?
@@ -181,7 +176,6 @@ function RegistroRetiros(props) {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Ficha del socio"
-                                                name="nombre"
                                                 defaultValue={fichaSocioElegido}
                                                 disabled
                                             />
@@ -195,7 +189,6 @@ function RegistroRetiros(props) {
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Nombre del socio"
-                                                    name="nombre"
                                                     defaultValue={nombreSocioElegido}
                                                     disabled
                                                 />
@@ -249,10 +242,13 @@ function RegistroRetiros(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -267,11 +263,14 @@ function RegistroRetiros(props) {
                                     type="number"
                                     min="0"
                                     placeholder="Escribe la cantidad de retiro"
-                                    name="retiro"
                                     step="0.01"
-                                    defaultValue={formData.retiro}
+                                    isInvalid={!!errors.retiro}
+                                    {...register("retiro", { required: "El retiro es obligatorio" })}
                                 />
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.retiro?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
 
                         </Form.Group>
@@ -285,13 +284,16 @@ function RegistroRetiros(props) {
                             <Form.Control
                                 className="mb-3"
                                 as="select"
-                                defaultValue={formData.tipo}
-                                name="tipo"
+                                isInvalid={!!errors.tipo}
+                                {...register("tipo", { required: "Selecciona un tipo" })}
                             >
-                                <option>Elige una opción</option>
+                                <option value="">Elige una opción</option>
                                 <option value="aportaciones">Aportaciones</option>
                                 <option value="intereses">Intereses</option>
                             </Form.Control>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.tipo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

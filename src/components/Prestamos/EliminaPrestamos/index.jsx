@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaPrestamos} from "../../../api/prestamos";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaPrestamos } from "../../../api/prestamos";
 import Swal from "sweetalert2";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
-import {actualizacionDeudaSocio} from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
+import { actualizacionDeudaSocio } from "../../DeudaSocio/RegistroActualizacionDeudaSocio";
 import queryString from "query-string";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaPrestamos(props) {
     const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
-    const { id, folio, fichaSocio, prestamo, prestamoTotal,  cantidadPagos, abonoPorPago, fechaCreacion, fechaActualizacion, tasaInteres} = datos;
+    const { id, folio, fichaSocio, prestamo, prestamoTotal, cantidadPagos, abonoPorPago, fechaCreacion, fechaActualizacion, tasaInteres } = datos;
 
     const cancelarEliminacion = () => {
         setShowModal(false)
@@ -32,27 +32,20 @@ function EliminaPrestamos(props) {
         setLoading(true)
 
         try {
-                eliminaPrestamos(id).then(response => {
+            eliminaPrestamos(id).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                // Revierte saldos para eliminar el prestamo correspondiente
-                registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", parseFloat(prestamoTotal), "0", "0", "0", "0", "Eliminación prestamo");
-                
-                actualizacionDeudaSocio(parseInt(fichaSocio), "0", parseFloat(prestamoTotal), "Eliminación prestamo", fechaCreacion);
-               
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
@@ -113,7 +106,7 @@ function EliminaPrestamos(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
+
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFolio">
@@ -139,19 +132,19 @@ function EliminaPrestamos(props) {
                                 disabled
                             />
                         </Form.Group>
-                        
+
                         <Form.Group as={Col} controlId="formGridPrestamo">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                           <Form.Control
+                            <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
                                 defaultValue={fechaToCurrentTimezone(fechaCreacion)}
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
 

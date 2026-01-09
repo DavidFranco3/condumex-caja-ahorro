@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import "./RegistroAportaciones.scss"
 import { Button, Col, Form, Row, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -61,83 +62,82 @@ function RegistroAportaciones(props) {
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
 
     // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    // const [formData, setFormData] = useState(initialFormData());
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const { register, handleSubmit, setValue, getValues, watch, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
-        if (!fichaSocioElegido) {
+    const onSubmit = (data) => {
+        // e.preventDefault() handled by RHF
+
+        // e.preventDefault() handled by RHF
+
+        // RHF handles validation for required fields like aportacion via register rules
+        // But if we want to keep the manual check structure:
+        if (!data.aportacion) {
             Swal.fire({
-                title: "Debe elegir un socio",
+                title: "Faltan datos",
                 icon: "warning",
                 showConfirmButton: false,
                 timer: 1600,
             });
         } else {
-            if (!formData.aportacion) {
-                Swal.fire({
-                    title: "Faltan datos",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
-            } else {
 
-                setLoading(true)
-                // Realiza registro de la aportación
-                obtenerFolioActualAportaciones().then(response => {
-                    const { data } = response;
-                    const { folio } = data;
+            setLoading(true)
+            // Realiza registro de la aportación
+            obtenerFolioActualAportaciones().then(response => {
+                const { data: dataFolio } = response;
+                const { folio } = dataFolio;
 
-                    const dataTemp = {
-                        folio: folio,
-                        fichaSocio: fichaSocioElegido,
-                        tipo: getRazonSocial(),
-                        periodo: getPeriodo(),
-                        aportacion: formData.aportacion,
-                        createdAt: formData.fecha
-                    }
+                const dataTemp = {
+                    folio: folio,
+                    fichaSocio: fichaSocioElegido,
+                    tipo: getRazonSocial(),
+                    periodo: getPeriodo(),
+                    aportacion: data.aportacion,
+                    createdAt: data.fecha
+                }
 
-                    registraAportacionesSocios(dataTemp).then(response => {
-                        const { data } = response;
+                registraAportacionesSocios(dataTemp).then(response => {
+                    const { data: responseData } = response;
 
-                        // Registra movimientos
-                        registroMovimientosSaldosSocios(fichaSocioElegido, formData.aportacion, "0", "0", "0", "0", "0", "0", "Aportación")
+                    // Registra movimientos
+                    registroMovimientosSaldosSocios(fichaSocioElegido, data.aportacion, "0", "0", "0", "0", "0", "0", "Aportación")
 
-                        // Registra Saldos
-                        registroSaldoInicial(fichaSocioElegido, formData.aportacion, "0", "0", folio, "Aportación")
+                    // Registra Saldos
+                    registroSaldoInicial(fichaSocioElegido, data.aportacion, "0", "0", folio, "Aportación")
 
-                        actualizacionSaldosSocios(fichaSocioElegido, formData.aportacion, "0", "0", folio, "Aportación")
+                    actualizacionSaldosSocios(fichaSocioElegido, data.aportacion, "0", "0", folio, "Aportación")
 
-                        Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1600,
-                        });
-                        setTimeout(() => {
-                            setLoading(false)
-                            history({
-                                search: queryString.stringify(""),
-                            });
-                            setShowModal(false)
-                        }, 2000)
+                    setLoading(false)
+                    history({
+                        search: queryString.stringify(""),
+                    });
+                    setShowModal(false)
 
-                    }).catch(e => {
-                        console.log(e)
-                    })
+                    Swal.fire({
+                        title: responseData.mensaje,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
 
                 }).catch(e => {
                     console.log(e)
                 })
 
-            }
+            }).catch(e => {
+                console.log(e)
+            })
+
         }
     }
 
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
+
+    // const onChange = e => {
+    //    setFormData({ ...formData, [e.target.name]: e.target.value })
+    // }
 
     const eliminaBusqueda = () => {
         setFichaSocioElegido("")
@@ -148,21 +148,28 @@ function RegistroAportaciones(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!fichaSocioElegido) {
+                        Swal.fire({
+                            title: "Debe elegir un socio",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });
+                        return;
+                    }
+                    handleSubmit(onSubmit)(e);
+                }}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFicha">
-                            <Form.Label>
-                                Folio
-                            </Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="folio"
-                                defaultValue={folioActual}
-                                disabled
-                            />
+                            <Form.Label>Folio</Form.Label>
+                            <Form.Control type="text" name="folio" defaultValue={folioActual} disabled />
                         </Form.Group>
+
+                        {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
 
                         {
                             fichaSocioElegido ?
@@ -243,10 +250,13 @@ function RegistroAportaciones(props) {
                                 <Form.Control
                                     className="mb-3"
                                     type="datetime-local"
-                                    defaultValue={formData.fecha}
                                     placeholder="Fecha"
-                                    name="fecha"
+                                    isInvalid={!!errors.fecha}
+                                    {...register("fecha", { required: "La fecha es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.fecha?.message}
+                                </Form.Control.Feedback>
                             </InputGroup>
                         </Form.Group>
 
@@ -258,12 +268,14 @@ function RegistroAportaciones(props) {
                                 <InputGroup.Text>$</InputGroup.Text>
                                 <Form.Control
                                     type="number"
-
                                     step="0.01"
                                     placeholder="Escribe la aportación"
-                                    name="aportacion"
-                                    defaultValue={formData.aportacion}
+                                    isInvalid={!!errors.aportacion}
+                                    {...register("aportacion", { required: "La aportación es obligatoria" })}
                                 />
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.aportacion?.message}
+                                </Form.Control.Feedback>
                                 <InputGroup.Text>.00 MXN</InputGroup.Text>
                             </InputGroup>
 

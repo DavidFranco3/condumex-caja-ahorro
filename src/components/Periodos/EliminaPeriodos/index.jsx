@@ -32,20 +32,18 @@ function EliminaPeriodos(props) {
         try {
             eliminaPeriodos(id).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)

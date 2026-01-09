@@ -34,25 +34,18 @@ function EliminaAbonos(props) {
         try {
             eliminaAbonos(id).then(response => {
                 const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
                 Swal.fire({
                     title: data.mensaje,
                     icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-
-                // Registra movimientos
-                registroMovimientosSaldosSocios(parseInt(fichaSocio), "0", "0", "0", "0", "0", "0", parseFloat(abono), "Eliminación abono");
-
-                actualizacionDeudaSocio(parseInt(fichaSocio), parseFloat(abono), "0", "Eliminación abono", fechaCreacion);
-
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
 
             }).catch(e => {
                 console.log(e)

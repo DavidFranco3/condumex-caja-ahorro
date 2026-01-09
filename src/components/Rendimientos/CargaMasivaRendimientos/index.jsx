@@ -57,18 +57,19 @@ const CargaMasivaRendimientos = ({ setShowModal, history }) => {
                         // increment count for render value in progress bar
                         setCount(oldCount => oldCount + 1);
                 }
-                Swal.fire({
-                        title: "Intereses registrados con exito",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                });
                 setDataFile([]);
                 setLoading(false);
                 history({
                         search: queryString.stringify(''),
                 });
                 setShowModal(false);
+
+                Swal.fire({
+                        title: "Intereses registrados con exito",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1600,
+                });
         }
 
 

@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaPatrimonio} from "../../../api/patrimonio";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaPatrimonio } from "../../../api/patrimonio";
 import Swal from "sweetalert2";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
-import {actualizacionSaldosSocios} from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
+import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaPatrimonios(props) {
     const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
     //console.log(datos)
-    const { id, folio, fichaSocio, patrimonio, fechaCreacion, fechaActualizacion} = datos;
+    const { id, folio, fichaSocio, patrimonio, fechaCreacion, fechaActualizacion } = datos;
 
     const cancelarEliminacion = () => {
         setShowModal(false)
@@ -33,29 +33,20 @@ function EliminaPatrimonios(props) {
         setLoading(true)
 
         try {
-                eliminaPatrimonio(id).then(response => {
+            eliminaPatrimonio(id).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                registroMovimientosSaldosSocios(fichaSocio, "0", "0", "0", patrimonio, "0", "0", "0", "Eliminación patrimonio")
-      
-                // Registra Saldos
-                registroSaldoInicial(fichaSocio, "0", patrimonio, "0", folio, "Eliminación patrimonio")
-      
-                actualizacionSaldosSocios(fichaSocio, "0", patrimonio, "0", folio, "Eliminación patrimonio")
-               
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 3000)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
@@ -116,21 +107,21 @@ function EliminaPatrimonios(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
+
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
                         <Form.Group as={Col} controlId="formGridFecha">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
-                           <Form.Control
+                            <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
                                 defaultValue={fechaToCurrentTimezone(fechaCreacion)}
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
 

@@ -55,18 +55,19 @@ const CargaMasivaAbonos = ({ setShowModal, history }) => {
             // increment count for render value in progress bar
             setCount(oldCount => oldCount + 1);
         }
-        Swal.fire({
-            title: "Abonos registrados con exito",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1600,
-        });
         setDataFile([]);
         setLoading(false);
         history({
             search: queryString.stringify(''),
         });
         setShowModal(false);
+
+        Swal.fire({
+            title: "Abonos registrados con exito",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1600,
+        });
     }
     const handleChange = (e) => {
 

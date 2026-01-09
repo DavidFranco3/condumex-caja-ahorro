@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
@@ -31,91 +32,68 @@ function RegistroSociosEmpleados(props) {
     // Para controlar la animación
     const [loading, setLoading] = useState(false);
 
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const onSubmit = (data) => {
+        setLoading(true)
+        const dataTemp = {
+            ficha: data.ficha,
+            nombre: data.nombre,
+            tipo: data.tipo,
+            correo: data.correo,
+            createdAt: data.fecha,
+            estado: "true"
+        }
 
-        if (!formData.ficha || !formData.nombre || !formData.tipo) {
-            Swal.fire({
-                title: "Completa el formulario",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
-        } else {
-            if (!isEmailValid(formData.correo)) {
+        try {
+            registraSociosEmpleados(dataTemp).then(response => {
+                const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
                 Swal.fire({
-                    title: "Escriba un correo valido",
-                    icon: "warning",
+                    title: data.mensaje,
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
-                setLoading(true)
-                const dataTemp = {
-                    ficha: formData.ficha,
-                    nombre: formData.nombre,
-                    tipo: formData.tipo,
-                    correo: formData.correo,
-                    createdAt: formData.fecha,
-                    estado: "true"
-                }
-
-                try {
-                    registraSociosEmpleados(dataTemp).then(response => {
-                        const { data } = response;
+            }).catch(e => {
+                console.log(e)
+                if (e.message === 'Network Error') {
+                    //console.log("No hay internet")
+                    Swal.fire({
+                        title: "Conexión al servidor no disponible",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1600,
+                    });
+                    setLoading(false);
+                } else {
+                    if (e.response && e.response.status === 401) {
+                        const { mensaje } = e.response.data;
                         Swal.fire({
-                            title: data.mensaje,
-                            icon: "success",
+                            title: mensaje,
+                            icon: "error",
                             showConfirmButton: false,
                             timer: 1600,
-                        });
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }).catch(e => {
-                        console.log(e)
-                        if (e.message === 'Network Error') {
-                            //console.log("No hay internet")
-                            Swal.fire({
-                                title: "Conexión al servidor no disponible",
-                                icon: "error",
-                                showConfirmButton: false,
-                                timer: 1600,
-                            });
-                            setLoading(false);
-                        } else {
-                            if (e.response && e.response.status === 401) {
-                                const { mensaje } = e.response.data;
-                                Swal.fire({
-                                    title: mensaje,
-                                    icon: "error",
-                                    showConfirmButton: false,
-                                    timer: 1600,
-                                });;
-                                setLoading(false);
-                            }
-                        }
-                    })
-                } catch (e) {
-                    console.log(e)
+                        });;
+                        setLoading(false);
+                    }
                 }
-            }
+            })
+        } catch (e) {
+            console.log(e)
         }
-    }
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -126,9 +104,12 @@ function RegistroSociosEmpleados(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe la ficha"
-                                name="ficha"
-                                defaultValue={formData.ficha}
+                                isInvalid={!!errors.ficha}
+                                {...register("ficha", { required: "La ficha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.ficha?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridNombre">
@@ -138,9 +119,12 @@ function RegistroSociosEmpleados(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el nombre"
-                                name="nombre"
-                                defaultValue={formData.nombre}
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
                     {/* Tipo de socio, correo */}
@@ -150,9 +134,8 @@ function RegistroSociosEmpleados(props) {
                                 Tipo de socio
                             </Form.Label>
                             <Form.Control as="select"
-                                defaultValue={formData.tipo}
-                                name="tipo"
                                 disabled
+                                {...register("tipo")}
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>
@@ -167,9 +150,18 @@ function RegistroSociosEmpleados(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el correo"
-                                name="correo"
-                                defaultValue={formData.correo}
+                                isInvalid={!!errors.correo}
+                                {...register("correo", {
+                                    required: "El correo es obligatorio",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Dirección de correo inválida"
+                                    }
+                                })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.correo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -180,10 +172,13 @@ function RegistroSociosEmpleados(props) {
                             </Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
-                                name="fecha"
+                                isInvalid={!!errors.fecha}
+                                {...register("fecha", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fecha?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
@@ -216,18 +211,18 @@ function RegistroSociosEmpleados(props) {
     );
 }
 
-    const hoy = new Date();
+const hoy = new Date();
 
-    const fecha = [
-        hoy.getFullYear(),
-        String(hoy.getMonth() + 1).padStart(2, "0"),
-        String(hoy.getDate()).padStart(2, "0"),
-    ].join("-");
+const fecha = [
+    hoy.getFullYear(),
+    String(hoy.getMonth() + 1).padStart(2, "0"),
+    String(hoy.getDate()).padStart(2, "0"),
+].join("-");
 
-    const hora = [
-        String(hoy.getHours()).padStart(2, "0"),
-        String(hoy.getMinutes()).padStart(2, "0"),
-    ].join(":");
+const hora = [
+    String(hoy.getHours()).padStart(2, "0"),
+    String(hoy.getMinutes()).padStart(2, "0"),
+].join(":");
 
 function initialFormData() {
     return {

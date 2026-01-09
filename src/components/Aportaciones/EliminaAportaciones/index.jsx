@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import {Alert, Button, Col, Form, Row, Spinner} from "react-bootstrap";
-import {eliminaAportaciones} from "../../../api/aportaciones";
+import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
+import { eliminaAportaciones } from "../../../api/aportaciones";
 import Swal from "sweetalert2";
-import {registroMovimientosSaldosSocios} from "../../GestionAutomatica/Saldos/Movimientos";
+import { registroMovimientosSaldosSocios } from "../../GestionAutomatica/Saldos/Movimientos";
 import queryString from "query-string";
-import {registroSaldoInicial} from "../../GestionAutomatica/Saldos/Saldos";
-import {actualizacionSaldosSocios} from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
+import { registroSaldoInicial } from "../../GestionAutomatica/Saldos/Saldos";
+import { actualizacionSaldosSocios } from "../../GestionAutomatica/Saldos/ActualizacionSaldos";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaAportaciones(props) {
@@ -23,7 +23,7 @@ function EliminaAportaciones(props) {
 
     const cancelarEliminacion = () => {
         setShowModal(false)
-        }
+    }
 
     // Para controlar la animacion
     const [loading, setLoading] = useState(false);
@@ -35,28 +35,18 @@ function EliminaAportaciones(props) {
         try {
             eliminaAportaciones(id).then(response => {
                 const { data } = response;
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+
                 Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-
-                // Revierte saldos para eliminar la aportacion correspondiente
-                registroMovimientosSaldosSocios(parseInt(fichaSocio), aportacion, "0", "0", "0", "0", "0", "0", "Eliminación aportación")
-                
-                // Registra Saldos
-                registroSaldoInicial(parseInt(fichaSocio), aportacion, "0", "0", folio, "Eliminación aportación")
-                
-                actualizacionSaldosSocios(parseInt(fichaSocio), aportacion, "0", "0", folio, "Eliminación aportación")
-
-                setTimeout(() => {
-                    setLoading(false)
-                    history({
-                        search: queryString.stringify(""),
-                    });
-                    setShowModal(false)
-                }, 2000)
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
@@ -117,9 +107,9 @@ function EliminaAportaciones(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
+
                     <Row>
-                    <Form.Group as={Col} controlId="formGridAportacion">
+                        <Form.Group as={Col} controlId="formGridAportacion">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
@@ -130,11 +120,11 @@ function EliminaAportaciones(props) {
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
-                    
-                    <br/>
+
+                    <br />
 
                     <Form.Group as={Row} className="botones">
                         <Col>

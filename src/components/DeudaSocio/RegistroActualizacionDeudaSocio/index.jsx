@@ -12,6 +12,12 @@ export const actualizacionDeudaSocio = async (fichaSocio, ingresaAbono, ingresaP
         await obtenerDatosDeudaSocio(fichaSocio).then(response => {
 
             const { data } = response;
+
+            if (!data) {
+                // console.log("No se encontraron datos de deuda para el socio");
+                return;
+            }
+
             const { _id, abonoTotal, prestamoTotal } = data;
 
             // Se recibe solamente lo ingresado, hya que sumar lo ingresado con lo que tiene en ->

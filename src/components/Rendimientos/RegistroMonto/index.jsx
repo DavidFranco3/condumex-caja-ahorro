@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
-import useField from '../../../hooks/useField'
+import { useForm } from 'react-hook-form';
 import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { getTotalGeneralByRazon } from '../../../api/rendimientos'
 
 const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
-  const earnings = useField({ type: 'number', step: '.01' })
-  const earningsDate = useField({ type: 'datetime-local' })
+  const { register, watch, handleSubmit, formState: { errors } } = useForm();
+  const earningsValue = watch("utilidad");
+  const earningsDateValue = watch("fecha");
+
   const [totalGeneral, setTotalGeneral] = useState(0)
   const [rendimiento, setRendimiento] = useState(0)
 
@@ -22,25 +24,25 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
   }
 
   useEffect(() => {
-    if (totalGeneral && earningsDate.value) {
-      setRendimiento(Number(earnings.value) / totalGeneral);
+    if (totalGeneral && earningsDateValue) {
+      setRendimiento(Number(earningsValue) / totalGeneral);
     }
-  }, [totalGeneral, earnings.value])
+  }, [totalGeneral, earningsValue])
 
   useEffect(() => {
-    if (earningsDate.value) {
+    if (earningsDateValue) {
       // set to local storage
-      localStorage.setItem('earningsDate', earningsDate.value)
-      getGeneral(earningsDate.value, getRazonSocial(), getPeriodo())
+      localStorage.setItem('earningsDate', earningsDateValue)
+      getGeneral(earningsDateValue, getRazonSocial(), getPeriodo())
     }
-  }, [earningsDate.value, getGeneral])
+  }, [earningsDateValue, getGeneral])
 
   useEffect(() => {
-    if (earnings.value) {
+    if (earningsValue) {
       // set to local storage
-      localStorage.setItem('earnings', earnings.value)
+      localStorage.setItem('earnings', earningsValue)
     }
-  }, [earnings.value])
+  }, [earningsValue])
 
   const handleCancel = () => {
     setShowModal(false)
@@ -64,7 +66,16 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
         <Row className="mb-3">
           <Form.Group as={Col} controlId="formGridUtilidad">
             <Form.Label>Utilidad</Form.Label>
-            <Form.Control placeholder="1000" {...earnings} />
+            <Form.Control
+              placeholder="1000"
+              type="number"
+              step=".01"
+              isInvalid={!!errors.utilidad}
+              {...register("utilidad", { required: "La utilidad es obligatoria" })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.utilidad?.message}
+            </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group as={Col} controlId="formGridTotalGeneral">
@@ -91,7 +102,15 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
 
           <Form.Group as={Col} controlId="formGridFechaRegistro">
             <Form.Label>Fecha de registro:</Form.Label>
-            <Form.Control {...earningsDate} placeholder="Fecha" name="fecha" />
+            <Form.Control
+              type="datetime-local"
+              placeholder="Fecha"
+              isInvalid={!!errors.fecha}
+              {...register("fecha", { required: "La fecha es obligatoria" })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.fecha?.message}
+            </Form.Control.Feedback>
           </Form.Group>
         </Row>
 
@@ -101,8 +120,7 @@ const RegistroMonto = ({ setShowModal, onRepartir, razon }) => {
               type="button"
               variant="success"
               className="registrar"
-              onClick={onRepartir}
-              disabled={earnings.value === '' || earningsDate.value === ''}
+              onClick={handleSubmit(onRepartir)}
             >
               Repartir
             </Button>

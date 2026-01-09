@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { obtenerFolioActualPeriodo, registraPeriodos } from "../../../api/periodos";
 import Swal from "sweetalert2";
@@ -39,75 +40,60 @@ function RegistroPeriodos(props) {
     const [fichaSocioElegido, setFichaSocioElegido] = useState("");
     const [nombreSocioElegido, setNombreSocioElegido] = useState("");
 
-    // Para almacenar los datos del formulario
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const onSubmit = (data) => {
+        setLoading(true)
+        // Realiza registro de la aportación
+        obtenerFolioActualPeriodo().then(response => {
+            const { data: dataFolio } = response;
+            const { folio } = dataFolio;
+            // console.log(data)
 
-        if (!formData.nombre || !formData.fechaInicio || !formData.fechaCierre) {
-            Swal.fire({
-                title: "Faltan datos",
-                icon: "warning",
-                showConfirmButton: false,
-                timer: 1600,
-            });
-        } else {
+            const dataTemp = {
+                folio: folio,
+                nombre: data.nombre,
+                tipo: getRazonSocial(),
+                fechaInicio: data.fechaInicio,
+                fechaCierre: data.fechaCierre,
+            }
 
-            setLoading(true)
-            // Realiza registro de la aportación
-            obtenerFolioActualPeriodo().then(response => {
+            registraPeriodos(dataTemp).then(response => {
                 const { data } = response;
-                const { folio } = data;
-                // console.log(data)
 
-                const dataTemp = {
-                    folio: folio,
-                    nombre: formData.nombre,
-                    tipo: getRazonSocial(),
-                    fechaInicio: formData.fechaInicio,
-                    fechaCierre: formData.fechaCierre,
-                }
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
 
-                registraPeriodos(dataTemp).then(response => {
-                    const { data } = response;
-
-                    Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                    setTimeout(() => {
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }, 2000)
-
-                }).catch(e => {
-                    console.log(e)
-                })
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
 
             }).catch(e => {
                 console.log(e)
+                setLoading(false)
             })
 
-        }
-    }
-
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        }).catch(e => {
+            console.log(e)
+            setLoading(false)
+        })
     }
 
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                        <Form.Group as={Col} controlId="formGridFolio">
                             <Form.Label>
                                 Folio
                             </Form.Label>
@@ -119,45 +105,54 @@ function RegistroPeriodos(props) {
                             />
                         </Form.Group>
 
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                        <Form.Group as={Col} controlId="formGridNombre">
                             <Form.Label>
                                 Nombre
                             </Form.Label>
                             <Form.Control
                                 className="mb-3"
                                 type="text"
-                                defaultValue={formData.nombre}
                                 placeholder="Nombre"
-                                name="nombre"
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 
                     <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                        <Form.Group as={Col} controlId="formGridFechaInicio">
                             <Form.Label>
                                 Fecha de incio
                             </Form.Label>
                             <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fechaInicio}
                                 placeholder="Fecha de inicio"
-                                name="fechaInicio"
+                                isInvalid={!!errors.fechaInicio}
+                                {...register("fechaInicio", { required: "La fecha de inicio es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fechaInicio?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
+                        <Form.Group as={Col} controlId="formGridFechaCierre">
                             <Form.Label>
                                 Fecha de cierre
                             </Form.Label>
                             <Form.Control
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fechaCierre}
                                 placeholder="Fecha de cierre"
-                                name="fechaCierre"
+                                isInvalid={!!errors.fechaCierre}
+                                {...register("fechaCierre", { required: "La fecha de cierre es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fechaCierre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

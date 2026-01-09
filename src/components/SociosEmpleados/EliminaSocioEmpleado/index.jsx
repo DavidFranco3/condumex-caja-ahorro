@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import {Button, Col, Form, Row, Spinner, Alert} from "react-bootstrap";
+import { Button, Col, Form, Row, Spinner, Alert } from "react-bootstrap";
 import Swal from "sweetalert2";
 import queryString from "query-string";
-import {eliminaSocioEmpleado} from "../../../api/sociosEmpleados";
+import { eliminaSocioEmpleado } from "../../../api/sociosEmpleados";
 
 const fechaToCurrentTimezone = (fecha) => {
-  const date = new Date(fecha)
+    const date = new Date(fecha)
 
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
 
 
-  return date.toISOString().slice(0, 16);
+    return date.toISOString().slice(0, 16);
 }
 
 function EliminaSocioEmpleado(props) {
@@ -32,17 +32,17 @@ function EliminaSocioEmpleado(props) {
         try {
             eliminaSocioEmpleado(id).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),
                 });
                 setShowModal(false)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             }).catch(e => {
                 console.log(e)
             })
@@ -97,9 +97,9 @@ function EliminaSocioEmpleado(props) {
                                 Tipo de socio
                             </Form.Label>
                             <Form.Control as="select"
-                                          defaultValue={tipo}
-                                          name="tipo"
-                                          disabled
+                                defaultValue={tipo}
+                                name="tipo"
+                                disabled
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>
@@ -119,9 +119,9 @@ function EliminaSocioEmpleado(props) {
                             />
                         </Form.Group>
                     </Row>
-                    
+
                     <Row>
-                    <Form.Group as={Col} controlId="formGridCorreo">
+                        <Form.Group as={Col} controlId="formGridCorreo">
                             <Form.Label>
                                 Fecha de registro
                             </Form.Label>
@@ -132,7 +132,7 @@ function EliminaSocioEmpleado(props) {
                                 placeholder="Fecha"
                                 name="createdAt"
                                 disabled
-                                />
+                            />
                         </Form.Group>
                     </Row>
 

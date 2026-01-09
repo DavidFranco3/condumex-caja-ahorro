@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { isEmailValid } from "../../../utils/validations";
@@ -34,89 +35,74 @@ function ModificaUsuarios(props) {
     const [loading, setLoading] = useState(false);
 
     // Para almacenar la información
-    const [formData, setFormData] = useState(initialFormData(datos));
+    // const [formData, setFormData] = useState(initialFormData(datos));
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData(datos)
+    });
 
-        if (!formData.nombre || !formData.correo || !formData.createdAt) {
-            Swal.fire({
-                    title: "Completa el formulario",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
-        } else {
-            if (!isEmailValid(formData.correo)) {
+    const onSubmit = (data) => {
+        // e.preventDefault() -> Handled by handleSubmit
+
+        // Validations handled by react-hook-form
+
+        setLoading(true)
+        const dataTemp = {
+            nombre: data.nombre,
+            apellidos: data.apellidos,
+            correo: data.correo,
+            password: data.password,
+            createdAt: data.createdAt
+        }
+
+        try {
+            actualizaUsuario(id, dataTemp).then(response => {
+                const { data } = response;
                 Swal.fire({
-                    title: "Escriba un correo valido",
-                    icon: "warning",
+                    title: data.mensaje,
+                    icon: "success",
                     showConfirmButton: false,
                     timer: 1600,
                 });
-            } else {
-                setLoading(true)
-                const dataTemp = {
-                    nombre: formData.nombre,
-                    apellidos: formData.apellidos,
-                    correo: formData.correo,
-                    password: formData.password,
-                    createdAt: formData.createdAt
-                }
-
-                try {
-                    actualizaUsuario(id, dataTemp).then(response => {
-                        const { data } = response;
-                        Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-                        setLoading(false)
-                        history({
-                            search: queryString.stringify(""),
-                        });
-                        setShowModal(false)
-                    }).catch(e => {
-                        console.log(e)
-                        if (e.message === 'Network Error') {
-                            //console.log("No hay internet")
-                             Swal.fire({
+                setLoading(false)
+                history({
+                    search: queryString.stringify(""),
+                });
+                setShowModal(false)
+            }).catch(e => {
+                console.log(e)
+                if (e.message === 'Network Error') {
+                    //console.log("No hay internet")
+                    Swal.fire({
                         title: "Conexión al servidor no disponible",
                         icon: "error",
                         showConfirmButton: false,
                         timer: 1600,
                     });
-                            setLoading(false);
-                        } else {
-                            if (e.response && e.response.status === 401) {
-                                const { mensaje } = e.response.data;
-                                 Swal.fire({
-                        title: mensaje,
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
-                                setLoading(false);
-                            }
-                        }
-                    })
-                } catch (e) {
-                    console.log(e)
+                    setLoading(false);
+                } else {
+                    if (e.response && e.response.status === 401) {
+                        const { mensaje } = e.response.data;
+                        Swal.fire({
+                            title: mensaje,
+                            icon: "error",
+                            showConfirmButton: false,
+                            timer: 1600,
+                        });;
+                        setLoading(false);
+                    }
                 }
-            }
+            })
+        } catch (e) {
+            console.log(e)
         }
     }
 
-    const onChange = e => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
 
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onChange={onChange} onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -127,9 +113,12 @@ function ModificaUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el nombre"
-                                name="nombre"
-                                defaultValue={formData.nombre}
+                                isInvalid={!!errors.nombre}
+                                {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.nombre?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridNombre">
@@ -139,8 +128,7 @@ function ModificaUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe los apellidos"
-                                name="apellidos"
-                                defaultValue={formData.apellidos}
+                                {...register("apellidos")}
                             />
                         </Form.Group>
                     </Row>
@@ -154,9 +142,18 @@ function ModificaUsuarios(props) {
                             <Form.Control
                                 type="text"
                                 placeholder="Escribe el correo"
-                                name="correo"
-                                defaultValue={formData.correo !== "No especificado" ? formData.correo : ""}
+                                isInvalid={!!errors.correo}
+                                {...register("correo", {
+                                    required: "El correo es obligatorio",
+                                    pattern: {
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                        message: "Dirección de correo inválida"
+                                    }
+                                })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.correo?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group as={Col} controlId="formGridCorreo">
@@ -166,8 +163,7 @@ function ModificaUsuarios(props) {
                             <Form.Control
                                 type="password"
                                 placeholder="Escribe el password"
-                                name="password"
-                                defaultValue={formData.password}
+                                {...register("password")}
                             />
                         </Form.Group>
                     </Row>
@@ -179,10 +175,13 @@ function ModificaUsuarios(props) {
                             </Form.Label>
                             <Form.Control
                                 type="datetime-local"
-                                defaultValue={formData.createdAt}
                                 placeholder="Fecha"
-                                name="createdAt"
+                                isInvalid={!!errors.createdAt}
+                                {...register("createdAt", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.createdAt?.message}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Row>
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Col, Form, Row, Spinner, ProgressBar } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import queryString from "query-string";
@@ -9,14 +10,16 @@ import { registroDeudaSocioInicial, actualizacionDeudaSocio } from "../../DeudaS
 
 const CargaMasivaPrestamos = ({ setShowModal, history }) => {
 
-    const [formData, setFormData] = useState(initialFormData());
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: initialFormData()
+    });
 
     const [loading, setLoading] = useState(false);
     const [dataFile, setDataFile] = useState([]);
     const [count, setCount] = useState(0)
     const handleCancel = () => setShowModal(false)
-    const handleSubmit = async (evt) => {
-        evt.preventDefault();
+    const onSubmit = async (data) => {
+        // evt.preventDefault();
         if (dataFile.length === 0) {
             Swal.fire({
                 title: 'No hay datos para cargar',
@@ -44,35 +47,34 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                 periodo: periodo,
                 prestamoTotal: prestamo,
                 tasaInteres: 0,
-                createdAt: formData.fecha,
+                createdAt: data.fecha,
             }
             await registraPrestamos(dataPrestamos);
 
-            await actualizacionDeudaSocio(fichaSocio, "0", parseFloat(prestamo), "Prestamo", formData.fecha);
-
-            await registroDeudaSocioInicial(fichaSocio, "0", parseFloat(prestamo), "Prestamo", formData.fecha);
+            await actualizacionDeudaSocio(fichaSocio, "0", parseFloat(prestamo), "Prestamo", data.fecha);
+            await registroDeudaSocioInicial(fichaSocio, "0", parseFloat(prestamo), "Prestamo", data.fecha);
 
             await registroMovimientosSaldosSocios(fichaSocio, "0", "0", parseFloat(prestamo), "0", "0", "0", "0", "Prestamo");
 
             // increment count for render value in progress bar
             setCount(oldCount => oldCount + 1);
         }
-        Swal.fire({
-            title: "Prestamos registrados con exito",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1600,
-        });
         setDataFile([]);
         setLoading(false);
         history({
             search: queryString.stringify(''),
         });
         setShowModal(false);
-    }
-    const handleChange = (e) => {
 
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        Swal.fire({
+            title: "Prestamos registrados con exito",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1600,
+        });
+    }
+    const handleFileChange = (e) => {
+        // setFormData({ ...formData, [e.target.name]: e.target.value })
 
         const { files } = e.target;
         if (files.length > 0) {
@@ -105,14 +107,14 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
     return (
         <>
             <div className='contenidoFormularioPrincipal'>
-                <Form>
+                <Form onSubmit={handleSubmit(onSubmit)}>
                     <Form.Group as={Row} className='botones pt-3'>
                         <Col sm={5}>
                             <Form.Label>Seleccione el fichero:</Form.Label>
                         </Col>
                         <Col sm={7}>
                             <Form.Control
-                                onChange={handleChange}
+                                onChange={handleFileChange}
                                 className='form-control block w-full px-3 py-1.5 text-base font-normaltext-gray-700bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none'
                                 accept='.txt, text/plain'
                                 type='file'
@@ -126,13 +128,15 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                         <Col sm={7}>
 
                             <Form.Control
-                                onChange={handleChange}
                                 className="mb-3"
                                 type="datetime-local"
-                                defaultValue={formData.fecha}
                                 placeholder="Fecha"
-                                name="fecha"
+                                isInvalid={!!errors.fecha}
+                                {...register("fecha", { required: "La fecha es obligatoria" })}
                             />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.fecha?.message}
+                            </Form.Control.Feedback>
                         </Col>
                     </Form.Group>
                     {
@@ -162,7 +166,6 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                                 type='submit'
                                 variant='success'
                                 className='registrar'
-                                onClick={handleSubmit}
                                 disabled={loading}
                             >
                                 <Loading />

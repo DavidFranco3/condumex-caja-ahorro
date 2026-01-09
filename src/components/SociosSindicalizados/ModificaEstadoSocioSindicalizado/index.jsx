@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import {Button, Col, Form, Row, Spinner} from "react-bootstrap";
+import { useForm } from 'react-hook-form';
+import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import queryString from "query-string";
-import {cambiaEstadoSocioSindicalizado} from "../../../api/sociosSindicalizados";
+import { cambiaEstadoSocioSindicalizado } from "../../../api/sociosSindicalizados";
 
 function ModificaEstadoSocioSindicalizado(props) {
     const { datos, setShowModal, history, location } = props;
@@ -15,8 +16,10 @@ function ModificaEstadoSocioSindicalizado(props) {
         setShowModal(false)
     }
 
-    const onSubmit = (e) => {
-        e.preventDefault()
+    const { handleSubmit } = useForm();
+
+    const onSubmit = (data) => {
+        // e.preventDefault() -> Handled
         setLoading(true)
 
         const dataTemp = {
@@ -26,17 +29,17 @@ function ModificaEstadoSocioSindicalizado(props) {
         try {
             cambiaEstadoSocioSindicalizado(id, dataTemp).then(response => {
                 const { data } = response;
-                Swal.fire({
-                        title: data.mensaje,
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
                 setLoading(false)
                 history({
                     search: queryString.stringify(""),
                 });
                 setShowModal(false)
+                Swal.fire({
+                    title: data.mensaje,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1600,
+                });
             }).catch(e => {
                 console.log(e)
             })
@@ -48,7 +51,7 @@ function ModificaEstadoSocioSindicalizado(props) {
     return (
         <>
             <div className="contenidoFormularioPrincipal">
-                <Form onSubmit={onSubmit}>
+                <Form onSubmit={handleSubmit(onSubmit)}>
 
                     {/* Ficha, nombre */}
                     <Row className="mb-3">
@@ -83,9 +86,9 @@ function ModificaEstadoSocioSindicalizado(props) {
                                 Tipo de socio
                             </Form.Label>
                             <Form.Control as="select"
-                                          defaultValue={tipo}
-                                          name="tipo"
-                                          disabled
+                                defaultValue={tipo}
+                                name="tipo"
+                                disabled
                             >
                                 <option>Elige una opción</option>
                                 <option value="Asociación de Empleados Sector Cables A.C.">Empleado</option>

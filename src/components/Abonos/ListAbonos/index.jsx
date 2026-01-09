@@ -68,7 +68,6 @@ function ListAbonos(props) {
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
                                 <Dropdown.Item
-                                    bg="danger"
                                     className="eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2"
                                     onClick={() => {
                                         eliminacionAbonos(
@@ -82,7 +81,7 @@ function ListAbonos(props) {
                                         )
                                     }}
                                 >
-                                    <FontAwesomeIcon icon={faTrashCan} className="text-lg" />
+                                    <span className="text-red-600" style={{ color: 'red' }}><FontAwesomeIcon icon={faTrashCan} className="text-lg" /> Eliminar</span>
                                 </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
