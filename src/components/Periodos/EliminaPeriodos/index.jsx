@@ -1,158 +1,147 @@
-import { useState, useEffect } from 'react';
-import { Alert, Button, Col, Form, Row, Spinner } from "react-bootstrap";
-import { eliminaPeriodos } from "../../../api/periodos";
-import Swal from "sweetalert2";
-import queryString from "query-string";
+import { useState } from 'react'
+import { Alert, Button, Col, Form, Row, Spinner } from 'react-bootstrap'
+import { eliminaPeriodos } from '../../../api/periodos'
+import Swal from 'sweetalert2'
+import queryString from 'query-string'
 
-const fechaToCurrentTimezone = (fecha) => {
-    const date = new Date(fecha)
+function EliminaPeriodos (props) {
+  const { datos, history, setShowModal } = props
+  // console.log(datos)
+  const { id, folio, nombre, fechaInicio, fechaCierre } = datos
 
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset())
+  const cancelarEliminacion = () => {
+    setShowModal(false)
+  }
 
+  // Para controlar la animacion
+  const [loading, setLoading] = useState(false)
 
-    return date.toISOString().slice(0, 16);
-}
+  const onSubmit = (e) => {
+    e.preventDefault()
+    setLoading(true)
 
-function EliminaPeriodos(props) {
-    const { datos, location, history, setShowModal, setRefreshCheckLogin } = props;
-    //console.log(datos)
-    const { id, folio, nombre, fechaInicio, fechaCierre } = datos;
-
-    const cancelarEliminacion = () => {
+    try {
+      eliminaPeriodos(id).then(response => {
+        const { data } = response
+        setLoading(false)
+        history({
+          search: queryString.stringify(''),
+        })
         setShowModal(false)
+
+        Swal.fire({
+          title: data.mensaje,
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+      }).catch(e => {
+        console.log(e)
+      })
+    } catch (e) {
+      console.log(e)
     }
+  }
 
-    // Para controlar la animacion
-    const [loading, setLoading] = useState(false);
+  return (
+    <>
+      <div className='contenidoFormularioPrincipal'>
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        setLoading(true)
+        <Alert variant='danger'>
+          <Alert.Heading>Atención! Acción destructiva!</Alert.Heading>
+          <p className='mensaje'>
+            Esta acción eliminará del sistema el abono del socio.
+          </p>
+        </Alert>
 
-        try {
-            eliminaPeriodos(id).then(response => {
-                const { data } = response;
-                setLoading(false)
-                history({
-                    search: queryString.stringify(""),
-                });
-                setShowModal(false)
+        <Form onSubmit={onSubmit}>
 
-                Swal.fire({
-                    title: data.mensaje,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1600,
-                });
+          {/* Ficha, nombre */}
+          <Row className='mb-3'>
+            <Form.Group as={Col} controlId='formGridFechaRegistro'>
+              <Form.Label>
+                Folio
+              </Form.Label>
+              <Form.Control
+                className='mb-3'
+                type='text'
+                value={folio}
+                disabled
+              />
+            </Form.Group>
 
-            }).catch(e => {
-                console.log(e)
-            })
-        } catch (e) {
-            console.log(e)
-        }
-    }
+            <Form.Group as={Col} controlId='formGridFechaRegistro'>
+              <Form.Label>
+                Nombre
+              </Form.Label>
+              <Form.Control
+                className='mb-3'
+                type='text'
+                defaultValue={nombre}
+                placeholder='Nombre'
+                name='nombre'
+                disabled
+              />
+            </Form.Group>
+          </Row>
 
-    return (
-        <>
-            <div className="contenidoFormularioPrincipal">
+          <Row className='mb-3'>
+            <Form.Group as={Col} controlId='formGridFechaRegistro'>
+              <Form.Label>
+                Fecha de incio
+              </Form.Label>
+              <Form.Control
+                className='mb-3'
+                type='datetime-local'
+                defaultValue={fechaInicio}
+                placeholder='Fecha de inicio'
+                name='fechaInicio'
+                disabled
+              />
+            </Form.Group>
 
-                <Alert variant="danger">
-                    <Alert.Heading>Atención! Acción destructiva!</Alert.Heading>
-                    <p className="mensaje">
-                        Esta acción eliminará del sistema el abono del socio.
-                    </p>
-                </Alert>
+            <Form.Group as={Col} controlId='formGridFechaRegistro'>
+              <Form.Label>
+                Fecha de cierre
+              </Form.Label>
+              <Form.Control
+                className='mb-3'
+                type='datetime-local'
+                defaultValue={fechaCierre}
+                placeholder='Fecha de cierre'
+                name='fechaCierre'
+                disabled
+              />
+            </Form.Group>
+          </Row>
 
-                <Form onSubmit={onSubmit}>
+          <Form.Group as={Row} className='botones'>
+            <Col>
+              <Button
+                type='submit'
+                variant='success'
+                className='registrar'
+              >
+                {!loading ? 'Eliminar' : <Spinner animation='border' />}
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                variant='danger'
+                className='cancelar'
+                onClick={() => {
+                  cancelarEliminacion()
+                }}
+              >
+                Cancelar
+              </Button>
+            </Col>
+          </Form.Group>
 
-                    {/* Ficha, nombre */}
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
-                            <Form.Label>
-                                Folio
-                            </Form.Label>
-                            <Form.Control
-                                className="mb-3"
-                                type="text"
-                                value={folio}
-                                disabled
-                            />
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
-                            <Form.Label>
-                                Nombre
-                            </Form.Label>
-                            <Form.Control
-                                className="mb-3"
-                                type="text"
-                                defaultValue={nombre}
-                                placeholder="Nombre"
-                                name="nombre"
-                                disabled
-                            />
-                        </Form.Group>
-                    </Row>
-
-                    <Row className="mb-3">
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
-                            <Form.Label>
-                                Fecha de incio
-                            </Form.Label>
-                            <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={fechaInicio}
-                                placeholder="Fecha de inicio"
-                                name="fechaInicio"
-                                disabled
-                            />
-                        </Form.Group>
-
-                        <Form.Group as={Col} controlId="formGridFechaRegistro">
-                            <Form.Label>
-                                Fecha de cierre
-                            </Form.Label>
-                            <Form.Control
-                                className="mb-3"
-                                type="datetime-local"
-                                defaultValue={fechaCierre}
-                                placeholder="Fecha de cierre"
-                                name="fechaCierre"
-                                disabled
-                            />
-                        </Form.Group>
-                    </Row>
-
-                    <Form.Group as={Row} className="botones">
-                        <Col>
-                            <Button
-                                type="submit"
-                                variant="success"
-                                className="registrar"
-                            >
-                                {!loading ? "Eliminar" : <Spinner animation="border" />}
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                variant="danger"
-                                className="cancelar"
-                                onClick={() => {
-                                    cancelarEliminacion()
-                                }}
-                            >
-                                Cancelar
-                            </Button>
-                        </Col>
-                    </Form.Group>
-
-                </Form>
-            </div>
-        </>
-    );
+        </Form>
+      </div>
+    </>
+  )
 }
 
-export default EliminaPeriodos;
-
+export default EliminaPeriodos

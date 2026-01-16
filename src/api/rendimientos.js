@@ -23,7 +23,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Obtener datos del saldo del socio indicando la ficha del socio
-export async function obtenerRendimientoxFicha(fichaSocio) {
+export async function obtenerRendimientoxFicha (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -37,7 +37,7 @@ export async function obtenerRendimientoxFicha(fichaSocio) {
   )
 }
 
-export async function getTotalGeneralByRazon(fecha, razonSocial, periodo) {
+export async function getTotalGeneralByRazon (fecha, razonSocial, periodo) {
   const token = getTokenApi()
   const url = `${API_HOST}/rendimientos/totalGeneralByRazon?fecha=${fecha}&&razonSocial=${razonSocial}&&periodo=${periodo}`
 
@@ -48,7 +48,7 @@ export async function getTotalGeneralByRazon(fecha, razonSocial, periodo) {
   })
 }
 
-export async function totalGeneralBySocios(fecha, razonSocial, periodo) {
+export async function totalGeneralBySocios (fecha, razonSocial, periodo) {
   const token = getTokenApi()
   const url = `${API_HOST}/rendimientos/totalGeneralBySocios?fecha=${fecha}&&razonSocial=${razonSocial}&&periodo=${periodo}`
 
@@ -60,7 +60,7 @@ export async function totalGeneralBySocios(fecha, razonSocial, periodo) {
 }
 
 // Obtener rendimientos por ficha del socio
-export async function getRendimientosBySocio(ficha, periodo) {
+export async function getRendimientosBySocio (ficha, periodo) {
   const token = getTokenApi()
   const headers = {
     'Content-Type': 'application/json',
@@ -73,14 +73,14 @@ export async function getRendimientosBySocio(ficha, periodo) {
   )
 }
 
-export async function getRendimientoAcumuladosByRazon(tipo) {
+export async function getRendimientoAcumuladosByRazon (tipo) {
   const token = getTokenApi()
   const url = `${API_HOST}${ENDPOINTObtenerRendimientosAcumuladosByRazon}/?tipo=${tipo}`
   return axios.get(url, { headers: { Authorization: `Bearer ${token}` } })
 }
 
 // Registro de Rendimientos
-export async function registraRendimientosSocios(data) {
+export async function registraRendimientosSocios (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -93,7 +93,7 @@ export async function registraRendimientosSocios(data) {
 }
 
 // Registro de Rendimientos
-export async function registraRendimientosSocios2(data) {
+export async function registraRendimientosSocios2 (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -106,7 +106,7 @@ export async function registraRendimientosSocios2(data) {
 }
 
 // Listar todas las Rendimientos
-export async function listarRendimientos(razonSocial, inicio, fin) {
+export async function listarRendimientos (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -123,7 +123,7 @@ export async function listarRendimientos(razonSocial, inicio, fin) {
 }
 
 // Listar todas las Rendimientos
-export async function listarRendimiento(razonSocial) {
+export async function listarRendimiento (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -138,7 +138,7 @@ export async function listarRendimiento(razonSocial) {
 }
 
 // Listar todas las Rendimientos
-export async function listarRendimientoPeriodo(razonSocial, periodo) {
+export async function listarRendimientoPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -153,7 +153,7 @@ export async function listarRendimientoPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de las Rendimientos
-export async function totalRendimientos() {
+export async function totalRendimientos () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -165,7 +165,7 @@ export async function totalRendimientos() {
 }
 
 // Obtener el total de Rendimientos segun la razon social proporcionada
-export async function totalxTipoRendimientos(razonSocial) {
+export async function totalxTipoRendimientos (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -180,7 +180,7 @@ export async function totalxTipoRendimientos(razonSocial) {
 }
 
 // Listar las Rendimientos paginandolas
-export async function listarPaginacionRendimientos(pagina, limite) {
+export async function listarPaginacionRendimientos (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -197,7 +197,7 @@ export async function listarPaginacionRendimientos(pagina, limite) {
 }
 
 // Listar paginando las Rendimientos paginandolas por tipo
-export async function listarPaginacionRendimientosxTipo(pagina, limite, tipo) {
+export async function listarPaginacionRendimientosxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -214,7 +214,7 @@ export async function listarPaginacionRendimientosxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio actual de las Rendimientos
-export async function obtenerFolioActualRendimientos() {
+export async function obtenerFolioActualRendimientos () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -226,7 +226,7 @@ export async function obtenerFolioActualRendimientos() {
 }
 
 // Obtener los datos de la aportación por id
-export async function obtenerRendimientos(id) {
+export async function obtenerRendimientos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -241,7 +241,7 @@ export async function obtenerRendimientos(id) {
 }
 
 // Obtener los datos de la aportacion por el numero de ficha del socio --
-export async function obtenerDatosRendimientos(ficha) {
+export async function obtenerDatosRendimientos (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -256,7 +256,7 @@ export async function obtenerDatosRendimientos(ficha) {
 }
 
 // Eliminar Rendimientos
-export async function eliminaRendimientos(id) {
+export async function eliminaRendimientos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -272,7 +272,7 @@ export async function eliminaRendimientos(id) {
 }
 
 // Actualizar Rendimientos
-export async function actualizaRendimientos(id, data) {
+export async function actualizaRendimientos (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -288,7 +288,7 @@ export async function actualizaRendimientos(id, data) {
   )
 }
 
-export async function eliminaRendimientosMasivo(fecha, tipo) {
+export async function eliminaRendimientosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

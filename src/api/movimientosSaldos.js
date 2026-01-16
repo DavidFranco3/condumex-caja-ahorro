@@ -17,7 +17,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Registro de movimiento de saldos
-export async function registraMovimientoSaldos(data) {
+export async function registraMovimientoSaldos (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -34,7 +34,7 @@ export async function registraMovimientoSaldos(data) {
 }
 
 // Listar todos los movimientos de saldos
-export async function listarMovimientoSaldos(razonSocial) {
+export async function listarMovimientoSaldos (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -49,7 +49,7 @@ export async function listarMovimientoSaldos(razonSocial) {
 }
 
 // Listar todos los movimientos de saldos
-export async function listarMovimientoSaldosPeriodo(razonSocial, periodo) {
+export async function listarMovimientoSaldosPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -64,7 +64,7 @@ export async function listarMovimientoSaldosPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de movimientos registrados
-export async function totalMovimientoRegistrados(params) {
+export async function totalMovimientoRegistrados (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -76,7 +76,7 @@ export async function totalMovimientoRegistrados(params) {
 }
 
 // Obten el total de movimientos registrados segun la razon social indicada
-export async function totalxTipoMovimientosSaldos(dato) {
+export async function totalxTipoMovimientosSaldos (dato) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -91,7 +91,7 @@ export async function totalxTipoMovimientosSaldos(dato) {
 }
 
 // Listar paginando los movimientos de saldos
-export async function listarPaginacionMovimientoSaldos(pagina, limite) {
+export async function listarPaginacionMovimientoSaldos (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -108,7 +108,7 @@ export async function listarPaginacionMovimientoSaldos(pagina, limite) {
 }
 
 // Listar paginando los movimientos de saldos, indicando el tipo
-export async function listarPaginacionMovimientosSaldosxTipo(
+export async function listarPaginacionMovimientosSaldosxTipo (
   pagina,
   limite,
   tipo
@@ -129,7 +129,7 @@ export async function listarPaginacionMovimientosSaldosxTipo(
 }
 
 // Obtener el folio actual de los movimientos de saldos
-export async function obtenerFolioActualMovimientoSaldos() {
+export async function obtenerFolioActualMovimientoSaldos () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -144,7 +144,7 @@ export async function obtenerFolioActualMovimientoSaldos() {
 }
 
 // Obtener los datos de un movimiento especificando el id
-export async function obtenerMovimientoSaldos(id) {
+export async function obtenerMovimientoSaldos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -159,7 +159,7 @@ export async function obtenerMovimientoSaldos(id) {
 }
 
 // Obtener los datos de un movimiento especificando la ficha del socio
-export async function obtenerDatosMovimientoSaldos(dato) {
+export async function obtenerDatosMovimientoSaldos (dato) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -174,7 +174,7 @@ export async function obtenerDatosMovimientoSaldos(dato) {
 }
 
 // Eliminar un movimiento
-export async function eliminaMovimientoSaldos(id) {
+export async function eliminaMovimientoSaldos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -190,7 +190,7 @@ export async function eliminaMovimientoSaldos(id) {
 }
 
 // Actualizar movimientos de saldos
-export async function actualizaMovimientoSaldos(id, data) {
+export async function actualizaMovimientoSaldos (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',

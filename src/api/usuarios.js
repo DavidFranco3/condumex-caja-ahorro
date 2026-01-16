@@ -13,7 +13,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Registra usuarios
-export async function registraUsuarios(data) {
+export async function registraUsuarios (data) {
   // console.log(data)
 
   const config = {
@@ -28,7 +28,7 @@ export async function registraUsuarios(data) {
 }
 
 // Para obtener todos los datos del usuario
-export async function obtenerUsuario(params) {
+export async function obtenerUsuario (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -43,7 +43,7 @@ export async function obtenerUsuario(params) {
 }
 
 // Para listar todos los usuarios
-export async function listarUsuarios(params) {
+export async function listarUsuarios (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -55,7 +55,7 @@ export async function listarUsuarios(params) {
 }
 
 // Listar los usuarios paginandolos
-export async function listarUsuariosPaginacion(pagina, limite) {
+export async function listarUsuariosPaginacion (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -72,7 +72,7 @@ export async function listarUsuariosPaginacion(pagina, limite) {
 }
 
 // Elimina cliente fisicamente de la bd
-export async function eliminaUsuario(id) {
+export async function eliminaUsuario (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -88,7 +88,7 @@ export async function eliminaUsuario(id) {
 }
 
 // Deshabilita el usuario
-export async function deshabilitaUsuario(id, data) {
+export async function deshabilitaUsuario (id, data) {
   // console.log(data)
   const config = {
     headers: {
@@ -106,7 +106,7 @@ export async function deshabilitaUsuario(id, data) {
 }
 
 // Modifica datos del usuario
-export async function actualizaUsuario(id, data) {
+export async function actualizaUsuario (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -123,7 +123,7 @@ export async function actualizaUsuario(id, data) {
 }
 
 // Obtener el total de socios registrados
-export async function totalRegistrosUsuarios() {
+export async function totalRegistrosUsuarios () {
   const config = {
     headers: {
       Accept: 'application/json',

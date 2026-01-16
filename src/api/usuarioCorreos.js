@@ -13,7 +13,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Registra UsuarioCorreos
-export async function registraUsuarioCorreo(data) {
+export async function registraUsuarioCorreo (data) {
   // console.log(data)
 
   const config = {
@@ -28,7 +28,7 @@ export async function registraUsuarioCorreo(data) {
 }
 
 // Para obtener todos los datos del usuario
-export async function obtenerUsuarioCorreo(params) {
+export async function obtenerUsuarioCorreo (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -43,7 +43,7 @@ export async function obtenerUsuarioCorreo(params) {
 }
 
 // Para listar todos los UsuarioCorreos
-export async function listarUsuarioCorreos(params) {
+export async function listarUsuarioCorreos (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -55,7 +55,7 @@ export async function listarUsuarioCorreos(params) {
 }
 
 // Listar los UsuarioCorreos paginandolos
-export async function listarUsuarioCorreosPaginacion(pagina, limite) {
+export async function listarUsuarioCorreosPaginacion (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -72,7 +72,7 @@ export async function listarUsuarioCorreosPaginacion(pagina, limite) {
 }
 
 // Elimina cliente fisicamente de la bd
-export async function eliminarUsuarioCorreo(id) {
+export async function eliminarUsuarioCorreo (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -88,7 +88,7 @@ export async function eliminarUsuarioCorreo(id) {
 }
 
 // Deshabilita el usuario
-export async function deshabilitaUsuarioCorreo(id, data) {
+export async function deshabilitaUsuarioCorreo (id, data) {
   // console.log(data)
   const config = {
     headers: {
@@ -106,7 +106,7 @@ export async function deshabilitaUsuarioCorreo(id, data) {
 }
 
 // Modifica datos del usuario
-export async function actualizaUsuarioCorreo(id, data) {
+export async function actualizaUsuarioCorreo (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -123,7 +123,7 @@ export async function actualizaUsuarioCorreo(id, data) {
 }
 
 // Obtener el total de socios registrados
-export async function totalRegistrosUsuarioCorreos() {
+export async function totalRegistrosUsuarioCorreos () {
   const config = {
     headers: {
       Accept: 'application/json',

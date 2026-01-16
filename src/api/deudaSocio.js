@@ -38,7 +38,7 @@ export const getDeudaSocioAcumuladosByRazon = async (tipo) => {
 }
 
 // Registro de deuda socio
-export async function registraDeudaSocio(data) {
+export async function registraDeudaSocio (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -51,7 +51,7 @@ export async function registraDeudaSocio(data) {
 }
 
 // Listar todos los deuda socio
-export async function listarDeudaSocio(razonSocial, inicio, fin) {
+export async function listarDeudaSocio (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -68,7 +68,7 @@ export async function listarDeudaSocio(razonSocial, inicio, fin) {
 }
 
 // Listar todos los deuda socio
-export async function listarDeudasSocios(razonSocial) {
+export async function listarDeudasSocios (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -83,7 +83,7 @@ export async function listarDeudasSocios(razonSocial) {
 }
 
 // Listar todos los deuda socio
-export async function listarDeudasSociosPeriodo(razonSocial, periodo) {
+export async function listarDeudasSociosPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -98,7 +98,7 @@ export async function listarDeudasSociosPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de registros de deuda socio
-export async function totalDeudaSocio(params) {
+export async function totalDeudaSocio (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -110,7 +110,7 @@ export async function totalDeudaSocio(params) {
 }
 
 // Obtener el total de registros de deuda socio segun la razon social proporcionada
-export async function totalxTipoDeudaSocio(razonSocial) {
+export async function totalxTipoDeudaSocio (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -125,7 +125,7 @@ export async function totalxTipoDeudaSocio(razonSocial) {
 }
 
 // Listar paginando los deudaSocio
-export async function listarPaginacionDeudaSocio(pagina, limite) {
+export async function listarPaginacionDeudaSocio (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -142,7 +142,7 @@ export async function listarPaginacionDeudaSocio(pagina, limite) {
 }
 
 // Listar deuda socio paginandolos, indicando el tipo
-export async function listarPaginacionDeudaSocioxTipo(pagina, limite, tipo) {
+export async function listarPaginacionDeudaSocioxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -159,7 +159,7 @@ export async function listarPaginacionDeudaSocioxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio del deuda socio actual
-export async function obtenerFolioActualDeudaSocio() {
+export async function obtenerFolioActualDeudaSocio () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -171,7 +171,7 @@ export async function obtenerFolioActualDeudaSocio() {
 }
 
 // Obtener los datos de un deudaSocio por id
-export async function obtenerDeudaSocio(id) {
+export async function obtenerDeudaSocio (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -186,7 +186,7 @@ export async function obtenerDeudaSocio(id) {
 }
 
 // Obtener el listado de deuda socio de un cliente, indicando ficha del socio
-export async function obtenerDatosDeudaSocio(fichaSocio) {
+export async function obtenerDatosDeudaSocio (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -201,7 +201,7 @@ export async function obtenerDatosDeudaSocio(fichaSocio) {
 }
 
 // Eliminar deuda socio -- ENDPOINTEliminarDeudaSocio
-export async function eliminaDeudaSocio(id) {
+export async function eliminaDeudaSocio (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -217,7 +217,7 @@ export async function eliminaDeudaSocio(id) {
 }
 
 // Actualiza datos del deuda Socio
-export async function actualizaDeudaSocio(id, data) {
+export async function actualizaDeudaSocio (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -233,7 +233,7 @@ export async function actualizaDeudaSocio(id, data) {
   )
 }
 
-export async function eliminaDeudaSocioMasivo(fecha, tipo) {
+export async function eliminaDeudaSocioMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

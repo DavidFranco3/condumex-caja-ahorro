@@ -42,7 +42,7 @@ export const getPrestamosAcumuladosByRazon = async (tipo) => {
 }
 
 // Registro de prestamos
-export async function registraPrestamos(data) {
+export async function registraPrestamos (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -55,7 +55,7 @@ export async function registraPrestamos(data) {
 }
 
 // Listar todos los abonos
-export async function listarPrestamos(razonSocial, inicio, fin) {
+export async function listarPrestamos (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -72,7 +72,7 @@ export async function listarPrestamos(razonSocial, inicio, fin) {
 }
 
 // Listar todos los abonos
-export async function listarPrestamo(razonSocial) {
+export async function listarPrestamo (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -87,7 +87,7 @@ export async function listarPrestamo(razonSocial) {
 }
 
 // Listar todos los abonos
-export async function listarPrestamoPeriodo(razonSocial, periodo) {
+export async function listarPrestamoPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -102,7 +102,7 @@ export async function listarPrestamoPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de registros de prestamos
-export async function totalPrestamos(params) {
+export async function totalPrestamos (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -114,7 +114,7 @@ export async function totalPrestamos(params) {
 }
 
 // Obtener el total de registros de prestamos segun la razon social proporcionada
-export async function totalxTipoPrestamos(razonSocial) {
+export async function totalxTipoPrestamos (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -129,7 +129,7 @@ export async function totalxTipoPrestamos(razonSocial) {
 }
 
 // Obtener el total de registros de prestamos segun la razon social proporcionada
-export async function totalxTipoSocioPrestamos(razonSocial, ficha) {
+export async function totalxTipoSocioPrestamos (razonSocial, ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -147,7 +147,7 @@ export async function totalxTipoSocioPrestamos(razonSocial, ficha) {
 }
 
 // Listar paginando los prestamos
-export async function listarPaginacionPrestamos(pagina, limite) {
+export async function listarPaginacionPrestamos (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -164,7 +164,7 @@ export async function listarPaginacionPrestamos(pagina, limite) {
 }
 
 // Listar prestamos paginandolos, indicando el tipo
-export async function listarPaginacionPrestamosxTipo(pagina, limite, tipo) {
+export async function listarPaginacionPrestamosxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -181,7 +181,7 @@ export async function listarPaginacionPrestamosxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio del prestamo actual
-export async function obtenerFolioActualPrestamo() {
+export async function obtenerFolioActualPrestamo () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -193,7 +193,7 @@ export async function obtenerFolioActualPrestamo() {
 }
 
 // Obtener los datos de un prestamo por id
-export async function obtenerPrestamo(id) {
+export async function obtenerPrestamo (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -205,7 +205,7 @@ export async function obtenerPrestamo(id) {
 }
 
 // Obtener el listado de prestamos de un cliente, indicando ficha del socio
-export async function obtenerDatosPrestamos(fichaSocio) {
+export async function obtenerDatosPrestamos (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -220,7 +220,7 @@ export async function obtenerDatosPrestamos(fichaSocio) {
 }
 
 // Eliminar prestamos -- ENDPOINTEliminarPrestamos
-export async function eliminaPrestamos(id) {
+export async function eliminaPrestamos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -236,7 +236,7 @@ export async function eliminaPrestamos(id) {
 }
 
 // Actualiza datos del prestamo
-export async function actualizaPrestamos(id, data) {
+export async function actualizaPrestamos (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -252,7 +252,7 @@ export async function actualizaPrestamos(id, data) {
   )
 }
 
-export async function eliminaPrestamosMasivo(fecha, tipo) {
+export async function eliminaPrestamosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -270,7 +270,7 @@ export async function eliminaPrestamosMasivo(fecha, tipo) {
 }
 
 // Obtener datos del saldo del socio indicando la ficha del socio
-export async function obtenerInfoxPrestamos(fichaSocio) {
+export async function obtenerInfoxPrestamos (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -285,7 +285,7 @@ export async function obtenerInfoxPrestamos(fichaSocio) {
 }
 
 // Obtener datos del saldo del socio indicando la ficha del socio
-export async function obtenerInfoxFechaPrestamos(fecha) {
+export async function obtenerInfoxFechaPrestamos (fecha) {
   const config = {
     headers: {
       Accept: 'application/json',

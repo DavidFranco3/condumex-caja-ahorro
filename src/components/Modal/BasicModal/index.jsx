@@ -4,15 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import './BasicModal.scss'
 
-function BasicModal({ show, setShow, title, children }) {
+function BasicModal ({ show, setShow, title, children }) {
   return (
     <Modal
-      className="basic-modal-principal"
+      className='basic-modal-principal'
       show={show}
       onHide={() => setShow(false)}
-      size="lg"
-      backdrop="static"
-      keyboard="false"
+      size='lg'
+      backdrop='static'
+      keyboard='false'
     >
       <ModalHeader>
         <h2>{title}</h2>

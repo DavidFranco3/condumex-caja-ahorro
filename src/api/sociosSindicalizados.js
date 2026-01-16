@@ -18,7 +18,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Obtener socios sindicalizados por nombre
-export async function obtenerSociosSindicalizadosByNombre(nombre) {
+export async function obtenerSociosSindicalizadosByNombre (nombre) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -33,7 +33,7 @@ export async function obtenerSociosSindicalizadosByNombre(nombre) {
 }
 
 // Registro de socios
-export async function registraSocioSindicalizado(data) {
+export async function registraSocioSindicalizado (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -50,7 +50,7 @@ export async function registraSocioSindicalizado(data) {
 }
 
 // Listado de todos los registros de socios
-export async function listarSocioSindicalizado(params) {
+export async function listarSocioSindicalizado (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -62,7 +62,7 @@ export async function listarSocioSindicalizado(params) {
 }
 
 // Obtener el total de socios registrados
-export async function totalRegistrosSocioSindicalizado() {
+export async function totalRegistrosSocioSindicalizado () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -74,7 +74,7 @@ export async function totalRegistrosSocioSindicalizado() {
 }
 
 // Listar paginando los socios
-export async function listarPaginacionSocioSindizalizado(pagina, limite) {
+export async function listarPaginacionSocioSindizalizado (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -91,7 +91,7 @@ export async function listarPaginacionSocioSindizalizado(pagina, limite) {
 }
 
 // Obtener ficha actual de los socios
-export async function obtenerFichaActualSocioSindicalizado() {
+export async function obtenerFichaActualSocioSindicalizado () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -106,7 +106,7 @@ export async function obtenerFichaActualSocioSindicalizado() {
 }
 
 // Obtener los datos de un socio por id
-export async function obtenerSocioSindicalizado(id) {
+export async function obtenerSocioSindicalizado (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -121,7 +121,7 @@ export async function obtenerSocioSindicalizado(id) {
 }
 
 // Obtener los datos de un socio por ficha
-export async function obtenerDatosSocioSindicalizado(ficha) {
+export async function obtenerDatosSocioSindicalizado (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -136,7 +136,7 @@ export async function obtenerDatosSocioSindicalizado(ficha) {
 }
 
 // Obtener los datos de un socio por ficha
-export async function obtenerNombreSocioSindicalizado(ficha) {
+export async function obtenerNombreSocioSindicalizado (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -151,7 +151,7 @@ export async function obtenerNombreSocioSindicalizado(ficha) {
 }
 
 // Eliminar socios
-export async function eliminaSocioSindicalizado(id) {
+export async function eliminaSocioSindicalizado (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -167,7 +167,7 @@ export async function eliminaSocioSindicalizado(id) {
 }
 
 // Deshabilitar socios
-export async function cambiaEstadoSocioSindicalizado(id, data) {
+export async function cambiaEstadoSocioSindicalizado (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -184,7 +184,7 @@ export async function cambiaEstadoSocioSindicalizado(id, data) {
 }
 
 // Actualizar información de socios
-export async function actualizaSocioSindicalizado(id, data) {
+export async function actualizaSocioSindicalizado (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -200,7 +200,7 @@ export async function actualizaSocioSindicalizado(id, data) {
   )
 }
 
-export async function eliminaSindicalizadosMasivo(fecha, tipo) {
+export async function eliminaSindicalizadosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

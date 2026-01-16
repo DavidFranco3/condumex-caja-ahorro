@@ -1,23 +1,23 @@
-import { useState, useEffect, Suspense } from 'react';
-import { withRouter } from "../../utils/withRouter";
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth';
-import Swal from "sweetalert2";
-import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons';
-import BasicModal from '../../components/Modal/BasicModal';
-import { listarAportacionesPeriodo } from '../../api/aportaciones';
-import ListAportaciones from '../../components/Aportaciones/ListAportaciones';
-import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones';
-import CargaMasivaAportaciones from '../../components/Aportaciones/CargaMasivaAportaciones';
-import RestaurarAportaciones from '../../components/Aportaciones/RestaurarAportaciones';
-import Lottie from 'react-lottie-player';
-import AnimacionLoading from '../../assets/json/loading.json';
-import EliminaAportacionMasivo from '../../components/Aportaciones/EliminaAportacionMasivo';
-import { listarPeriodo } from '../../api/periodos';
-import { map } from "lodash";
+import { useState, useEffect, Suspense } from 'react'
+import { withRouter } from '../../utils/withRouter'
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
+import Swal from 'sweetalert2'
+import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
+import BasicModal from '../../components/Modal/BasicModal'
+import { listarAportacionesPeriodo } from '../../api/aportaciones'
+import ListAportaciones from '../../components/Aportaciones/ListAportaciones'
+import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones'
+import CargaMasivaAportaciones from '../../components/Aportaciones/CargaMasivaAportaciones'
+import RestaurarAportaciones from '../../components/Aportaciones/RestaurarAportaciones'
+import Lottie from 'react-lottie-player'
+import AnimacionLoading from '../../assets/json/loading.json'
+import EliminaAportacionMasivo from '../../components/Aportaciones/EliminaAportacionMasivo'
+import { listarPeriodo } from '../../api/periodos'
+import { map } from 'lodash'
 
-function Aportaciones(props) {
+function Aportaciones (props) {
   const { setRefreshCheckLogin, location, history } = props
 
   // Para hacer uso del modal
@@ -29,18 +29,18 @@ function Aportaciones(props) {
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-         Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-         Swal.fire({
-                        title: "Sesión cerrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+        Swal.fire({
+          title: 'Sesión expirada',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        Swal.fire({
+          title: 'Sesión cerrada por seguridad',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1600,
+        })
         logoutApi()
         setRefreshCheckLogin(true)
       }
@@ -55,12 +55,12 @@ function Aportaciones(props) {
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarAportacionesPeriodo(getRazonSocial(), getPeriodo()).then(response => {
-        const { data } = response;
+        const { data } = response
         // console.log(data)
         if (!listAportaciones && data) {
-          setListAportaciones(formatModelAportaciones(data));
+          setListAportaciones(formatModelAportaciones(data))
         } else {
-          const datosAportaciones = formatModelAportaciones(data);
+          const datosAportaciones = formatModelAportaciones(data)
           setListAportaciones(datosAportaciones)
         }
       }).catch(e => {
@@ -69,9 +69,9 @@ function Aportaciones(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location]);
+  }, [location])
 
-  //Para el registro de Rendimientos
+  // Para el registro de Rendimientos
   const eliminaAportacionMasivo = (content) => {
     setTitulosModal('Eliminar elementos')
     setContentModal(content)
@@ -98,32 +98,32 @@ function Aportaciones(props) {
   }
 
   // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
   const cargarListaPeriodos = () => {
     try {
       listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response;
-        //console.log(data)
-        const dataTemp = formatModelPeriodos(data);
-        //console.log(data)
-        setPeriodosRegistrados(dataTemp);
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
       })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
   useEffect(() => {
-    cargarListaPeriodos();
-  }, []);
+    cargarListaPeriodos()
+  }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState("");
+  const [periodoElegido, setPeriodoElegido] = useState('')
 
   // Para almacenar en localstorage la razon social
   const almacenaPeriodo = (periodo) => {
-    if (periodo != "Elige una opción") {
+    if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
     }
     window.location.reload()
@@ -136,21 +136,21 @@ function Aportaciones(props) {
   }
 
   useEffect(() => {
-    guardarPeriodoElegido();
-  }, []);
+    guardarPeriodoElegido()
+  }, [])
 
   return (
     <>
-      <Alert className="fondoPrincipalAlert">
+      <Alert className='fondoPrincipalAlert'>
         <Row>
-          <Col xs={12} md={4} className="titulo">
-            <h1 className="font-bold">Aportaciones</h1>
+          <Col xs={12} md={4} className='titulo'>
+            <h1 className='font-bold'>Aportaciones</h1>
           </Col>
           <Col xs={6} md={8}>
             <div style={{ float: 'right' }}>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   eliminaAportacionMasivo(
@@ -166,7 +166,7 @@ function Aportaciones(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroAportacionesCargaMasiva(
@@ -182,7 +182,7 @@ function Aportaciones(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroAportacionesRestaurar(
@@ -198,7 +198,7 @@ function Aportaciones(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroAportaciones(
@@ -218,15 +218,13 @@ function Aportaciones(props) {
       </Alert>
 
       <Row>
-        <Col xs={6} md={4}>
-
-        </Col>
+        <Col xs={6} md={4} />
         <Col xs={6} md={4}>
           <Form.Control
-            as="select"
-            aria-label="indicadorPeriodo"
-            name="periodo"
-            className="periodo"
+            as='select'
+            aria-label='indicadorPeriodo'
+            name='periodo'
+            className='periodo'
             defaultValue={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
@@ -234,28 +232,30 @@ function Aportaciones(props) {
           >
             <option>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
       </Row>
 
-      {listAportaciones ? (
-        <>
-          <Suspense fallback={<Spinner />}>
-            <ListAportaciones
-              setRefreshCheckLogin={setRefreshCheckLogin}
-              listAportaciones={listAportaciones}
-              history={history}
-              location={location}
-            />
-          </Suspense>
-        </>
-      ) : (
-        <>
-          <Lottie loop={true} play={true} animationData={AnimacionLoading} />
-        </>
-      )}
+      {listAportaciones
+        ? (
+          <>
+            <Suspense fallback={<Spinner />}>
+              <ListAportaciones
+                setRefreshCheckLogin={setRefreshCheckLogin}
+                listAportaciones={listAportaciones}
+                history={history}
+                location={location}
+              />
+            </Suspense>
+          </>
+          )
+        : (
+          <>
+            <Lottie loop play animationData={AnimacionLoading} />
+          </>
+          )}
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -264,7 +264,7 @@ function Aportaciones(props) {
   )
 }
 
-function formatModelAportaciones(data) {
+function formatModelAportaciones (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -275,13 +275,13 @@ function formatModelAportaciones(data) {
       aportacion: data.aportacion,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
-    });
-  });
-  return dataTemp;
+    })
+  })
+  return dataTemp
 }
 
-function formatModelPeriodos(data) {
-  //console.log(data)
+function formatModelPeriodos (data) {
+  // console.log(data)
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -293,9 +293,9 @@ function formatModelPeriodos(data) {
       fechaCierre: data.fechaCierre,
       fechaRegistro: data.createdAt,
       fechaActualizacion: data.updatedAt
-    });
-  });
-  return dataTemp;
+    })
+  })
+  return dataTemp
 }
 
-export default withRouter(Aportaciones);
+export default withRouter(Aportaciones)

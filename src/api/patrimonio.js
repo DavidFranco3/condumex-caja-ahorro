@@ -42,7 +42,7 @@ export const getPatrimonioAcumuladosByRazon = async (tipo) => {
 }
 
 // Registro de patrimonios
-export async function registraPatrimonio(data) {
+export async function registraPatrimonio (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -54,7 +54,7 @@ export async function registraPatrimonio(data) {
   return await axios.post(API_HOST + ENDPOINTRegistroPatrimonio, data, config)
 }
 
-export async function listarPatrimonio(razonSocial, inicio, fin) {
+export async function listarPatrimonio (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -70,7 +70,7 @@ export async function listarPatrimonio(razonSocial, inicio, fin) {
   )
 }
 
-export async function listarPatrimoniosPeriodo(razonSocial, periodo) {
+export async function listarPatrimoniosPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -84,7 +84,7 @@ export async function listarPatrimoniosPeriodo(razonSocial, periodo) {
   )
 }
 
-export async function listarPatrimonios(razonSocial) {
+export async function listarPatrimonios (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -99,7 +99,7 @@ export async function listarPatrimonios(razonSocial) {
 }
 
 // Obtener el total de registros de patrimonios
-export async function totalPatrimonio(params) {
+export async function totalPatrimonio (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -111,7 +111,7 @@ export async function totalPatrimonio(params) {
 }
 
 // Obtener el total de registros de patrimonios segun la razon social proporcionada
-export async function totalxTipoPatrimonio(razonSocial) {
+export async function totalxTipoPatrimonio (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -126,7 +126,7 @@ export async function totalxTipoPatrimonio(razonSocial) {
 }
 
 // Obtener el total de registros de patrimonios segun la razon social proporcionada
-export async function totalxTipoSocioPatrimonio(razonSocial, ficha) {
+export async function totalxTipoSocioPatrimonio (razonSocial, ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -144,7 +144,7 @@ export async function totalxTipoSocioPatrimonio(razonSocial, ficha) {
 }
 
 // Listar paginando los patrimonio
-export async function listarPaginacionPatrimonio(pagina, limite) {
+export async function listarPaginacionPatrimonio (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -161,7 +161,7 @@ export async function listarPaginacionPatrimonio(pagina, limite) {
 }
 
 // Listar patrimonios paginandolos, indicando el tipo
-export async function listarPaginacionPatrimonioxTipo(pagina, limite, tipo) {
+export async function listarPaginacionPatrimonioxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -178,7 +178,7 @@ export async function listarPaginacionPatrimonioxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio del patrimonio actual
-export async function obtenerFolioActualPatrimonio() {
+export async function obtenerFolioActualPatrimonio () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -190,7 +190,7 @@ export async function obtenerFolioActualPatrimonio() {
 }
 
 // Obtener los datos de un prestamo por id
-export async function obtenerPatrimonio(id) {
+export async function obtenerPatrimonio (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -205,7 +205,7 @@ export async function obtenerPatrimonio(id) {
 }
 
 // Obtener el listado de prestamos de un cliente, indicando ficha del socio
-export async function obtenerDatosPatrimonio(fichaSocio) {
+export async function obtenerDatosPatrimonio (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -220,7 +220,7 @@ export async function obtenerDatosPatrimonio(fichaSocio) {
 }
 
 // Eliminar patrimonio -- ENDPOINTEliminarPatrimonio
-export async function eliminaPatrimonio(id) {
+export async function eliminaPatrimonio (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -236,7 +236,7 @@ export async function eliminaPatrimonio(id) {
 }
 
 // Actualiza datos del patrimonio
-export async function actualizaPatrimonio(id, data) {
+export async function actualizaPatrimonio (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -252,7 +252,7 @@ export async function actualizaPatrimonio(id, data) {
   )
 }
 
-export async function eliminaPatrimonioMasivo(fecha, tipo) {
+export async function eliminaPatrimonioMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -270,7 +270,7 @@ export async function eliminaPatrimonioMasivo(fecha, tipo) {
 }
 
 // Obtener datos del saldo del socio indicando la ficha del socio
-export async function obtenerInfoxPatrimonio(fichaSocio) {
+export async function obtenerInfoxPatrimonio (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',

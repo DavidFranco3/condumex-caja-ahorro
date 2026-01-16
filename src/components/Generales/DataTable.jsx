@@ -1,267 +1,268 @@
-import { useState, useEffect, useMemo, useRef } from "react";
-import DataTable from "react-data-table-component";
-import { CSVLink } from "react-csv";
-import { jsPDF } from "jspdf";
-import autoTable from "jspdf-autotable";
+import { useState, useEffect, useMemo, useRef } from 'react'
+import DataTable from 'react-data-table-component'
+import { CSVLink } from 'react-csv'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const DataTablecustom = ({
-    datos = [],
-    columnas = [],
-    hiddenOptions = false,
-    expandableRows = false,
-    expandableRowsComponent = null,
-    expandableRowExpanded = null,
-    title,
-    ...otherProps
+  datos = [],
+  columnas = [],
+  hiddenOptions = false,
+  expandableRows = false,
+  expandableRowsComponent = null,
+  expandableRowExpanded = null,
+  title,
+  ...otherProps
 }) => {
-    const [filterValue, setFilterValue] = useState("");
-    const [filteredData, setFilteredData] = useState(datos);
-    const [visibleColumns, setVisibleColumns] = useState(columnas.map((col) => col.name));
-    const [showModal, setShowModal] = useState(false);
-    const [isExporting, setIsExporting] = useState(false);
-    const [stickyColumns, setStickyColumns] = useState([]);
-    const [columnWidths, setColumnWidths] = useState({});
-    const tableRef = useRef(null);
+  const [filterValue, setFilterValue] = useState('')
+  const [filteredData, setFilteredData] = useState(datos)
+  const [visibleColumns, setVisibleColumns] = useState(columnas.map((col) => col.name))
+  const [showModal, setShowModal] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+  const [stickyColumns, setStickyColumns] = useState([])
+  const [columnWidths, setColumnWidths] = useState({})
+  const tableRef = useRef(null)
 
-    // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
-    const keys = datos.length > 0
-        ? Object.keys(datos[0]).filter(
-            k => k !== "id" && k !== "tipo" && k !== "folio" && k !== "fechaActualizacion"
-        )
-        : [];
+  // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
+  const keys = datos.length > 0
+    ? Object.keys(datos[0]).filter(
+      k => k !== 'id' && k !== 'tipo' && k !== 'folio' && k !== 'fechaActualizacion'
+    )
+    : []
 
-    // 🔹 Construye el CSV manualmente
-    const csvContent = datos.map(item => {
-        return keys
-            .map(key => {
-                const value = item[key]
-                // Formatea solo si es número
-                if (typeof value === "number" || (!isNaN(value) && value !== "")) {
-                    return Number(value).toFixed(2)
-                }
-                return value ?? "" // evita "undefined"
-            })
-            .join(",")
-    }).join("\n")
-
-    const handleFilterChange = (event) => {
-        const searchValue = event.target.value.trim();
-        setFilterValue(searchValue);
-
-        if (searchValue.length === 0) {
-            setFilteredData(datos);
-            return;
+  // 🔹 Construye el CSV manualmente
+  const csvContent = datos.map(item => {
+    return keys
+      .map(key => {
+        const value = item[key]
+        // Formatea solo si es número
+        if (typeof value === 'number' || (!isNaN(value) && value !== '')) {
+          return Number(value).toFixed(2)
         }
+        return value ?? '' // evita "undefined"
+      })
+      .join(',')
+  }).join('\n')
 
-        const searchLower = searchValue.toLowerCase();
+  const handleFilterChange = (event) => {
+    const searchValue = event.target.value.trim()
+    setFilterValue(searchValue)
 
-        const filtered = datos.filter((row) =>
-            Object.values(row).some((value) => {
-                if (value === null || value === undefined) return false;
-                return String(value).toLowerCase().includes(searchLower);
-            })
-        );
+    if (searchValue.length === 0) {
+      setFilteredData(datos)
+      return
+    }
 
-        setFilteredData(filtered);
-    };
+    const searchLower = searchValue.toLowerCase()
 
-    const handleDoubleClick = (row) => {
-        alert(JSON.stringify(row, null, 2));
-    };
+    const filtered = datos.filter((row) =>
+      Object.values(row).some((value) => {
+        if (value === null || value === undefined) return false
+        return String(value).toLowerCase().includes(searchLower)
+      })
+    )
 
-    useEffect(() => {
-        setFilteredData(datos);
-    }, [datos]);
+    setFilteredData(filtered)
+  }
 
-    const downloadPDF = () => {
-        setIsExporting(true);
-        setTimeout(() => {
-            const doc = new jsPDF();
-            const pageWidth = doc.internal.pageSize.getWidth();
+  const handleDoubleClick = (row) => {
+    alert(JSON.stringify(row, null, 2))
+  }
 
-            const columnasFiltradas = columnas.filter(
-                col => visibleColumns.includes(col.name) && col.name !== "Acciones"
-            );
+  useEffect(() => {
+    setFilteredData(datos)
+  }, [datos])
 
-            const tableColumn = columnasFiltradas.map(col => col.name);
+  const downloadPDF = () => {
+    setIsExporting(true)
+    setTimeout(() => {
+      // eslint-disable-next-line new-cap
+      const doc = new jsPDF()
+      const pageWidth = doc.internal.pageSize.getWidth()
 
-            const tableRows = datos.map(row => {
-                const rowData = columnasFiltradas.map(col => {
-                    let value;
+      const columnasFiltradas = columnas.filter(
+        col => visibleColumns.includes(col.name) && col.name !== 'Acciones'
+      )
 
-                    if (typeof col.selector === "function") {
-                        try {
-                            value = col.selector(row);
-                        } catch {
-                            value = "";
-                        }
-                    } else {
-                        value = row[col.selector];
-                    }
+      const tableColumn = columnasFiltradas.map(col => col.name)
 
-                    if (value && typeof value === "object") {
-                        if (value.props && value.props.children) {
-                            value = Array.isArray(value.props.children)
-                                ? value.props.children.join("")
-                                : value.props.children;
-                        } else {
-                            value = "";
-                        }
-                    }
+      const tableRows = datos.map(row => {
+        const rowData = columnasFiltradas.map(col => {
+          let value
 
-                    return value || "";
-                });
-                return rowData;
-            });
+          if (typeof col.selector === 'function') {
+            try {
+              value = col.selector(row)
+            } catch {
+              value = ''
+            }
+          } else {
+            value = row[col.selector]
+          }
 
-            autoTable(doc, {
-                head: [tableColumn],
-                body: tableRows,
-                startY: 30, // 👈 más margen superior para la primera página
-                theme: "grid",
-                styles: {
-                    halign: "center",
-                    valign: "middle",
-                },
-                headStyles: {
-                    halign: "center",
-                    valign: "middle",
-                    fillColor: [240, 240, 240],
-                    textColor: 20,
-                    fontStyle: "bold",
-                },
-                didDrawPage: (data) => {
-                    const pageCount = doc.internal.getNumberOfPages();
-                    const pageSize = doc.internal.pageSize;
-                    const pageHeight = pageSize.height || pageSize.getHeight();
+          if (value && typeof value === 'object') {
+            if (value.props && value.props.children) {
+              value = Array.isArray(value.props.children)
+                ? value.props.children.join('')
+                : value.props.children
+            } else {
+              value = ''
+            }
+          }
 
-                    // 🏷️ Encabezado
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(16);
-                    doc.text(title || "Reporte", pageWidth / 2, 15, { align: "center" });
+          return value || ''
+        })
+        return rowData
+      })
 
-                    // 📦 Ajustar margen superior para páginas siguientes
-                    if (data.pageNumber > 1) {
-                        data.settings.margin.top = 30; // asegura espacio entre encabezado y tabla
-                    }
+      autoTable(doc, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: 30, // 👈 más margen superior para la primera página
+        theme: 'grid',
+        styles: {
+          halign: 'center',
+          valign: 'middle',
+        },
+        headStyles: {
+          halign: 'center',
+          valign: 'middle',
+          fillColor: [240, 240, 240],
+          textColor: 20,
+          fontStyle: 'bold',
+        },
+        didDrawPage: (data) => {
+          const pageCount = doc.internal.getNumberOfPages()
+          const pageSize = doc.internal.pageSize
+          const pageHeight = pageSize.height || pageSize.getHeight()
 
-                    // 📄 Pie de página
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(10);
-                    doc.text(
+          // 🏷️ Encabezado
+          doc.setFont('helvetica', 'bold')
+          doc.setFontSize(16)
+          doc.text(title || 'Reporte', pageWidth / 2, 15, { align: 'center' })
+
+          // 📦 Ajustar margen superior para páginas siguientes
+          if (data.pageNumber > 1) {
+            data.settings.margin.top = 30 // asegura espacio entre encabezado y tabla
+          }
+
+          // 📄 Pie de página
+          doc.setFont('helvetica', 'normal')
+          doc.setFontSize(10)
+          doc.text(
                         `Página ${data.pageNumber} de ${pageCount}`,
                         pageWidth / 2,
                         pageHeight - 10,
-                        { align: "center" }
-                    );
-                },
-                margin: { top: 30 }, // 👈 margen superior general
-            });
+                        { align: 'center' }
+          )
+        },
+        margin: { top: 30 }, // 👈 margen superior general
+      })
 
-            doc.save(`${title || "data"}.pdf`);
-            setIsExporting(false);
-        }, 100);
-    };
+      doc.save(`${title || 'data'}.pdf`)
+      setIsExporting(false)
+    }, 100)
+  }
 
-    const handleColumnVisibilityChange = (columnName) => {
-        setVisibleColumns((prevVisibleColumns) =>
-            prevVisibleColumns.includes(columnName)
-                ? prevVisibleColumns.filter((name) => name !== columnName)
-                : [...prevVisibleColumns, columnName]
-        );
-    };
+  const handleColumnVisibilityChange = (columnName) => {
+    setVisibleColumns((prevVisibleColumns) =>
+      prevVisibleColumns.includes(columnName)
+        ? prevVisibleColumns.filter((name) => name !== columnName)
+        : [...prevVisibleColumns, columnName]
+    )
+  }
 
-    const selectAllColumns = () => {
-        setVisibleColumns(columnas.map((col) => col.name));
-    };
+  const selectAllColumns = () => {
+    setVisibleColumns(columnas.map((col) => col.name))
+  }
 
-    const deselectAllColumns = () => {
-        setVisibleColumns([]);
-    };
+  const deselectAllColumns = () => {
+    setVisibleColumns([])
+  }
 
-    // ✅ Columnas visibles memoizadas
-    const filteredColumns = useMemo(
-        () => columnas.filter((col) => visibleColumns.includes(col.name)),
-        [columnas, visibleColumns]
-    );
+  // ✅ Columnas visibles memoizadas
+  const filteredColumns = useMemo(
+    () => columnas.filter((col) => visibleColumns.includes(col.name)),
+    [columnas, visibleColumns]
+  )
 
-    // ✅ Columnas sticky en orden visual
-    const orderedStickyColumns = useMemo(
-        () => filteredColumns.filter((col) => stickyColumns.includes(col.name)),
-        [filteredColumns, stickyColumns]
-    );
+  // ✅ Columnas sticky en orden visual
+  const orderedStickyColumns = useMemo(
+    () => filteredColumns.filter((col) => stickyColumns.includes(col.name)),
+    [filteredColumns, stickyColumns]
+  )
 
-    const toggleStickyColumn = (name) => {
-        setStickyColumns((prev) => {
-            const isSticky = prev.includes(name);
-            if (isSticky) {
-                return prev.filter((colName) => colName !== name);
-            } else {
-                if (prev.length < 3) {
-                    return [...prev, name];
-                }
-                return prev; // límite de 3 columnas fijas
-            }
-        });
-    };
-
-    // ✅ Medir anchos usando la PRIMERA FILA de datos (más real que el header)
-    useEffect(() => {
-        if (!tableRef.current) return;
-
-        const firstRow = tableRef.current.querySelector(".rdt_TableRow");
-        if (!firstRow) return; // si no hay filas, no medimos
-
-        const rowCells = firstRow.querySelectorAll(".rdt_TableCell");
-        if (!rowCells.length) return;
-
-        const newWidths = {};
-
-        filteredColumns.forEach((col, index) => {
-            if (rowCells[index]) {
-                const width = rowCells[index].getBoundingClientRect().width;
-                newWidths[col.name] = width;
-            }
-        });
-
-        const oldKeys = Object.keys(columnWidths);
-        const newKeys = Object.keys(newWidths);
-
-        const sameLength = oldKeys.length === newKeys.length;
-        const sameValues =
-            sameLength &&
-            newKeys.every((key) => columnWidths[key] === newWidths[key]);
-
-        if (!sameValues) {
-            setColumnWidths(newWidths);
+  const toggleStickyColumn = (name) => {
+    setStickyColumns((prev) => {
+      const isSticky = prev.includes(name)
+      if (isSticky) {
+        return prev.filter((colName) => colName !== name)
+      } else {
+        if (prev.length < 3) {
+          return [...prev, name]
         }
-    }, [filteredColumns, columnWidths, filteredData.length]);
+        return prev // límite de 3 columnas fijas
+      }
+    })
+  }
 
-    // ✅ Calcular offsets en cadena según el orden visual de las columnas sticky
-    const stickyOffsets = useMemo(() => {
-        const offsets = {};
-        let currentOffset = 0;
+  // ✅ Medir anchos usando la PRIMERA FILA de datos (más real que el header)
+  useEffect(() => {
+    if (!tableRef.current) return
 
-        orderedStickyColumns.forEach((col) => {
-            offsets[col.name] = currentOffset;
-            currentOffset += columnWidths[col.name] || 0;
-        });
+    const firstRow = tableRef.current.querySelector('.rdt_TableRow')
+    if (!firstRow) return // si no hay filas, no medimos
 
-        return offsets;
-    }, [orderedStickyColumns, columnWidths]);
+    const rowCells = firstRow.querySelectorAll('.rdt_TableCell')
+    if (!rowCells.length) return
 
-    // ✅ Estilos dinámicos de columnas sticky (con z-index por orden)
-    const dynamicStyles = useMemo(() => {
-        return orderedStickyColumns
-            .map((col, orderIndex) => {
-                const index = filteredColumns.findIndex((c) => c.name === col.name);
-                const offset = stickyOffsets[col.name];
+    const newWidths = {}
 
-                if (index === -1 || offset === undefined) return "";
+    filteredColumns.forEach((col, index) => {
+      if (rowCells[index]) {
+        const width = rowCells[index].getBoundingClientRect().width
+        newWidths[col.name] = width
+      }
+    })
 
-                const zBase = 20 + orderIndex; // más grande para que no se pisen
+    const oldKeys = Object.keys(columnWidths)
+    const newKeys = Object.keys(newWidths)
 
-                return `
+    const sameLength = oldKeys.length === newKeys.length
+    const sameValues =
+            sameLength &&
+            newKeys.every((key) => columnWidths[key] === newWidths[key])
+
+    if (!sameValues) {
+      setColumnWidths(newWidths)
+    }
+  }, [filteredColumns, columnWidths, filteredData.length])
+
+  // ✅ Calcular offsets en cadena según el orden visual de las columnas sticky
+  const stickyOffsets = useMemo(() => {
+    const offsets = {}
+    let currentOffset = 0
+
+    orderedStickyColumns.forEach((col) => {
+      offsets[col.name] = currentOffset
+      currentOffset += columnWidths[col.name] || 0
+    })
+
+    return offsets
+  }, [orderedStickyColumns, columnWidths])
+
+  // ✅ Estilos dinámicos de columnas sticky (con z-index por orden)
+  const dynamicStyles = useMemo(() => {
+    return orderedStickyColumns
+      .map((col, orderIndex) => {
+        const index = filteredColumns.findIndex((c) => c.name === col.name)
+        const offset = stickyOffsets[col.name]
+
+        if (index === -1 || offset === undefined) return ''
+
+        const zBase = 20 + orderIndex // más grande para que no se pisen
+
+        return `
                     .rdt_TableCol:nth-child(${index + 1}),
                     .rdt_TableCell:nth-child(${index + 1}) {
                         position: sticky !important;
@@ -273,108 +274,107 @@ const DataTablecustom = ({
                     .rdt_TableCol:nth-child(${index + 1}) {
                         z-index: ${zBase + 1};
                     }
-                `;
-            })
-            .join("");
-    }, [orderedStickyColumns, stickyOffsets, filteredColumns]);
+                `
+      })
+      .join('')
+  }, [orderedStickyColumns, stickyOffsets, filteredColumns])
 
-    const processedColumns = filteredColumns.map((col) => {
-        // quitar props internas de react-data-table que NO deben ir al DOM
-        const {
-            right,
-            center,
-            compact,
-            wrap,
-            grow,
-            maxWidth,
-            minWidth,
-            width,
-            reorder,   // si existe
-            ...safeProps
-        } = col;
+  const processedColumns = filteredColumns.map((col) => {
+    // quitar props internas de react-data-table que NO deben ir al DOM
+    const {
+      right,
+      center,
+      compact,
+      wrap,
+      grow,
+      maxWidth,
+      minWidth,
+      width,
+      reorder,   // si existe
+      ...safeProps
+    } = col
 
-        const isSticky = stickyColumns.includes(col.name);
-        const canBeMadeSticky = isSticky || stickyColumns.length < 3;
+    const isSticky = stickyColumns.includes(col.name)
+    const canBeMadeSticky = isSticky || stickyColumns.length < 3
 
-        return {
-            ...safeProps,
-            name: (
-                <div className="custom-header-wrapper">
-                    <label className="custom-checkbox-label">
-                        <input
-                            type="checkbox"
-                            className="custom-checkbox-input"
-                            checked={isSticky}
-                            disabled={!canBeMadeSticky}
-                            onChange={() => toggleStickyColumn(col.name)}
-                        />
-                        <span className="custom-checkbox-checkmark">
-                            <i className="fas fa-thumbtack"></i>
-                        </span>
-                    </label>
-                    <span className="custom-header-name">{col.name}</span>
-                </div>
-            ),
-        };
-    });
+    return {
+      ...safeProps,
+      name: (
+        <div className='custom-header-wrapper'>
+          <label className='custom-checkbox-label'>
+            <input
+              type='checkbox'
+              className='custom-checkbox-input'
+              checked={isSticky}
+              disabled={!canBeMadeSticky}
+              onChange={() => toggleStickyColumn(col.name)}
+            />
+            <span className='custom-checkbox-checkmark'>
+              <i className='fas fa-thumbtack' />
+            </span>
+          </label>
+          <span className='custom-header-name'>{col.name}</span>
+        </div>
+      ),
+    }
+  })
 
-
-    const customStyles = {
-        headRow: {
-            style: {
-                backgroundColor: "#f8f9fa",
-                borderBottom: "2px solid #dee2e6",
-                fontWeight: "600",
-                fontSize: "14px",
-                color: "#495057",
-                minHeight: "52px",
-            },
+  const customStyles = {
+    headRow: {
+      style: {
+        backgroundColor: '#f8f9fa',
+        borderBottom: '2px solid #dee2e6',
+        fontWeight: '600',
+        fontSize: '14px',
+        color: '#495057',
+        minHeight: '52px',
+      },
+    },
+    headCells: {
+      style: {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        whiteSpace: 'nowrap',
+        justifyContent: 'center',
+        textAlign: 'center',
+      },
+    },
+    rows: {
+      style: {
+        fontSize: '13px',
+        color: '#212529',
+        minHeight: '48px',
+        '&:hover': {
+          backgroundColor: '#f1f3f5',
+          cursor: 'pointer',
+          transition: 'background-color 0.2s ease',
         },
-        headCells: {
-            style: {
-                paddingLeft: "16px",
-                paddingRight: "16px",
-                whiteSpace: "nowrap",
-                justifyContent: "center",
-                textAlign: "center",
-            },
-        },
-        rows: {
-            style: {
-                fontSize: "13px",
-                color: "#212529",
-                minHeight: "48px",
-                "&:hover": {
-                    backgroundColor: "#f1f3f5",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s ease",
-                },
-            },
-            stripedStyle: {
-                backgroundColor: "#f8f9fa",
-            },
-        },
-        cells: {
-            style: {
-                paddingLeft: "16px",
-                paddingRight: "16px",
-                justifyContent: "center",
-                textAlign: "center",
-            },
-        },
-        pagination: {
-            style: {
-                borderTop: "1px solid #dee2e6",
-                fontSize: "13px",
-                minHeight: "56px",
-                backgroundColor: "#ffffff",
-            },
-        },
-    };
+      },
+      stripedStyle: {
+        backgroundColor: '#f8f9fa',
+      },
+    },
+    cells: {
+      style: {
+        paddingLeft: '16px',
+        paddingRight: '16px',
+        justifyContent: 'center',
+        textAlign: 'center',
+      },
+    },
+    pagination: {
+      style: {
+        borderTop: '1px solid #dee2e6',
+        fontSize: '13px',
+        minHeight: '56px',
+        backgroundColor: '#ffffff',
+      },
+    },
+  }
 
-    return (
-        <section className="datatable-container" ref={tableRef}>
-            <style>{`
+  return (
+    <section className='datatable-container' ref={tableRef}>
+      <style>{`
                 .datatable-container {
                     background: #ffffff;
                     border-radius: 8px;
@@ -768,212 +768,212 @@ const DataTablecustom = ({
                         margin: 10px;
                     }
                 }
-            `}</style>
+            `}
+      </style>
 
-            <div className="search-bar-container" hidden={hiddenOptions}>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "16px",
-                    }}
+      <div className='search-bar-container' hidden={hiddenOptions}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
+            }}
+          >
+            <div className='search-input-wrapper'>
+              <i className='fa fa-search search-icon' />
+              <input
+                type='search'
+                value={filterValue}
+                onChange={handleFilterChange}
+                className='search-input'
+                placeholder='Buscar en todos los campos...'
+              />
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div className='action-buttons'>
+                <CSVLink
+                  data={csvContent}
+                  filename={`${title || 'data'}.csv`}
+                  style={{ textDecoration: 'none' }}
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            gap: "16px",
-                        }}
-                    >
-                        <div className="search-input-wrapper">
-                            <i className="fa fa-search search-icon" />
-                            <input
-                                type="search"
-                                value={filterValue}
-                                onChange={handleFilterChange}
-                                className="search-input"
-                                placeholder="Buscar en todos los campos..."
-                            />
-                        </div>
+                  <button className='btn-action btn-csv'>
+                    <i className='fas fa-file-csv' />
+                    <span>CSV</span>
+                  </button>
+                </CSVLink>
 
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                                flexWrap: "wrap",
-                            }}
-                        >
-                            <div className="action-buttons">
-                                <CSVLink
-                                    data={csvContent}
-                                    filename={`${title || "data"}.csv`}
-                                    style={{ textDecoration: 'none' }}
-                                >
-                                    <button className="btn-action btn-csv">
-                                        <i className="fas fa-file-csv" />
-                                        <span>CSV</span>
-                                    </button>
-                                </CSVLink>
+                <button
+                  onClick={downloadPDF}
+                  className='btn-action btn-pdf'
+                  disabled={isExporting}
+                >
+                  <i className='fas fa-file-pdf' />
+                  <span>
+                    {isExporting ? 'Exportando...' : 'PDF'}
+                  </span>
+                </button>
 
-                                <button
-                                    onClick={downloadPDF}
-                                    className="btn-action btn-pdf"
-                                    disabled={isExporting}
-                                >
-                                    <i className="fas fa-file-pdf" />
-                                    <span>
-                                        {isExporting ? "Exportando..." : "PDF"}
-                                    </span>
-                                </button>
-
-                                <button
-                                    className="btn-action btn-columns"
-                                    onClick={() => setShowModal(true)}
-                                >
-                                    <i className="fas fa-columns" />
-                                    <span>Columnas</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button
+                  className='btn-action btn-columns'
+                  onClick={() => setShowModal(true)}
+                >
+                  <i className='fas fa-columns' />
+                  <span>Columnas</span>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div className="sticky-info-label">
-                <i className="fas fa-info-circle"></i>
-                <span>
-                    Use la chincheta (<i className="fas fa-thumbtack"></i>) en el
-                    encabezado de una columna para fijarla. Puede fijar hasta 3
-                    columnas.
-                </span>
-            </div>
+      <div className='sticky-info-label'>
+        <i className='fas fa-info-circle' />
+        <span>
+          Use la chincheta (<i className='fas fa-thumbtack' />) en el
+          encabezado de una columna para fijarla. Puede fijar hasta 3
+          columnas.
+        </span>
+      </div>
 
-            <DataTable
-                columns={processedColumns}
-                data={filteredData}
-                pagination
-                paginationPerPage={10}
-                paginationRowsPerPageOptions={[5, 10, 15, 20, 25, 50]}
-                striped
-                highlightOnHover
-                pointerOnHover
-                responsive
-                onRowDoubleClicked={handleDoubleClick}
-                customStyles={customStyles}
-                expandableRows={expandableRows}
-                expandableRowsComponent={expandableRowsComponent}
-                expandableRowExpanded={expandableRowExpanded}
-                {...otherProps}
-                noDataComponent={
-                    <div
-                        style={{
-                            padding: "40px",
-                            textAlign: "center",
-                            color: "#6c757d",
-                        }}
-                    >
-                        <i
-                            className="fas fa-inbox"
-                            style={{
-                                fontSize: "48px",
-                                marginBottom: "16px",
-                                opacity: 0.5,
-                            }}
-                        />
-                        <p style={{ margin: 0, fontSize: "14px" }}>
-                            No se encontraron registros
-                        </p>
-                    </div>
-                }
+      <DataTable
+        columns={processedColumns}
+        data={filteredData}
+        pagination
+        paginationPerPage={10}
+        paginationRowsPerPageOptions={[5, 10, 15, 20, 25, 50]}
+        striped
+        highlightOnHover
+        pointerOnHover
+        responsive
+        onRowDoubleClicked={handleDoubleClick}
+        customStyles={customStyles}
+        expandableRows={expandableRows}
+        expandableRowsComponent={expandableRowsComponent}
+        expandableRowExpanded={expandableRowExpanded}
+        {...otherProps}
+        noDataComponent={
+          <div
+            style={{
+              padding: '40px',
+              textAlign: 'center',
+              color: '#6c757d',
+            }}
+          >
+            <i
+              className='fas fa-inbox'
+              style={{
+                fontSize: '48px',
+                marginBottom: '16px',
+                opacity: 0.5,
+              }}
             />
+            <p style={{ margin: 0, fontSize: '14px' }}>
+              No se encontraron registros
+            </p>
+          </div>
+                }
+      />
 
-            {/* Modal personalizado */}
-            {showModal && (
-                <div
-                    className="modal-overlay"
-                    onClick={() => setShowModal(false)}
+      {/* Modal personalizado */}
+      {showModal && (
+        <div
+          className='modal-overlay'
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className='modal-content-custom'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className='modal-header-custom'>
+              <h5 className='modal-title-custom'>
+                <i className='fas fa-columns' />
+                Gestionar Columnas
+              </h5>
+              <button
+                className='modal-close-btn'
+                onClick={() => setShowModal(false)}
+              >
+                <i className='fas fa-times' />
+              </button>
+            </div>
+
+            <div className='modal-body-custom'>
+              <div className='column-actions'>
+                <button
+                  className='btn-column-action'
+                  onClick={selectAllColumns}
                 >
-                    <div
-                        className="modal-content-custom"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="modal-header-custom">
-                            <h5 className="modal-title-custom">
-                                <i className="fas fa-columns" />
-                                Gestionar Columnas
-                            </h5>
-                            <button
-                                className="modal-close-btn"
-                                onClick={() => setShowModal(false)}
-                            >
-                                <i className="fas fa-times" />
-                            </button>
-                        </div>
+                  <i className='fas fa-check-double' />
+                  Seleccionar Todo
+                </button>
+                <button
+                  className='btn-column-action'
+                  onClick={deselectAllColumns}
+                >
+                  <i className='fas fa-times' />
+                  Deseleccionar Todo
+                </button>
+              </div>
 
-                        <div className="modal-body-custom">
-                            <div className="column-actions">
-                                <button
-                                    className="btn-column-action"
-                                    onClick={selectAllColumns}
-                                >
-                                    <i className="fas fa-check-double" />
-                                    Seleccionar Todo
-                                </button>
-                                <button
-                                    className="btn-column-action"
-                                    onClick={deselectAllColumns}
-                                >
-                                    <i className="fas fa-times" />
-                                    Deseleccionar Todo
-                                </button>
-                            </div>
-
-                            {columnas.map((col) => (
-                                <div
-                                    key={col.name}
-                                    className="column-checkbox-wrapper"
-                                >
-                                    <label className="column-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            checked={visibleColumns.includes(
-                                                col.name
-                                            )}
-                                            onChange={() =>
-                                                handleColumnVisibilityChange(
-                                                    col.name
-                                                )
-                                            }
-                                        />
-                                        {col.name}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="modal-footer-custom">
-                            <button
-                                className="btn-modal btn-modal-light"
-                                onClick={() => setShowModal(false)}
-                            >
-                                Cerrar
-                            </button>
-                            <button
-                                className="btn-modal btn-modal-primary"
-                                onClick={() => setShowModal(false)}
-                            >
-                                <i className="fas fa-check" />
-                                Aplicar
-                            </button>
-                        </div>
-                    </div>
+              {columnas.map((col) => (
+                <div
+                  key={col.name}
+                  className='column-checkbox-wrapper'
+                >
+                  <label className='column-checkbox'>
+                    <input
+                      type='checkbox'
+                      checked={visibleColumns.includes(
+                        col.name
+                      )}
+                      onChange={() =>
+                        handleColumnVisibilityChange(
+                          col.name
+                        )}
+                    />
+                    {col.name}
+                  </label>
                 </div>
-            )}
-        </section>
-    );
-};
+              ))}
+            </div>
 
-export default DataTablecustom;
+            <div className='modal-footer-custom'>
+              <button
+                className='btn-modal btn-modal-light'
+                onClick={() => setShowModal(false)}
+              >
+                Cerrar
+              </button>
+              <button
+                className='btn-modal btn-modal-primary'
+                onClick={() => setShowModal(false)}
+              >
+                <i className='fas fa-check' />
+                Aplicar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  )
+}
+
+export default DataTablecustom

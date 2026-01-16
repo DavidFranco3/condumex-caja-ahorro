@@ -38,7 +38,7 @@ export const getAbonosAcumuladosByRazon = async (tipo) => {
 }
 
 // Registro de abonos
-export async function registraAbonos(data) {
+export async function registraAbonos (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -51,7 +51,7 @@ export async function registraAbonos(data) {
 }
 
 // Listar todos los abonos
-export async function listarAbonos(razonSocial, inicio, fin) {
+export async function listarAbonos (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -68,7 +68,7 @@ export async function listarAbonos(razonSocial, inicio, fin) {
 }
 
 // Listar todos los abonos
-export async function listarAbonosPeriodo(razonSocial, periodo) {
+export async function listarAbonosPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -85,7 +85,7 @@ export async function listarAbonosPeriodo(razonSocial, periodo) {
 }
 
 // Listar todos los abonos
-export async function listarAbono(razonSocial) {
+export async function listarAbono (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -100,7 +100,7 @@ export async function listarAbono(razonSocial) {
 }
 
 // Obtener el total de registros de abonos
-export async function totalAbonos(params) {
+export async function totalAbonos (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -112,7 +112,7 @@ export async function totalAbonos(params) {
 }
 
 // Obtener el total de registros de abonos segun la razon social proporcionada
-export async function totalxTipoAbonos(razonSocial) {
+export async function totalxTipoAbonos (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -127,7 +127,7 @@ export async function totalxTipoAbonos(razonSocial) {
 }
 
 // Listar paginando los abonos
-export async function listarPaginacionAbonos(pagina, limite) {
+export async function listarPaginacionAbonos (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -144,7 +144,7 @@ export async function listarPaginacionAbonos(pagina, limite) {
 }
 
 // Listar abonos paginandolos, indicando el tipo
-export async function listarPaginacionAbonosxTipo(pagina, limite, tipo) {
+export async function listarPaginacionAbonosxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -161,7 +161,7 @@ export async function listarPaginacionAbonosxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio del abono actual
-export async function obtenerFolioActualAbono() {
+export async function obtenerFolioActualAbono () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -173,7 +173,7 @@ export async function obtenerFolioActualAbono() {
 }
 
 // Obtener los datos de un abono por id
-export async function obtenerAbono(id) {
+export async function obtenerAbono (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -185,7 +185,7 @@ export async function obtenerAbono(id) {
 }
 
 // Obtener el listado de abonos de un cliente, indicando ficha del socio
-export async function obtenerDatosAbonos(fichaSocio) {
+export async function obtenerDatosAbonos (fichaSocio) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -200,7 +200,7 @@ export async function obtenerDatosAbonos(fichaSocio) {
 }
 
 // Eliminar abonos -- ENDPOINTEliminarAbonos
-export async function eliminaAbonos(id) {
+export async function eliminaAbonos (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -216,7 +216,7 @@ export async function eliminaAbonos(id) {
 }
 
 // Actualiza datos del abonos
-export async function actualizaAbonos(id, data) {
+export async function actualizaAbonos (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -232,7 +232,7 @@ export async function actualizaAbonos(id, data) {
   )
 }
 
-export async function eliminaAbonosMasivo(fecha, tipo) {
+export async function eliminaAbonosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

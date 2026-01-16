@@ -11,12 +11,13 @@ import { TablePagination } from '@mui/material'
 import './BusquedaSaldos.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
-import Swal from "sweetalert2";
-import { obtenerDatosSaldos } from "../../../../api/saldosSocios"
+import Swal from 'sweetalert2'
+import { obtenerDatosSaldos } from '../../../../api/saldosSocios'
 import { getRazonSocial } from '../../../../api/auth'
 
-function BusquedaSaldos(props) {
-  const { setShowModal,
+function BusquedaSaldos (props) {
+  const {
+    setShowModal,
     setFichaSocioElegido,
     setIdSocioElegido,
     setAportacionSocioElegido,
@@ -87,11 +88,11 @@ function BusquedaSaldos(props) {
   const validarListadoSaldos = (listSaldos) => {
     if (listSaldos.length === 0) {
       Swal.fire({
-        title: "No se encontraron saldos con los datos ingresados",
-        icon: "error",
+        title: 'No se encontraron saldos con los datos ingresados',
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
     setListSaldosEncontrados(formatModelSocios(listSaldos))
   }
@@ -109,24 +110,24 @@ function BusquedaSaldos(props) {
       setLoading(false)
       Swal.fire({
         title: error.message,
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
   }
 
   const loadListadoSaldos = () => {
-    const { nombre, tipo, fichaSocio } = formData
+    const { tipo, fichaSocio } = formData
 
     // Busqueda por ficha
     if (tipo === 'fichaSocio' && fichaSocio === '') {
       Swal.fire({
-        title: "Debe especificar la ficha del socio",
-        icon: "warning",
+        title: 'Debe especificar la ficha del socio',
+        icon: 'warning',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
       setLoading(false)
     } else if (tipo === 'fichaSocio') {
       obtenerSaldoPorFicha(fichaSocio)
@@ -156,155 +157,157 @@ function BusquedaSaldos(props) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  function labelDisplayRows({ _from, to, count }) {
+  function labelDisplayRows ({ _from, to, count }) {
     return `Visualizando ${to} de ${count !== -1 ? count + ' Registros' : `more than ${to}`
       }`
   }
 
   return (
     <>
-      {listSaldosEncontrados ? (
-        <>
-          <div className="listadoSociosEncontrados">
-            <Row>
-              <h3>Saldos encontrados</h3>
-              <TableContainer component={Paper}>
-                <Table stickyHeader aria-label="sticky collapsible table dense">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center">#</TableCell>
-                      <TableCell align="center">Ficha</TableCell>
-                      <TableCell align="center">Tipo</TableCell>
-                      <TableCell align="center">Seleccionar</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {listSaldosEncontrados.map((dato, index) => (
-                      <TableRow
-                        sx={{ '& > *': { borderBottom: 'unset' } }}
-                        key={dato.fichaSocio}
-                      >
-                        <TableCell component="th" scope="row">
-                          {index + 1}
-                        </TableCell>
-                        <TableCell align="center">{dato.fichaSocio}</TableCell>
-                        <TableCell align="center">{dato.tipo}</TableCell>
-                        <TableCell align="center">
-                          <FontAwesomeIcon
-                            className="seleccionSocio"
-                            icon={faCircleCheck}
-                            onClick={() => {
-                              socioSeleccionado(dato)
-                            }}
-                          />
-                        </TableCell>
+      {listSaldosEncontrados
+        ? (
+          <>
+            <div className='listadoSociosEncontrados'>
+              <Row>
+                <h3>Saldos encontrados</h3>
+                <TableContainer component={Paper}>
+                  <Table stickyHeader aria-label='sticky collapsible table dense'>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align='center'>#</TableCell>
+                        <TableCell align='center'>Ficha</TableCell>
+                        <TableCell align='center'>Tipo</TableCell>
+                        <TableCell align='center'>Seleccionar</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={listSociosEncontrados.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                labelRowsPerPage="Filas por página"
-                labelDisplayedRows={labelDisplayRows}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Row>
-            <Row>
-              <Button
-                variant="danger"
-                className="BuscarOtraVez"
-                onClick={() => {
-                  eliminaDatosBusqueda()
-                }}
-              >
-                Realizar otra búsqueda
-              </Button>
-            </Row>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="contenidoFormularioPrincipal">
-            <Form onChange={onChange} onSubmit={onSubmit}>
-              {/* Selección de información */}
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  controlId="formHorizontaltipo"
-                  className="tipo"
+                    </TableHead>
+                    <TableBody>
+                      {listSaldosEncontrados.map((dato, index) => (
+                        <TableRow
+                          sx={{ '& > *': { borderBottom: 'unset' } }}
+                          key={dato.fichaSocio}
+                        >
+                          <TableCell component='th' scope='row'>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell align='center'>{dato.fichaSocio}</TableCell>
+                          <TableCell align='center'>{dato.tipo}</TableCell>
+                          <TableCell align='center'>
+                            <FontAwesomeIcon
+                              className='seleccionSocio'
+                              icon={faCircleCheck}
+                              onClick={() => {
+                                socioSeleccionado(dato)
+                              }}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component='div'
+                  count={listSaldosEncontrados.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  labelRowsPerPage='Filas por página'
+                  labelDisplayedRows={labelDisplayRows}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Row>
+              <Row>
+                <Button
+                  variant='danger'
+                  className='BuscarOtraVez'
+                  onClick={() => {
+                    eliminaDatosBusqueda()
+                  }}
                 >
-                  <Form.Label>¿Como desea buscar al socio?</Form.Label>
+                  Realizar otra búsqueda
+                </Button>
+              </Row>
+            </div>
+          </>
+          )
+        : (
+          <>
+            <div className='contenidoFormularioPrincipal'>
+              <Form onChange={onChange} onSubmit={onSubmit}>
+                {/* Selección de información */}
+                <Row className='mb-3'>
+                  <Form.Group
+                    as={Col}
+                    controlId='formHorizontaltipo'
+                    className='tipo'
+                  >
+                    <Form.Label>¿Como desea buscar al socio?</Form.Label>
+                    <Col>
+                      <Form.Select name='tipo' defaultValue={formData.tipo}>
+                        <option value='' selected>
+                          Elige....
+                        </option>
+                        <option value='fichaSocio'>Por ficha</option>
+                      </Form.Select>
+                    </Col>
+                  </Form.Group>
+                </Row>
+
+                {/* Ficha o Nombre */}
+                <Row className='mb-3'>
+                  <div className='datosBusqueda'>
+                    {formData.tipo === 'fichaSocio' && (
+                      <>
+                        <Form.Group as={Col} controlId='formGridFicha'>
+                          <Form.Label>Ficha</Form.Label>
+                          <Form.Control
+                            type='number'
+                            min='0'
+                            placeholder='Escribe la ficha'
+                            autoComplete='off'
+                            name='ficha'
+                            defaultValue={formData.fichaSocio}
+                          />
+                        </Form.Group>
+                      </>
+                    )}
+                  </div>
+                </Row>
+
+                <Form.Group as={Row} className='botonesBusqueda'>
                   <Col>
-                    <Form.Select name="tipo" defaultValue={formData.tipo}>
-                      <option value="" selected>
-                        Elige....
-                      </option>
-                      <option value="fichaSocio">Por ficha</option>
-                    </Form.Select>
+                    <Button
+                      type='submit'
+                      variant='success'
+                      className='busqueda'
+                      disabled={loading}
+                    >
+                      {!loading ? 'Buscar' : <Spinner animation='border' />}
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      variant='danger'
+                      className='cancelarBusqueda'
+                      disabled={loading}
+                      onClick={() => {
+                        cancelarBusqueda()
+                      }}
+                    >
+                      Cancelar
+                    </Button>
                   </Col>
                 </Form.Group>
-              </Row>
-
-              {/* Ficha o Nombre */}
-              <Row className="mb-3">
-                <div className="datosBusqueda">
-                  {formData.tipo === 'fichaSocio' && (
-                    <>
-                      <Form.Group as={Col} controlId="formGridFicha">
-                        <Form.Label>Ficha</Form.Label>
-                        <Form.Control
-                          type="number"
-                          min="0"
-                          placeholder="Escribe la ficha"
-                          autoComplete="off"
-                          name="ficha"
-                          defaultValue={formData.fichaSocio}
-                        />
-                      </Form.Group>
-                    </>
-                  )}
-                </div>
-              </Row>
-
-              <Form.Group as={Row} className="botonesBusqueda">
-                <Col>
-                  <Button
-                    type="submit"
-                    variant="success"
-                    className="busqueda"
-                    disabled={loading}
-                  >
-                    {!loading ? 'Buscar' : <Spinner animation="border" />}
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    variant="danger"
-                    className="cancelarBusqueda"
-                    disabled={loading}
-                    onClick={() => {
-                      cancelarBusqueda()
-                    }}
-                  >
-                    Cancelar
-                  </Button>
-                </Col>
-              </Form.Group>
-            </Form>
-          </div>
-        </>
-      )}
+              </Form>
+            </div>
+          </>
+          )}
     </>
   )
 }
 
-function formatModelSocios(data) {
+function formatModelSocios (data) {
   return data.map(
     ({
       _id: id,
@@ -320,7 +323,7 @@ function formatModelSocios(data) {
       updatedAt: fechaActualizacion,
     }) => ({
       id,
-      fichaSocio: parseInt(ficha),
+      fichaSocio: parseInt(fichaSocio),
       tipo,
       aportacion,
       prestamo,
@@ -334,7 +337,7 @@ function formatModelSocios(data) {
   )
 }
 
-function initialFormValue() {
+function initialFormValue () {
   return {
     tipo: '',
     aportacion: '',

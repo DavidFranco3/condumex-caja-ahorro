@@ -78,7 +78,7 @@ const configRouting = [
     path: '/usuarios',
     page: Usuarios,
   },
-    {
+  {
     path: '/usuarioCorreos',
     page: UsuarioCorreos,
   },

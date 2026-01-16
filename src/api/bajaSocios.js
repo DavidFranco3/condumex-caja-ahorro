@@ -31,7 +31,7 @@ export const getBajaSociosBySocio = async (ficha) => {
 }
 
 // Registro de las bajas de socios
-export async function registraBajaSocios(data) {
+export async function registraBajaSocios (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -44,7 +44,7 @@ export async function registraBajaSocios(data) {
 }
 
 // Listar todas las bajas de socios
-export async function listarBajaSocios(razonSocial, inicio, fin) {
+export async function listarBajaSocios (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -60,7 +60,7 @@ export async function listarBajaSocios(razonSocial, inicio, fin) {
   )
 }
 
-export async function listarBajaSocio(razonSocial) {
+export async function listarBajaSocio (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -74,7 +74,7 @@ export async function listarBajaSocio(razonSocial) {
   )
 }
 
-export async function listarBajaSocioPeriodo(razonSocial, periodo) {
+export async function listarBajaSocioPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -89,7 +89,7 @@ export async function listarBajaSocioPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de baja de socios
-export async function totalBajaSocios(params) {
+export async function totalBajaSocios (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -101,7 +101,7 @@ export async function totalBajaSocios(params) {
 }
 
 // Obtener el total de las bajas de socios segun la razon social indicada
-export async function totalxTipoBajaSocios(razonSocial) {
+export async function totalxTipoBajaSocios (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -116,7 +116,7 @@ export async function totalxTipoBajaSocios(razonSocial) {
 }
 
 // Listar paginando las bajas de socios
-export async function listarPaginacionBajaSocios(pagina, limite) {
+export async function listarPaginacionBajaSocios (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -133,7 +133,7 @@ export async function listarPaginacionBajaSocios(pagina, limite) {
 }
 
 // Listar paginando las bajas de socios, indicando el tipo
-export async function listarPaginacionBajaSociosxTipo(pagina, limite, tipo) {
+export async function listarPaginacionBajaSociosxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -150,7 +150,7 @@ export async function listarPaginacionBajaSociosxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio actual de las bajas de socios
-export async function obtenerFolioActualBajaSocios() {
+export async function obtenerFolioActualBajaSocios () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -162,7 +162,7 @@ export async function obtenerFolioActualBajaSocios() {
 }
 
 // Obtener los datos de una baja de socio indicando id
-export async function obtenerBajaSocios(id) {
+export async function obtenerBajaSocios (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -177,7 +177,7 @@ export async function obtenerBajaSocios(id) {
 }
 
 // Obtener los datos de una baja de socio indicando ficha del socio
-export async function obtenerDatosBajaSocios(dato) {
+export async function obtenerDatosBajaSocios (dato) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -192,7 +192,7 @@ export async function obtenerDatosBajaSocios(dato) {
 }
 
 // Eliminar una baja de socio
-export async function eliminaBajaSocios(id) {
+export async function eliminaBajaSocios (id) {
   const config = {
     headers: {
       Accept: 'application/json',

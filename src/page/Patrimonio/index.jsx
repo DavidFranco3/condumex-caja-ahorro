@@ -1,58 +1,58 @@
-import { useState, useEffect, Suspense } from 'react';
-import { withRouter } from "../../utils/withRouter";
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from "../../api/auth";
-import Swal from "sweetalert2";
-import { Alert, Button, Col, Row, Spinner, Form } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faTrashCan, faWindowRestore } from "@fortawesome/free-solid-svg-icons";
-import { listarPatrimoniosPeriodo } from "../../api/patrimonio";
-import ListPatrimonios from "../../components/Patrimonio/ListPatrimonios";
-import RegistroPatrimonio from "../../components/Patrimonio/RegistroPatrimonios";
-import BasicModal from "../../components/Modal/BasicModal";
-import CargaMasivaPatrimonio from '../../components/Patrimonio/CargaMasivaPatrimonios';
-import EliminaPatrimonioMasivo from '../../components/Patrimonio/EliminaPatrimoniosMasivo';
-import RestaurarPatrimonios from '../../components/Patrimonio/RestaurarPatrimonios';
-import Lottie from "react-lottie-player";
-import AnimacionLoading from "../../assets/json/loading.json";
-import { listarPeriodo } from '../../api/periodos';
-import { map } from "lodash";
+import { useState, useEffect, Suspense } from 'react'
+import { withRouter } from '../../utils/withRouter'
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
+import Swal from 'sweetalert2'
+import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCirclePlus, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
+import { listarPatrimoniosPeriodo } from '../../api/patrimonio'
+import ListPatrimonios from '../../components/Patrimonio/ListPatrimonios'
+import RegistroPatrimonio from '../../components/Patrimonio/RegistroPatrimonios'
+import BasicModal from '../../components/Modal/BasicModal'
+import CargaMasivaPatrimonio from '../../components/Patrimonio/CargaMasivaPatrimonios'
+import EliminaPatrimonioMasivo from '../../components/Patrimonio/EliminaPatrimoniosMasivo'
+import RestaurarPatrimonios from '../../components/Patrimonio/RestaurarPatrimonios'
+import Lottie from 'react-lottie-player'
+import AnimacionLoading from '../../assets/json/loading.json'
+import { listarPeriodo } from '../../api/periodos'
+import { map } from 'lodash'
 
-function Patrimonio(props) {
-  const { setRefreshCheckLogin, location, history } = props;
+function Patrimonio (props) {
+  const { setRefreshCheckLogin, location, history } = props
 
   // Para hacer uso del modal
-  const [showModal, setShowModal] = useState(false);
-  const [contentModal, setContentModal] = useState(null);
-  const [titulosModal, setTitulosModal] = useState(null);
+  const [showModal, setShowModal] = useState(false)
+  const [contentModal, setContentModal] = useState(null)
+  const [titulosModal, setTitulosModal] = useState(null)
 
   // Cerrado de sesión automatico
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-         Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-         Swal.fire({
-                        title: "Sesión cerrrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-        logoutApi();
-        setRefreshCheckLogin(true);
+        Swal.fire({
+          title: 'Sesión expirada',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        Swal.fire({
+          title: 'Sesión cerrrada por seguridad',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        logoutApi()
+        setRefreshCheckLogin(true)
       }
     }
-  }, []);
+  }, [])
   // Termina cerrado de sesión automatico
 
   // Para el registro de patrimonios
   const registroPatrimonio = (content) => {
-    setTitulosModal("Registro un patrimonio");
-    setContentModal(content);
-    setShowModal(true);
+    setTitulosModal('Registro un patrimonio')
+    setContentModal(content)
+    setShowModal(true)
   }
 
   const registroPatrimonioCargaMasiva = (content) => {
@@ -67,7 +67,7 @@ function Patrimonio(props) {
     setShowModal(true)
   }
 
-  //Para el registro de Rendimientos
+  // Para el registro de Rendimientos
   const eliminaPatrimonioMasivo = (content) => {
     setTitulosModal('Eliminar elementos')
     setContentModal(content)
@@ -75,18 +75,18 @@ function Patrimonio(props) {
   }
 
   // Almacena los datos de los patrimonios
-  const [listPatrimonios, setListPatrimonios] = useState(null);
+  const [listPatrimonios, setListPatrimonios] = useState(null)
 
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarPatrimoniosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
-        const { data } = response;
+        const { data } = response
         // console.log(data)
         if (!listPatrimonios && data) {
-          setListPatrimonios(formatModelPatrimonio(data));
+          setListPatrimonios(formatModelPatrimonio(data))
         } else {
-          const datosPatrimonio = formatModelPatrimonio(data);
+          const datosPatrimonio = formatModelPatrimonio(data)
           setListPatrimonios(datosPatrimonio)
         }
       }).catch(e => {
@@ -95,35 +95,35 @@ function Patrimonio(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location]);
+  }, [location])
 
   // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
   const cargarListaPeriodos = () => {
     try {
       listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response;
-        //console.log(data)
-        const dataTemp = formatModelPeriodos(data);
-        //console.log(data)
-        setPeriodosRegistrados(dataTemp);
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
       })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
   useEffect(() => {
-    cargarListaPeriodos();
-  }, []);
+    cargarListaPeriodos()
+  }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState("");
+  const [periodoElegido, setPeriodoElegido] = useState('')
 
   // Para almacenar en localstorage la razon social
   const almacenaPeriodo = (periodo) => {
-    if (periodo != "Elige una opción") {
+    if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
     }
     window.location.reload()
@@ -136,21 +136,21 @@ function Patrimonio(props) {
   }
 
   useEffect(() => {
-    guardarPeriodoElegido();
-  }, []);
+    guardarPeriodoElegido()
+  }, [])
 
   return (
     <>
-      <Alert className="fondoPrincipalAlert">
+      <Alert className='fondoPrincipalAlert'>
         <Row>
-          <Col xs={12} md={4} className="titulo">
-            <h1 className="font-bold">Patrimonio</h1>
+          <Col xs={12} md={4} className='titulo'>
+            <h1 className='font-bold'>Patrimonio</h1>
           </Col>
           <Col xs={6} md={8}>
             <div style={{ float: 'right' }}>
 
               <Button
-                className="btnMasivo"
+                className='btnMasivo'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   eliminaPatrimonioMasivo(
@@ -166,7 +166,7 @@ function Patrimonio(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroPatrimonioCargaMasiva(
@@ -182,7 +182,7 @@ function Patrimonio(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroPatrimonioRestaurar(
@@ -198,7 +198,7 @@ function Patrimonio(props) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroPatrimonio(
@@ -218,15 +218,13 @@ function Patrimonio(props) {
       </Alert>
 
       <Row>
-        <Col xs={6} md={4}>
-
-        </Col>
+        <Col xs={6} md={4} />
         <Col xs={6} md={4}>
           <Form.Control
-            as="select"
-            aria-label="indicadorPeriodo"
-            name="periodo"
-            className="periodo"
+            as='select'
+            aria-label='indicadorPeriodo'
+            name='periodo'
+            className='periodo'
             defaultValue={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
@@ -234,15 +232,15 @@ function Patrimonio(props) {
           >
             <option>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
       </Row>
 
       {
-        listPatrimonios ?
-          (
+        listPatrimonios
+          ? (
             <>
               <Suspense fallback={<Spinner />}>
                 <ListPatrimonios
@@ -253,23 +251,22 @@ function Patrimonio(props) {
                 />
               </Suspense>
             </>
-          )
-          :
-          (
+            )
+          : (
             <>
-              <Lottie loop={true} play={true} animationData={AnimacionLoading} />
+              <Lottie loop play animationData={AnimacionLoading} />
             </>
-          )
+            )
       }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
       </BasicModal>
     </>
-  );
+  )
 }
 
-function formatModelPatrimonio(data) {
+function formatModelPatrimonio (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -280,27 +277,27 @@ function formatModelPatrimonio(data) {
       patrimonio: data.patrimonio,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
-    });
-  });
-  return dataTemp;
+    })
+  })
+  return dataTemp
 }
 
-function formatModelPeriodos(data) {
-  //console.log(data)
+function formatModelPeriodos (data) {
+  // console.log(data)
   const dataTemp = []
   data.forEach(data => {
-      dataTemp.push({
-          id: data._id,
-          folio: data.folio,
-          nombre: data.nombre,
-          tipo: data.tipo,
-          fechaInicio: data.fechaInicio,
-          fechaCierre: data.fechaCierre,
-          fechaRegistro: data.createdAt,
-          fechaActualizacion: data.updatedAt
-      });
-  });
-  return dataTemp;
+    dataTemp.push({
+      id: data._id,
+      folio: data.folio,
+      nombre: data.nombre,
+      tipo: data.tipo,
+      fechaInicio: data.fechaInicio,
+      fechaCierre: data.fechaCierre,
+      fechaRegistro: data.createdAt,
+      fechaActualizacion: data.updatedAt
+    })
+  })
+  return dataTemp
 }
 
-export default withRouter(Patrimonio);
+export default withRouter(Patrimonio)

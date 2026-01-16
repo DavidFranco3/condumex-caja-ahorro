@@ -1,74 +1,71 @@
-import { useEffect, useState } from 'react';
-import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth';
-import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom';
-import { Card, Container, CardGroup, Image } from 'react-bootstrap';
+import { useEffect, useState } from 'react'
+import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom'
+import { Card, Image } from 'react-bootstrap'
 // Importaciones de imagenes del dashboard
-import LogoSocios from '../../assets/png/usuarios.png';
-import LogoMovimientos from '../../assets/png/movimientos.png';
-import LogoAjustes from '../../assets/png/ajuste.png';
-import LogoAportacion from '../../assets/png/aportacion.png';
-import LogoSaldos from '../../assets/png/saldos.png';
-import LogoRetiros from '../../assets/png/retiros.png';
-import LogoBajaSocios from '../../assets/png/bajaSocios.png';
-import LogoEstadoCuenta from '../../assets/png/estadoCuenta.png';
-import LogoCredito from '../../assets/png/credito.png';
-import LogoBackup from '../../assets/png/backup.png';
-import LogoRendimientos from '../../assets/png/rendimientos.png';
-import LogoPatrimonio from '../../assets/png/patrimonio.png';
-import LogoInteresesSocios from '../../assets/png/interesesSocios.png';
-import LogoAbonos from '../../assets/png/abonos.png';
-import LogoDeudaSocio from '../../assets/png/deudaSocio.png';
-import LogoSaldosSocios from '../../assets/png/saldosSocios.png';
-import LogoUsuarios from '../../assets/png/usuarios.png';
-import LogoUsuarioCorreos from '../../assets/png/usuarioCorreos.png';
-import './Dashboard.scss';
+import LogoMovimientos from '../../assets/png/movimientos.png'
+import LogoAjustes from '../../assets/png/ajuste.png'
+import LogoAportacion from '../../assets/png/aportacion.png'
+import LogoRetiros from '../../assets/png/retiros.png'
+import LogoBajaSocios from '../../assets/png/bajaSocios.png'
+import LogoEstadoCuenta from '../../assets/png/estadoCuenta.png'
+import LogoCredito from '../../assets/png/credito.png'
+import LogoRendimientos from '../../assets/png/rendimientos.png'
+import LogoPatrimonio from '../../assets/png/patrimonio.png'
+import LogoInteresesSocios from '../../assets/png/interesesSocios.png'
+import LogoAbonos from '../../assets/png/abonos.png'
+import LogoDeudaSocio from '../../assets/png/deudaSocio.png'
+import LogoSaldosSocios from '../../assets/png/saldosSocios.png'
+import LogoUsuarios from '../../assets/png/usuarios.png'
+import LogoUsuarioCorreos from '../../assets/png/usuarioCorreos.png'
+import './Dashboard.scss'
 
-function Dashboard(props) {
-  const { setRefreshCheckLogin } = props;
+function Dashboard (props) {
+  const { setRefreshCheckLogin } = props
 
-  const enrutamiento = useNavigate();
+  const enrutamiento = useNavigate()
 
   // Cerrado de sesión automatico
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-         Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
-         Swal.fire({
-                        title: "Sesión cerrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });;
-        logoutApi();
-        setRefreshCheckLogin(true);
+        Swal.fire({
+          title: 'Sesión expirada',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        Swal.fire({
+          title: 'Sesión cerrada por seguridad',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        logoutApi()
+        setRefreshCheckLogin(true)
       }
     }
-  }, []);
+  }, [])
   // Termina cerrado de sesión automatico
-  
+
   // Almacena la razón social, si ya fue elegida
-    const [razonSocialElegida, setRazonSocialElegida] = useState("");
+  const [razonSocialElegida, setRazonSocialElegida] = useState('')
 
-    useEffect(() => {
-        if (getRazonSocial()) {
-            setRazonSocialElegida(getRazonSocial)
-        }
-    }, []);
+  useEffect(() => {
+    if (getRazonSocial()) {
+      setRazonSocialElegida(getRazonSocial)
+    }
+  }, [])
 
-  const goTo = (ruta) => enrutamiento(ruta);
+  const goTo = (ruta) => enrutamiento(ruta)
 
   const ItemCard = ({ path, logo, title }) => (
     <Card>
       <Card.Body onClick={() => goTo(path)}>
-        <div className="flex flex-col items-center justify-center">
+        <div className='flex flex-col items-center justify-center'>
           <Image src={logo} style={{ width: '95px' }} />
-          <span className="inline-block text-lg font-normal">{title}</span>
+          <span className='inline-block text-lg font-normal'>{title}</span>
         </div>
       </Card.Body>
     </Card>
@@ -76,96 +73,96 @@ function Dashboard(props) {
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-4">
+      <div className='grid grid-cols-4 gap-4'>
         <ItemCard
-        path={'/socios'}
-        logo={LogoSocios}
-        title={'Socios'}
+          path='/socios'
+          logo={LogoUsuarios}
+          title='Socios'
         />
         <ItemCard
-          path={'/baja-de-socios'}
+          path='/baja-de-socios'
           logo={LogoBajaSocios}
-          title={'Baja de socios'}
+          title='Baja de socios'
         />
         <ItemCard
-          path={'/aportaciones'}
+          path='/aportaciones'
           logo={LogoAportacion}
-          title={'Aportaciones'}
+          title='Aportaciones'
         />
         <ItemCard
-          path={'/prestamos'}
-          logo={LogoCredito} 
-          title={'Préstamos'}
-        />
-        <ItemCard 
-          path={'/retiros'} 
-          logo={LogoRetiros} 
-          title={'Retiros'} 
+          path='/prestamos'
+          logo={LogoCredito}
+          title='Préstamos'
         />
         <ItemCard
-          path={'/intereses'}
+          path='/retiros'
+          logo={LogoRetiros}
+          title='Retiros'
+        />
+        <ItemCard
+          path='/intereses'
           logo={LogoRendimientos}
-          title={'Intereses'}
+          title='Intereses'
         />
         {
-            razonSocialElegida === "Asociación de Empleados Sector Cables A.C." &&
+            razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.' &&
                 (
-                    <>
-        <ItemCard
-          path={'/patrimonio'}
-          logo={LogoPatrimonio}
-          title={'Patrimonio'}
-        />
-        </>
-                                                    )
+                  <>
+                    <ItemCard
+                      path='/patrimonio'
+                      logo={LogoPatrimonio}
+                      title='Patrimonio'
+                    />
+                  </>
+                )
                                                 }
         <ItemCard
-          path={'/abonos'}
+          path='/abonos'
           logo={LogoAbonos}
-          title={'Abonos'}
+          title='Abonos'
         />
         <ItemCard
-          path={'/deudaSocio'}
+          path='/deudaSocio'
           logo={LogoDeudaSocio}
-          title={'Deudas de los socios'}
+          title='Deudas de los socios'
         />
         <ItemCard
-          path={'/interesesSocios'}
+          path='/interesesSocios'
           logo={LogoInteresesSocios}
-          title={'Intereses de los socios'}
+          title='Intereses de los socios'
         />
         <ItemCard
-          path={'/saldosSocios'}
+          path='/saldosSocios'
           logo={LogoSaldosSocios}
-          title={'Saldos de los socios'}
+          title='Saldos de los socios'
         />
         <ItemCard
-          path={'/movimientos'}
+          path='/movimientos'
           logo={LogoMovimientos}
-          title={'Movimientos'}
+          title='Movimientos'
         />
         <ItemCard
-          path={'/estados-de-cuenta'}
+          path='/estados-de-cuenta'
           logo={LogoEstadoCuenta}
-          title={'Estados de cuenta'}
+          title='Estados de cuenta'
         />
         <ItemCard
-          path={'/periodos'}
+          path='/periodos'
           logo={LogoAjustes}
-          title={'Periodos'}
+          title='Periodos'
         />
         <ItemCard
-          path={'/usuarios'}
+          path='/usuarios'
           logo={LogoUsuarios}
-          title={'Usuarios'}
+          title='Usuarios'
         />
-                <ItemCard
-          path={'/usuarioCorreos'}
+        <ItemCard
+          path='/usuarioCorreos'
           logo={LogoUsuarioCorreos}
-          title={'Usuario de correos'}
+          title='Usuario de correos'
         />
       </div>
-      
+
     </>
   )
 }

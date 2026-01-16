@@ -50,7 +50,7 @@ export const getAportacionesAcumuladasByTipo = async (tipo) => {
 }
 
 // Registro de aportaciones
-export async function registraAportacionesSocios(data) {
+export async function registraAportacionesSocios (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -63,7 +63,7 @@ export async function registraAportacionesSocios(data) {
 }
 
 // Registro de aportaciones
-export async function registraAportacionesSocios2(data) {
+export async function registraAportacionesSocios2 (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -76,7 +76,7 @@ export async function registraAportacionesSocios2(data) {
 }
 
 // Listar todas las aportaciones
-export async function listarAportaciones(razonSocial, inicio, fin) {
+export async function listarAportaciones (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -93,7 +93,7 @@ export async function listarAportaciones(razonSocial, inicio, fin) {
 }
 
 // Listar todas las aportacion
-export async function listarAportacion(razonSocial) {
+export async function listarAportacion (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -108,7 +108,7 @@ export async function listarAportacion(razonSocial) {
 }
 
 // Listar todas las aportacion
-export async function listarAportacionesPeriodo(razonSocial, periodo) {
+export async function listarAportacionesPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -123,7 +123,7 @@ export async function listarAportacionesPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de las aportaciones
-export async function totalAportaciones(params) {
+export async function totalAportaciones (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -135,7 +135,7 @@ export async function totalAportaciones(params) {
 }
 
 // Obtener el total de aportaciones segun la razon social proporcionada
-export async function totalxTipoAportaciones(razonSocial) {
+export async function totalxTipoAportaciones (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -150,7 +150,7 @@ export async function totalxTipoAportaciones(razonSocial) {
 }
 
 // Listar las aportaciones paginandolas
-export async function listarPaginacionAportaciones(pagina, limite) {
+export async function listarPaginacionAportaciones (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -167,7 +167,7 @@ export async function listarPaginacionAportaciones(pagina, limite) {
 }
 
 // Listar paginando las aportaciones paginandolas por tipo
-export async function listarPaginacionAportacionesxTipo(pagina, limite, tipo) {
+export async function listarPaginacionAportacionesxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -184,7 +184,7 @@ export async function listarPaginacionAportacionesxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio actual de las aportaciones
-export async function obtenerFolioActualAportaciones() {
+export async function obtenerFolioActualAportaciones () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -196,7 +196,7 @@ export async function obtenerFolioActualAportaciones() {
 }
 
 // Obtener los datos de la aportación por id
-export async function obtenerAportaciones(id) {
+export async function obtenerAportaciones (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -211,7 +211,7 @@ export async function obtenerAportaciones(id) {
 }
 
 // Obtener los datos de la aportacion por el numero de ficha del socio --
-export async function obtenerDatosAportaciones(ficha) {
+export async function obtenerDatosAportaciones (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -226,7 +226,7 @@ export async function obtenerDatosAportaciones(ficha) {
 }
 
 // Eliminar aportaciones
-export async function eliminaAportaciones(id) {
+export async function eliminaAportaciones (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -242,7 +242,7 @@ export async function eliminaAportaciones(id) {
 }
 
 // Actualizar aportaciones
-export async function actualizaAportaciones(id, data) {
+export async function actualizaAportaciones (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -258,7 +258,7 @@ export async function actualizaAportaciones(id, data) {
   )
 }
 
-export async function eliminaAportacionesMasivo(fecha, tipo) {
+export async function eliminaAportacionesMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

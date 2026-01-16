@@ -3,15 +3,13 @@ const reactPlugin = require('eslint-plugin-react')
 const globals = require('globals')
 
 module.exports = [
-  // 1. Cargamos la configuración base de NeoStandard
   ...neostandard({
-    // neostandard ya incluye configuraciones modernas, 
-    // pero puedes añadir 'ignores' aquí si necesitas.
+    // 1. IMPORTANTE: Ignoramos las carpetas de compilación
+    ignores: ['dist', 'build', 'node_modules', 'coverage', '*.min.js'],
   }),
 
-  // 2. Configuración específica para React
   {
-    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'], // Aplica a estos archivos
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     plugins: {
       react: reactPlugin,
     },
@@ -22,23 +20,39 @@ module.exports = [
         },
       },
       globals: {
-        ...globals.browser, // Reemplaza a env: { browser: true }
-        ...globals.node     // Reemplaza a env: { node: true }
+        ...globals.browser,
+        ...globals.node,
+        // 2. Definimos tus variables globales para que no marquen error
+        Swal: 'readonly',     // SweetAlert
+        moment: 'readonly',   // Moment.js
+        test: 'readonly',     // Pruebas (Jest/Vitest)
+        expect: 'readonly',   // Pruebas
+        describe: 'readonly', // Pruebas
+        it: 'readonly',       // Pruebas
+        vi: 'readonly'        // Vitest (si lo usas)
       },
     },
     settings: {
       react: {
-        version: 'detect', // Tu configuración original
+        version: 'detect',
       },
     },
-    // Aquí definimos las reglas
     rules: {
-      // Cargamos las reglas recomendadas de React manualmente
       ...reactPlugin.configs.recommended.rules,
 
-      // TUS REGLAS PERSONALIZADAS:
+      // Reglas de React que ya tenías desactivadas
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
+
+      // 3. Suavizamos reglas estrictas para facilitar la migración
+      // Cambiamos "error" a "warn" (advertencia amarilla)
+      'no-unused-vars': 'warn',
+      eqeqeq: 'warn',
+      'no-undef': 'error', // Esto sí debe ser error (variables que no existen)
+
+      // Reglas de estilo (opcional, si te molestan mucho las sangrías)
+      '@stylistic/jsx-closing-tag-location': 'warn',
+      '@stylistic/jsx-indent': 'off' // A veces pelea con los formateadores
     },
   },
 ]

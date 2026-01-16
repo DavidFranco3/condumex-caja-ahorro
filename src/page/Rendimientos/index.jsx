@@ -1,8 +1,8 @@
 import { useState, useEffect, Fragment, Suspense } from 'react'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
-import { withRouter } from "../../utils/withRouter";
+import { withRouter } from '../../utils/withRouter'
 import Lottie from 'react-lottie-player'
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus, faSackDollar, faTrashCan, faWindowRestore } from '@fortawesome/free-solid-svg-icons'
@@ -10,7 +10,6 @@ import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, set
 import {
   obtenerFolioActualRendimientos,
   registraRendimientosSocios,
-  totalxTipoRendimientos,
   totalGeneralBySocios,
   listarRendimientoPeriodo
 } from '../../api/rendimientos'
@@ -21,14 +20,14 @@ import ListRendimientos from '../../components/Rendimientos/ListRendimientos'
 import RegistroRendimientos from '../../components/Rendimientos/RegistroRendimientos'
 import CargaMasivaRendimientos from '../../components/Rendimientos/CargaMasivaRendimientos'
 import RegistroMonto from '../../components/Rendimientos/RegistroMonto'
-import RestaurarRendimientos from '../../components/Rendimientos/RestaurarRendimientos';
+import RestaurarRendimientos from '../../components/Rendimientos/RestaurarRendimientos'
 import EliminaRendimientosMasivo from '../../components/Rendimientos/EliminaRendimientosMasivo'
-import { actualizacionSaldosSocios } from '../../components/GestionAutomatica/Saldos/ActualizacionSaldos';
-import { registroSaldoInicial } from "../../components/GestionAutomatica/Saldos/Saldos";
-import { map } from "lodash";
-import { listarPeriodo } from '../../api/periodos';
+import { actualizacionSaldosSocios } from '../../components/GestionAutomatica/Saldos/ActualizacionSaldos'
+import { registroSaldoInicial } from '../../components/GestionAutomatica/Saldos/Saldos'
+import { map } from 'lodash'
+import { listarPeriodo } from '../../api/periodos'
 
-function Rendimientos({ setRefreshCheckLogin, location, history }) {
+function Rendimientos ({ setRefreshCheckLogin, location, history }) {
   // Dialog headlessui
   const [isOpen, setIsOpen] = useState(false)
 
@@ -38,13 +37,6 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   const [titulosModal, setTitulosModal] = useState(null)
   // Para almacenar el listado de Rendimientos
   const [listRendimientos, setListRendimientos] = useState(null)
-
-  // Para controlar la paginación
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [page, setPage] = useState(1)
-  const [totalRendimientos, setTotalRendimientos] = useState(0)
-
-  const [, setEarnings] = useState(0)
   const [contribuitors, setContribuitors] = useState([])
   const [razon] = useState(getRazonSocial())
   const [periodo] = useState(getPeriodo())
@@ -53,22 +45,6 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   const [reloadRendimientos, setReloadRendimientos] = useState(false)
 
   const getRendimientos = () => {
-    totalxTipoRendimientos(razon)
-      .then((response) => {
-        const { data } = response
-        setTotalRendimientos(data)
-      })
-      .catch((e) => {
-        if (e.message === 'Network Error') {
-           Swal.fire({
-                        title: 'Conexión al servidor no disponible',
-                        icon: "error",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-        }
-      })
-
     listarRendimientoPeriodo(razon, getPeriodo())
       .then((response) => {
         const { data } = response
@@ -87,18 +63,18 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   useEffect(() => {
     if (getTokenApi()) {
       if (isExpiredToken(getTokenApi())) {
-         Swal.fire({
-                        title: "Sesión expirada",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
-         Swal.fire({
-                        title: "Sesión cerrada por seguridad",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1600,
-                    });
+        Swal.fire({
+          title: 'Sesión expirada',
+          icon: 'warning',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+        Swal.fire({
+          title: 'Sesión cerrada por seguridad',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1600,
+        })
         logoutApi()
         setRefreshCheckLogin(true)
       }
@@ -122,7 +98,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
     setReloadRendimientos(true)
   }
 
-  //Para el registro de Rendimientos
+  // Para el registro de Rendimientos
   const eliminaRendimientosMasivo = (content) => {
     setTitulosModal('Eliminar elementos')
     setContentModal(content)
@@ -164,11 +140,11 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
     const earningsLocalNumber = parseFloat(earningsLocal) || 0
     const totalGeneralLocalNumber = parseFloat(localStorage.getItem('totalGeneral')) || 0
 
-    const earningsDate = localStorage.getItem('earningsDate');
+    const earningsDate = localStorage.getItem('earningsDate')
 
-    const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber;
+    const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber
 
-    const response = await totalGeneralBySocios(earningsDate, razon, periodo);
+    const response = await totalGeneralBySocios(earningsDate, razon, periodo)
 
     const {
       data: { data },
@@ -181,7 +157,6 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
 
     setContribuitors(tmpData)
 
-
     // save the rendimientos data in the database
     for (const { fichaSocio, rendimiento } of tmpData) {
       const responseFolio = await obtenerFolioActualRendimientos()
@@ -193,7 +168,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         folio,
         fichaSocio,
         rendimiento,
-        periodo: periodo,
+        periodo,
         tipo: razon,
         createdAt: earningsDate,
       }
@@ -234,32 +209,32 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   }
 
   // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null);
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
   const cargarListaPeriodos = () => {
     try {
       listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response;
-        //console.log(data)
-        const dataTemp = formatModelPeriodos(data);
-        //console.log(data)
-        setPeriodosRegistrados(dataTemp);
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
       })
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
   }
 
   useEffect(() => {
-    cargarListaPeriodos();
-  }, []);
+    cargarListaPeriodos()
+  }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState("");
+  const [periodoElegido, setPeriodoElegido] = useState('')
 
   // Para almacenar en localstorage la razon social
   const almacenaPeriodo = (periodo) => {
-    if (periodo != "Elige una opción") {
+    if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
     }
     window.location.reload()
@@ -272,57 +247,57 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   }
 
   useEffect(() => {
-    guardarPeriodoElegido();
-  }, []);
+    guardarPeriodoElegido()
+  }, [])
 
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog static as="div" className="relative z-10" onClose={() => null}>
+        <Dialog static as='div' className='relative z-10' onClose={() => null}>
           <TransitionChild
             as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+            enter='ease-out duration-300'
+            enterFrom='opacity-0'
+            enterTo='opacity-100'
+            leave='ease-in duration-200'
+            leaveFrom='opacity-100'
+            leaveTo='opacity-0'
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className='fixed inset-0 bg-black bg-opacity-25' />
           </TransitionChild>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className='fixed inset-0 overflow-y-auto'>
+            <div className='flex min-h-full items-center justify-center p-4 text-center'>
               <TransitionChild
                 as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
+                enter='ease-out duration-300'
+                enterFrom='opacity-0 scale-95'
+                enterTo='opacity-100 scale-100'
+                leave='ease-in duration-200'
+                leaveFrom='opacity-100 scale-100'
+                leaveTo='opacity-0 scale-95'
               >
-                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <DialogPanel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
                   <DialogTitle
-                    as="h3"
-                    className="flex justify-center items-center text-lg font-medium leading-6 text-gray-900"
+                    as='h3'
+                    className='flex justify-center items-center text-lg font-medium leading-6 text-gray-900'
                   >
                     Guardando rendimientos
                   </DialogTitle>
-                  <div className="flex justify-center items-center flex-col mt-2">
-                    <p className="text-sm text-gray-500">
+                  <div className='flex justify-center items-center flex-col mt-2'>
+                    <p className='text-sm text-gray-500'>
                       {countSave} de {contribuitors.length}
                     </p>
                     {countSave !== contribuitors.length && (
-                      <Spinner animation="border" />
+                      <Spinner animation='border' />
                     )}
                   </div>
 
-                  <div className="flex justify-center items-center mt-4">
+                  <div className='flex justify-center items-center mt-4'>
                     {countSave === contribuitors.length && (
                       <button
-                        type="button"
-                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                        type='button'
+                        className='inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
                         onClick={closeModal}
                       >
                         Aceptar
@@ -336,15 +311,15 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
         </Dialog>
       </Transition>
 
-      <Alert className="fondoPrincipalAlert">
+      <Alert className='fondoPrincipalAlert'>
         <Row>
-          <Col xs={12} md={4} className="titulo">
-            <h1 className="font-bold">Intereses</h1>
+          <Col xs={12} md={4} className='titulo'>
+            <h1 className='font-bold'>Intereses</h1>
           </Col>
           <Col xs={6} md={8}>
             <div style={{ float: 'right' }}>
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroModalMonto(
@@ -362,7 +337,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   eliminaRendimientosMasivo(
@@ -378,7 +353,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroRendimientosCargaMasiva(
@@ -394,7 +369,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroRendimientosRestaurar(
@@ -410,7 +385,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
               </Button>
 
               <Button
-                className="btnRegistro"
+                className='btnRegistro'
                 style={{ marginRight: '10px' }}
                 onClick={() => {
                   registroRendimiento(
@@ -430,15 +405,13 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
       </Alert>
 
       <Row>
-        <Col xs={6} md={4}>
-
-        </Col>
+        <Col xs={6} md={4} />
         <Col xs={6} md={4}>
           <Form.Control
-            as="select"
-            aria-label="indicadorPeriodo"
-            name="periodo"
-            className="periodo"
+            as='select'
+            aria-label='indicadorPeriodo'
+            name='periodo'
+            className='periodo'
             defaultValue={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
@@ -446,24 +419,26 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
           >
             <option>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={periodoElegido == periodo?.folio}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
       </Row>
 
-      {listRendimientos ? (
-        <Suspense fallback={<Spinner />}>
-          <ListRendimientos
-            setRefreshCheckLogin={setRefreshCheckLogin}
-            listRendimientos={listRendimientos}
-            history={history}
-            location={location}
-          />
-        </Suspense>
-      ) : (
-        <Lottie loop={true} play={true} animationData={AnimacionLoading} />
-      )}
+      {listRendimientos
+        ? (
+          <Suspense fallback={<Spinner />}>
+            <ListRendimientos
+              setRefreshCheckLogin={setRefreshCheckLogin}
+              listRendimientos={listRendimientos}
+              history={history}
+              location={location}
+            />
+          </Suspense>
+          )
+        : (
+          <Lottie loop play animationData={AnimacionLoading} />
+          )}
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -472,7 +447,7 @@ function Rendimientos({ setRefreshCheckLogin, location, history }) {
   )
 }
 
-function formatModelRendimientos(data) {
+function formatModelRendimientos (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -483,13 +458,13 @@ function formatModelRendimientos(data) {
       rendimiento: data.rendimiento,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
-    });
-  });
-  return dataTemp;
+    })
+  })
+  return dataTemp
 }
 
-function formatModelPeriodos(data) {
-  //console.log(data)
+function formatModelPeriodos (data) {
+  // console.log(data)
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -501,9 +476,9 @@ function formatModelPeriodos(data) {
       fechaCierre: data.fechaCierre,
       fechaRegistro: data.createdAt,
       fechaActualizacion: data.updatedAt
-    });
-  });
-  return dataTemp;
+    })
+  })
+  return dataTemp
 }
 
 export default withRouter(Rendimientos)

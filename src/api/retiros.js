@@ -39,7 +39,7 @@ export const getRetirosAcumuladasByRazon = async (tipo) => {
 }
 
 // Registro de retiros
-export async function registraRetiros(data) {
+export async function registraRetiros (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -52,7 +52,7 @@ export async function registraRetiros(data) {
 }
 
 // Listar todos los retiros
-export async function listarRetiros(razonSocial, inicio, fin) {
+export async function listarRetiros (razonSocial, inicio, fin) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -69,7 +69,7 @@ export async function listarRetiros(razonSocial, inicio, fin) {
 }
 
 // Listar todos los retiros
-export async function listarRetiro(razonSocial) {
+export async function listarRetiro (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -84,7 +84,7 @@ export async function listarRetiro(razonSocial) {
 }
 
 // Listar todos los retiros
-export async function listarRetiroPeriodo(razonSocial, periodo) {
+export async function listarRetiroPeriodo (razonSocial, periodo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -99,7 +99,7 @@ export async function listarRetiroPeriodo(razonSocial, periodo) {
 }
 
 // Obtener el total de retiros
-export async function totalRetiros(params) {
+export async function totalRetiros (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -111,7 +111,7 @@ export async function totalRetiros(params) {
 }
 
 // Obtener el total de retiros segun la razon social proporcionada
-export async function totalxTipoRetiros(razonSocial) {
+export async function totalxTipoRetiros (razonSocial) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -126,7 +126,7 @@ export async function totalxTipoRetiros(razonSocial) {
 }
 
 // Listar paginando los retiros
-export async function listarPaginacionRetiros(pagina, limite) {
+export async function listarPaginacionRetiros (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -143,7 +143,7 @@ export async function listarPaginacionRetiros(pagina, limite) {
 }
 
 // Listar paginando los retiros, indicando el tipo
-export async function listarPaginacionRetirosxTipo(pagina, limite, tipo) {
+export async function listarPaginacionRetirosxTipo (pagina, limite, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -160,7 +160,7 @@ export async function listarPaginacionRetirosxTipo(pagina, limite, tipo) {
 }
 
 // Obtener el folio actual de los retiros
-export async function obtenerFolioActualRetiros() {
+export async function obtenerFolioActualRetiros () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -172,7 +172,7 @@ export async function obtenerFolioActualRetiros() {
 }
 
 // Obtener la informacion de un retiro indicando el id
-export async function obtenerRetiro(id) {
+export async function obtenerRetiro (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -184,7 +184,7 @@ export async function obtenerRetiro(id) {
 }
 
 // Obtener la informacion de un retiro indicando la ficha del socio
-export async function obtenerDatos(ficha) {
+export async function obtenerDatos (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -199,7 +199,7 @@ export async function obtenerDatos(ficha) {
 }
 
 // Eliminar retiros
-export async function eliminaRetiros(id) {
+export async function eliminaRetiros (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -215,7 +215,7 @@ export async function eliminaRetiros(id) {
 }
 
 // Actualizar retiros
-export async function actualizaRetiros(id, data) {
+export async function actualizaRetiros (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -231,7 +231,7 @@ export async function actualizaRetiros(id, data) {
   )
 }
 
-export async function eliminaRetirosMasivo(fecha, tipo) {
+export async function eliminaRetirosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

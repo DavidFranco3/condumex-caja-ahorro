@@ -18,7 +18,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Registro de socios
-export async function registraSociosEmpleados(data) {
+export async function registraSociosEmpleados (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -35,7 +35,7 @@ export async function registraSociosEmpleados(data) {
 }
 
 // Listado de todos los registros de socios
-export async function listarSociosEmpleados(params) {
+export async function listarSociosEmpleados (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -47,7 +47,7 @@ export async function listarSociosEmpleados(params) {
 }
 
 // Obtener el total de socios registrados
-export async function totalRegistrosSociosEmpleados() {
+export async function totalRegistrosSociosEmpleados () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -59,7 +59,7 @@ export async function totalRegistrosSociosEmpleados() {
 }
 
 // Listar paginando los socios
-export async function listarPaginacionSociosEmpleados(pagina, limite) {
+export async function listarPaginacionSociosEmpleados (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -76,7 +76,7 @@ export async function listarPaginacionSociosEmpleados(pagina, limite) {
 }
 
 // Obtener ficha actual de los socios
-export async function obtenerFichaActualSociosEmpleados() {
+export async function obtenerFichaActualSociosEmpleados () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -88,7 +88,7 @@ export async function obtenerFichaActualSociosEmpleados() {
 }
 
 // Obtener los datos de un socio por id
-export async function obtenerSocioEmpleado(id) {
+export async function obtenerSocioEmpleado (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -103,7 +103,7 @@ export async function obtenerSocioEmpleado(id) {
 }
 
 // Obtener los datos de un socio por ficha
-export async function obtenerDatosSocioEmpleado(ficha) {
+export async function obtenerDatosSocioEmpleado (ficha) {
   // console.log("Ficha ", ficha)
   const config = {
     headers: {
@@ -119,7 +119,7 @@ export async function obtenerDatosSocioEmpleado(ficha) {
 }
 
 // Obtener los datos de un socio por ficha
-export async function obtenerNombreSocioEmpleado(ficha) {
+export async function obtenerNombreSocioEmpleado (ficha) {
   // console.log("Ficha ", ficha)
   const config = {
     headers: {
@@ -135,7 +135,7 @@ export async function obtenerNombreSocioEmpleado(ficha) {
 }
 
 // Obtener empleados por nombre
-export async function obtenerEmpleadosPorNombre(nombre) {
+export async function obtenerEmpleadosPorNombre (nombre) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -150,7 +150,7 @@ export async function obtenerEmpleadosPorNombre(nombre) {
 }
 
 // Eliminar socios
-export async function eliminaSocioEmpleado(id) {
+export async function eliminaSocioEmpleado (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -166,7 +166,7 @@ export async function eliminaSocioEmpleado(id) {
 }
 
 // Deshabilitar socios
-export async function cambiaEstadoSocioEmpleado(id, data) {
+export async function cambiaEstadoSocioEmpleado (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -183,7 +183,7 @@ export async function cambiaEstadoSocioEmpleado(id, data) {
 }
 
 // Actualizar información de socios
-export async function actualizaSocioEmpleado(id, data) {
+export async function actualizaSocioEmpleado (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -199,7 +199,7 @@ export async function actualizaSocioEmpleado(id, data) {
   )
 }
 
-export async function eliminaEmpleadosMasivo(fecha, tipo) {
+export async function eliminaEmpleadosMasivo (fecha, tipo) {
   const config = {
     headers: {
       Accept: 'application/json',

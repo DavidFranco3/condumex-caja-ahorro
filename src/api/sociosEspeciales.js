@@ -17,7 +17,7 @@ import axios from 'axios'
 import { getTokenApi } from './auth'
 
 // Obtener socios especiales por nombre
-export async function obtenerSociosEspecialesByNombre(nombre) {
+export async function obtenerSociosEspecialesByNombre (nombre) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -32,7 +32,7 @@ export async function obtenerSociosEspecialesByNombre(nombre) {
 }
 
 // Registro de socios
-export async function registraSocioEspecial(data) {
+export async function registraSocioEspecial (data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -49,7 +49,7 @@ export async function registraSocioEspecial(data) {
 }
 
 // Listado de todos los registros de socios
-export async function listarSocioEspecial(params) {
+export async function listarSocioEspecial (params) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -61,7 +61,7 @@ export async function listarSocioEspecial(params) {
 }
 
 // Obtener el total de socios registrados
-export async function totalRegistroSocioEspecial() {
+export async function totalRegistroSocioEspecial () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -73,7 +73,7 @@ export async function totalRegistroSocioEspecial() {
 }
 
 // Listar paginando los socios
-export async function listarPaginacionSocioEspecial(pagina, limite) {
+export async function listarPaginacionSocioEspecial (pagina, limite) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -90,7 +90,7 @@ export async function listarPaginacionSocioEspecial(pagina, limite) {
 }
 
 // Obtener ficha actual de los socios
-export async function obtenerFichaActualSocioEspecial() {
+export async function obtenerFichaActualSocioEspecial () {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -105,7 +105,7 @@ export async function obtenerFichaActualSocioEspecial() {
 }
 
 // Obtener los datos de un socio por id
-export async function obtenerSocioEspecial(id) {
+export async function obtenerSocioEspecial (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -120,7 +120,7 @@ export async function obtenerSocioEspecial(id) {
 }
 
 // Obtener los datos de un socio por ficha
-export async function obtenerDatosSocioEspecial(ficha) {
+export async function obtenerDatosSocioEspecial (ficha) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -135,7 +135,7 @@ export async function obtenerDatosSocioEspecial(ficha) {
 }
 
 // Eliminar socios
-export async function eliminaSocioEspecial(id) {
+export async function eliminaSocioEspecial (id) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -151,7 +151,7 @@ export async function eliminaSocioEspecial(id) {
 }
 
 // Deshabilitar socios
-export async function cambiaEstadoSocioEspecial(id, data) {
+export async function cambiaEstadoSocioEspecial (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -168,7 +168,7 @@ export async function cambiaEstadoSocioEspecial(id, data) {
 }
 
 // Actualizar información de socios
-export async function actualizaSocioEspecial(id, data) {
+export async function actualizaSocioEspecial (id, data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -184,7 +184,7 @@ export async function actualizaSocioEspecial(id, data) {
   )
 }
 
-export async function eliminaEspecialesMasivo(fecha) {
+export async function eliminaEspecialesMasivo (fecha) {
   const config = {
     headers: {
       Accept: 'application/json',

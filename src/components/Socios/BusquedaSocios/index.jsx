@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button, Spinner, Container } from 'react-bootstrap';
-import moment from "moment";
-import 'moment/locale/es';
-import './BusquedaSocios.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faArrowDownLong } from '@fortawesome/free-solid-svg-icons';
-import Swal from "sweetalert2";
+import { useState } from 'react'
+import { Row, Col, Form, Button, Spinner } from 'react-bootstrap'
+import 'moment/locale/es'
+import './BusquedaSocios.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons'
+import Swal from 'sweetalert2'
 import {
   obtenerDatosSocioEmpleado,
   obtenerEmpleadosPorNombre,
@@ -14,15 +13,11 @@ import {
   obtenerDatosSocioSindicalizado,
   obtenerSociosSindicalizadosByNombre,
 } from '../../../api/sociosSindicalizados'
-import {
-  obtenerDatosSocioEspecial,
-  obtenerSociosEspecialesByNombre,
-} from '../../../api/sociosEspeciales'
 import { getRazonSocial } from '../../../api/auth'
-import { formatFecha } from '../../Generales/FormatFecha';
-import DataTablecustom from '../../Generales/DataTable';
+import { formatFecha } from '../../Generales/FormatFecha'
+import DataTablecustom from '../../Generales/DataTable'
 
-function BusquedaSocios(props) {
+function BusquedaSocios (props) {
   const {
     setShowModal,
     setFichaSocioElegido,
@@ -70,10 +65,10 @@ function BusquedaSocios(props) {
     if (listSocios.length === 0) {
       Swal.fire({
         title: 'No se encontraron socios con los datos ingresados',
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
     setListSociosEncontrados(formatModelSocios(listSocios))
   }
@@ -91,10 +86,10 @@ function BusquedaSocios(props) {
       setLoading(false)
       Swal.fire({
         title: error.message,
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
   }
 
@@ -111,10 +106,10 @@ function BusquedaSocios(props) {
       setLoading(false)
       Swal.fire({
         title: error.message,
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
   }
 
@@ -131,10 +126,10 @@ function BusquedaSocios(props) {
       setLoading(false)
       Swal.fire({
         title: error.message,
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     }
   }
 
@@ -151,50 +146,10 @@ function BusquedaSocios(props) {
       setLoading(false)
       Swal.fire({
         title: error.message,
-        icon: "error",
+        icon: 'error',
         showConfirmButton: false,
         timer: 1600,
-      });
-    }
-  }
-
-  // Obtener especial por ficha
-  const obtenerEspecialPorFicha = async (ficha) => {
-    try {
-      setLoading(true)
-      const { data } = await obtenerDatosSocioEspecial(ficha)
-
-      validarListadoSocios(data)
-
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      Swal.fire({
-        title: error.message,
-        icon: "error",
-        showConfirmButton: false,
-        timer: 1600,
-      });
-    }
-  }
-
-  // Obtener especial por nombre
-  const obtenerEspecialPorNombre = async (nombre) => {
-    try {
-      setLoading(true)
-      const { data } = await obtenerSociosEspecialesByNombre(nombre)
-
-      validarListadoSocios(data)
-
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      Swal.fire({
-        title: error.message,
-        icon: "error",
-        showConfirmButton: false,
-        timer: 1600,
-      });
+      })
     }
   }
 
@@ -204,11 +159,11 @@ function BusquedaSocios(props) {
     // Busqueda por ficha
     if (tipo === 'ficha' && ficha === '') {
       Swal.fire({
-        title: "Debe especificar la ficha del socio",
-        icon: "warning",
+        title: 'Debe especificar la ficha del socio',
+        icon: 'warning',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
       setLoading(false)
     } else if (tipo === 'ficha') {
       obtenerEmpleadoPorFicha(ficha)
@@ -217,11 +172,11 @@ function BusquedaSocios(props) {
     // Busqueda por nombre
     if (tipo === 'nombre' && nombre === '') {
       Swal.fire({
-        title: "Debe especificar el nombre del socio",
-        icon: "warning",
+        title: 'Debe especificar el nombre del socio',
+        icon: 'warning',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     } else if (tipo === 'nombre') {
       obtenerEmpleadoPorNombre(nombre)
     }
@@ -233,11 +188,11 @@ function BusquedaSocios(props) {
     // Busqueda por ficha
     if (tipo === 'ficha' && ficha === '') {
       Swal.fire({
-        title: "Debe especificar la ficha del socio",
-        icon: "warning",
+        title: 'Debe especificar la ficha del socio',
+        icon: 'warning',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     } else if (tipo === 'ficha') {
       obtenerSindicalizadoPorFicha(formData.ficha)
     }
@@ -245,41 +200,13 @@ function BusquedaSocios(props) {
     // Busqueda por nombre
     if (tipo === 'nombre' && nombre === '') {
       Swal.fire({
-        title: "Debe especificar el nombre del socio",
-        icon: "warning",
+        title: 'Debe especificar el nombre del socio',
+        icon: 'warning',
         showConfirmButton: false,
         timer: 1600,
-      });
+      })
     } else if (tipo === 'nombre') {
       obtenerSindicalizadoPorNombre(nombre)
-    }
-  }
-
-  const loadListadoEspeciales = () => {
-    const { nombre, tipo, ficha } = formData
-
-    // Búsqueda por ficha
-    if (tipo === 'ficha' && ficha === '') {
-      Swal.fire({
-        title: "Debe especificar la ficha del socio",
-        icon: "warning",
-        showConfirmButton: false,
-        timer: 1600,
-      });
-    } else if (tipo === 'ficha') {
-      obtenerEspecialPorFicha(ficha)
-    }
-
-    // Búsqueda por nombre
-    if (tipo === 'nombre' && nombre === '') {
-      Swal.fire({
-        title: "Debe especificar el nombre del socio",
-        icon: "warning",
-        showConfirmButton: false,
-        timer: 1600,
-      });
-    } else if (tipo === 'nombre') {
-      obtenerEspecialPorNombre(nombre)
     }
   }
 
@@ -308,46 +235,46 @@ function BusquedaSocios(props) {
 
   const columns = [
     {
-      name: "Ficha",
+      name: 'Ficha',
       selector: row => row.ficha,
       sortable: false,
       center: true,
       reorder: false
     },
     {
-      name: "Nombre",
+      name: 'Nombre',
       selector: row => row.nombre,
       sortable: false,
       center: true,
       reorder: false
     },
     {
-      name: "Correo",
+      name: 'Correo',
       selector: row => row.correo,
       sortable: false,
       center: true,
       reorder: false
     },
     {
-      name: "Fecha de registro",
+      name: 'Fecha de registro',
       selector: row => formatFecha(row.fechaCreacion),
       sortable: false,
       center: true,
       reorder: false
     },
     {
-      name: "Fecha de actualizacion",
+      name: 'Fecha de actualizacion',
       selector: row => formatFecha(row.fechaActualizacion),
       sortable: false,
       center: true,
       reorder: false
     },
     {
-      name: "Seleccionar",
+      name: 'Seleccionar',
       selector: row => (
         <>
           <FontAwesomeIcon
-            className="eleccionSocio"
+            className='eleccionSocio'
             icon={faCircleCheck}
             onClick={() => {
               socioSeleccionado(row)
@@ -359,146 +286,128 @@ function BusquedaSocios(props) {
       center: true,
       reorder: false
     },
-  ];
-
-  // Configurando animacion de carga
-  const [pending, setPending] = useState(true);
-  const [rows, setRows] = useState([]);
-
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setRows(listSociosEncontrados);
-      setPending(false);
-    }, 0);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const paginationComponentOptions = {
-    rowsPerPageText: 'Filas por página',
-    rangeSeparatorText: 'de'
-  };
-
-  const [resetPaginationToogle, setResetPaginationToogle] = useState(false);
+  ]
 
   return (
     <>
-      {listSociosEncontrados ? (
-        <>
-          <div className="listadoSociosEncontrados">
-            <Row>
-              <h3>Socios encontrados</h3>
-              <DataTablecustom datos={listSociosEncontrados} columnas={columns} title={"Socios encontrados"} />
-            </Row>
-            <Row>
-              <Button
-                variant="danger"
-                className="BuscarOtraVez"
-                onClick={() => {
-                  eliminaDatosBusqueda()
-                }}
-              >
-                Realizar otra búsqueda
-              </Button>
-            </Row>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="contenidoFormularioPrincipal">
-            <Form onChange={onChange} onSubmit={onSubmit}>
-              {/* Selección de información */}
-              <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  controlId="formHorizontaltipo"
-                  className="tipo"
+      {listSociosEncontrados
+        ? (
+          <>
+            <div className='listadoSociosEncontrados'>
+              <Row>
+                <h3>Socios encontrados</h3>
+                <DataTablecustom datos={listSociosEncontrados} columnas={columns} title='Socios encontrados' />
+              </Row>
+              <Row>
+                <Button
+                  variant='danger'
+                  className='BuscarOtraVez'
+                  onClick={() => {
+                    eliminaDatosBusqueda()
+                  }}
                 >
-                  <Form.Label>¿Como desea buscar al socio?</Form.Label>
+                  Realizar otra búsqueda
+                </Button>
+              </Row>
+            </div>
+          </>
+          )
+        : (
+          <>
+            <div className='contenidoFormularioPrincipal'>
+              <Form onChange={onChange} onSubmit={onSubmit}>
+                {/* Selección de información */}
+                <Row className='mb-3'>
+                  <Form.Group
+                    as={Col}
+                    controlId='formHorizontaltipo'
+                    className='tipo'
+                  >
+                    <Form.Label>¿Como desea buscar al socio?</Form.Label>
+                    <Col>
+                      <Form.Control
+                        as='select'
+                        name='tipo'
+                        defaultValue={formData.tipo}
+                      >
+                        <option value='' selected>
+                          Elige....
+                        </option>
+                        <option value='ficha'>Por ficha</option>
+                        <option value='nombre'>Por nombre</option>
+                      </Form.Control>
+                    </Col>
+                  </Form.Group>
+                </Row>
+
+                {/* Ficha o Nombre */}
+                <Row className='mb-3'>
+                  <div className='datosBusqueda'>
+                    {formData.tipo === 'ficha' && (
+                      <>
+                        <Form.Group as={Col} controlId='formGridFicha'>
+                          <Form.Label>Ficha</Form.Label>
+                          <Form.Control
+                            type='number'
+                            min='0'
+                            placeholder='Escribe la ficha'
+                            autoComplete='off'
+                            name='ficha'
+                            defaultValue={formData.ficha}
+                          />
+                        </Form.Group>
+                      </>
+                    )}
+                    {formData.tipo === 'nombre' && (
+                      <>
+                        <Form.Group as={Col} controlId='formGridFicha'>
+                          <Form.Label>Nombre</Form.Label>
+                          <Form.Control
+                            type='text'
+                            placeholder='Escribe el nombre'
+                            autoComplete='off'
+                            name='nombre'
+                            defaultValue={formData.nombre}
+                          />
+                        </Form.Group>
+                      </>
+                    )}
+                  </div>
+                </Row>
+
+                <Form.Group as={Row} className='botonesBusqueda'>
                   <Col>
-                    <Form.Control
-                      as="select"
-                      name="tipo"
-                      defaultValue={formData.tipo}
+                    <Button
+                      type='submit'
+                      variant='success'
+                      className='busqueda'
+                      disabled={loading}
                     >
-                      <option value="" selected>
-                        Elige....
-                      </option>
-                      <option value="ficha">Por ficha</option>
-                      <option value="nombre">Por nombre</option>
-                    </Form.Control>
+                      {!loading ? 'Buscar' : <Spinner animation='border' />}
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      variant='danger'
+                      className='cancelarBusqueda'
+                      disabled={loading}
+                      onClick={() => {
+                        cancelarBusqueda()
+                      }}
+                    >
+                      Cancelar
+                    </Button>
                   </Col>
                 </Form.Group>
-              </Row>
-
-              {/* Ficha o Nombre */}
-              <Row className="mb-3">
-                <div className="datosBusqueda">
-                  {formData.tipo === 'ficha' && (
-                    <>
-                      <Form.Group as={Col} controlId="formGridFicha">
-                        <Form.Label>Ficha</Form.Label>
-                        <Form.Control
-                          type="number"
-                          min="0"
-                          placeholder="Escribe la ficha"
-                          autoComplete="off"
-                          name="ficha"
-                          defaultValue={formData.ficha}
-                        />
-                      </Form.Group>
-                    </>
-                  )}
-                  {formData.tipo === 'nombre' && (
-                    <>
-                      <Form.Group as={Col} controlId="formGridFicha">
-                        <Form.Label>Nombre</Form.Label>
-                        <Form.Control
-                          type="text"
-                          placeholder="Escribe el nombre"
-                          autoComplete="off"
-                          name="nombre"
-                          defaultValue={formData.nombre}
-                        />
-                      </Form.Group>
-                    </>
-                  )}
-                </div>
-              </Row>
-
-              <Form.Group as={Row} className="botonesBusqueda">
-                <Col>
-                  <Button
-                    type="submit"
-                    variant="success"
-                    className="busqueda"
-                    disabled={loading}
-                  >
-                    {!loading ? 'Buscar' : <Spinner animation="border" />}
-                  </Button>
-                </Col>
-                <Col>
-                  <Button
-                    variant="danger"
-                    className="cancelarBusqueda"
-                    disabled={loading}
-                    onClick={() => {
-                      cancelarBusqueda()
-                    }}
-                  >
-                    Cancelar
-                  </Button>
-                </Col>
-              </Form.Group>
-            </Form>
-          </div>
-        </>
-      )}
+              </Form>
+            </div>
+          </>
+          )}
     </>
   )
 }
 
-function formatModelSocios(data) {
+function formatModelSocios (data) {
   return data.map(
     ({
       _id: id,
@@ -522,7 +431,7 @@ function formatModelSocios(data) {
   )
 }
 
-function initialFormValue() {
+function initialFormValue () {
   return {
     nombre: '',
     tipo: '',

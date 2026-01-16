@@ -2,10 +2,9 @@ import {
   registraMovimientoSaldos,
   obtenerFolioActualMovimientoSaldos,
 } from '../../../api/movimientosSaldos'
-import { actualizacionSaldosSocios } from './ActualizacionSaldos'
 import { getRazonSocial, getPeriodo } from '../../../api/auth'
 
-export const registraMovimientoSaldosSocios2 = async(
+export const registraMovimientoSaldosSocios2 = async (
   fichaSocio,
   aportacion,
   prestamo,
@@ -19,7 +18,6 @@ export const registraMovimientoSaldosSocios2 = async(
   try {
     const razonSocial = getRazonSocial()
     const periodo = getPeriodo()
-    const prestamoTotal = parseFloat(prestamo) + parseFloat(interesGenerado)
 
     const responseFolio = await obtenerFolioActualMovimientoSaldos()
     const {
@@ -29,7 +27,7 @@ export const registraMovimientoSaldosSocios2 = async(
       folio,
       fichaSocio,
       tipo: razonSocial,
-      periodo: periodo,
+      periodo,
       aportacion,
       prestamo: parseFloat(interesGenerado),
       patrimonio,
@@ -59,28 +57,23 @@ export const registroMovimientosSaldosSocios = async (
   movimiento
 ) => {
   try {
-    //console.log('Cantidad recibida del prestamo ', prestamo)
-    //console.log('Cantidad recibida de intereses ', interesGenerado)
-    // console.log(typeof prestamo)
-    // console.log(typeof interesGenerado)
-    const prestamoTotal = parseFloat(prestamo) + parseFloat(interesGenerado)
     await obtenerFolioActualMovimientoSaldos()
       .then((response) => {
         const { data } = response
         const { folio } = data
 
         const dataTemp = {
-          folio: folio,
-          fichaSocio: fichaSocio,
+          folio,
+          fichaSocio,
           tipo: getRazonSocial(),
           periodo: getPeriodo(),
-          aportacion: aportacion,
+          aportacion,
           prestamo: parseFloat(interesGenerado),
-          patrimonio: patrimonio,
-          rendimiento: rendimiento,
-          retiro: retiro,
-          abono: abono,
-          movimiento: movimiento,
+          patrimonio,
+          rendimiento,
+          retiro,
+          abono,
+          movimiento,
         }
 
         // console.log(dataTemp)
@@ -89,12 +82,7 @@ export const registroMovimientosSaldosSocios = async (
         registraMovimientoSaldos(dataTemp)
           .then((response) => {
             const { data } = response
-            const { datos } = data
-            const { folio } = datos
-            // console.log("Registro de movimiento")
-            //console.log(' ')
-            //console.log('Dato del prestamo a enviar ', prestamoTotal)
-            //console.log(' ')
+            console.log(data)
           })
           .catch((e) => {
             console.log(e)
