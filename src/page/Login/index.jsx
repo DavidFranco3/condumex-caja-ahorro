@@ -128,11 +128,6 @@ function Login({ setRefreshCheckLogin }) {
                   />
                 </div>
                 {errors.password && <span className="text-red-500 text-sm mt-1">{errors.password.message}</span>}
-                <FontAwesomeIcon
-                  className="cursor-pointer py-2 -ml-6"
-                  icon={!mostrarPassword ? faEyeSlash : faEye}
-                  onClick={togglePasswordVisiblity}
-                />
               </div>
               <div className="pt-6">
                 <button
