@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import LogoCajadeAhorro from '../../assets/png/caja-de-ahorro-login.png'
 
-function Login ({ setRefreshCheckLogin }) {
+function Login({ setRefreshCheckLogin }) {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [signInLoading, setSignInLoading] = useState(false)
 
@@ -105,7 +105,8 @@ function Login ({ setRefreshCheckLogin }) {
                   {...register('correo', {
                     required: 'El correo es obligatorio',
                     pattern: {
-                      value: /^(([^<>()[]\\.,;:\s@"]+(\.[^<>()[]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                      message: "Correo no válido"
                     }
                   })}
                 />
@@ -138,11 +139,11 @@ function Login ({ setRefreshCheckLogin }) {
                 >
                   {!signInLoading
                     ? (
-                        'Iniciar Sesión'
-                      )
+                      'Iniciar Sesión'
+                    )
                     : (
                       <Spinner animation='border' />
-                      )}
+                    )}
                 </button>
               </div>
             </form>
