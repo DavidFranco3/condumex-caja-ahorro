@@ -14,7 +14,7 @@ import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/Actual
 import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
-function RegistroRetiros (props) {
+function RegistroRetiros(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -74,7 +74,7 @@ function RegistroRetiros (props) {
     }
   }, [fichaSocioElegido, setValue, clearErrors])
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
 
     // Realiza registro de la aportación
@@ -82,29 +82,31 @@ function RegistroRetiros (props) {
       const { data: dataFolio } = response
       const { folio } = dataFolio
 
-      const retiro = data.retiro * parseInt('-1')
+      const retiro = dataa.retiro * parseInt('-1')
+      console.log(dataa.tipo)
 
       const dataTemp = {
         folio,
         fichaSocio: fichaSocioElegido,
         tipo: getRazonSocial(),
         periodo: getPeriodo(),
-        retiro: data.retiro,
-        createdAt: data.fecha
+        retiro: dataa.retiro,
+        createdAt: dataa.fecha
       }
 
       registraRetiros(dataTemp).then(response => {
         const { data } = response
 
         // Registra movimientos
-        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', data.retiro, '0', 'Retiro')
-
-        actualizacionSaldosSocios(fichaSocioElegido, data.retiro, '0', '0', folio, 'Retiro')
+        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', dataa.retiro, '0', 'Retiro')
 
         if (data.tipo === 'aportaciones') {
-          registroAportacionInicial(fichaSocioElegido, retiro, data.fecha)
-        } else if (data.tipo === 'intereses') {
-          registroRendimientoInicial(fichaSocioElegido, retiro, data.fecha)
+          console.log(dataa.retiro)
+          actualizacionSaldosSocios(fichaSocioElegido, dataa.retiro, '0', '0', folio, 'Retiro')
+          registroAportacionInicial(fichaSocioElegido, retiro, dataa.fecha)
+        } else if (dataa.tipo === 'intereses') {
+          actualizacionSaldosSocios(fichaSocioElegido, '0', '0', dataa.retiro, folio, 'Retiro')
+          registroRendimientoInicial(fichaSocioElegido, retiro, dataa.fecha)
         }
 
         history({
@@ -190,7 +192,7 @@ function RegistroRetiros (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -222,7 +224,7 @@ function RegistroRetiros (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
 
@@ -337,7 +339,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     retiro: '',

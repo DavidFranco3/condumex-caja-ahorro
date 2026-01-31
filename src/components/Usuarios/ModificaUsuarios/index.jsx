@@ -21,7 +21,7 @@ const initialFormData = ({ nombre, apellidos, correo, fechaCreacion }) => ({
   password: ''
 })
 
-function ModificaUsuarios (props) {
+function ModificaUsuarios(props) {
   const { datos, setShowModal, history, } = props
   const { id } = datos
 
@@ -39,18 +39,18 @@ function ModificaUsuarios (props) {
     defaultValues: initialFormData(datos)
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     // e.preventDefault() -> Handled by handleSubmit
 
     // Validations handled by react-hook-form
 
     setLoading(true)
     const dataTemp = {
-      nombre: data.nombre,
-      apellidos: data.apellidos,
-      correo: data.correo,
-      password: data.password,
-      createdAt: data.createdAt
+      nombre: dataa.nombre,
+      apellidos: dataa.apellidos,
+      correo: dataa.correo,
+      password: dataa.password,
+      createdAt: dataa.createdAt
     }
 
     try {

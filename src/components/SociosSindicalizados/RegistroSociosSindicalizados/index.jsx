@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { registraSocioSindicalizado } from '../../../api/sociosSindicalizados'
 
-function RegistroSociosSindicalizados (props) {
+function RegistroSociosSindicalizados(props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -19,14 +19,14 @@ function RegistroSociosSindicalizados (props) {
     defaultValues: initialFormData()
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
     const dataTemp = {
-      ficha: data.ficha,
-      nombre: data.nombre,
-      tipo: data.tipo,
-      correo: data.correo,
-      createdAt: data.fecha,
+      ficha: dataa.ficha,
+      nombre: dataa.nombre,
+      tipo: dataa.tipo,
+      correo: dataa.correo,
+      createdAt: dataa.fecha,
       estado: 'true'
     }
     try {
@@ -207,7 +207,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     ficha: '',
     nombre: '',

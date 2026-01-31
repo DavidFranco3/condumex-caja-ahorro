@@ -141,26 +141,26 @@ const CargaMasivaPatrimonios = ({ setShowModal, history }) => {
             </Col>
           </Form.Group>
           {
-                        dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
-                          <Col sm={12}>
-                            <div className='flex flex-col justify-center'>
-                              <div className='mb-3 w-100'>
-                                <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
-                              </div>
-                              {
-                                        count > 0 && (<div className='mb-3 w-100'>
-                                          <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
-                                          <Form.Group as={Row}>
-                                            <Col sm={12}>
-                                              <ProgressBar animated now={count} max={dataFile.length} variant='info' />
-                                            </Col>
-                                          </Form.Group>
-                                                      </div>)
-                                    }
-                            </div>
-                          </Col>
-                                                </Form.Group>)
-                    }
+            dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
+              <Col sm={12}>
+                <div className='flex flex-col justify-center'>
+                  <div className='mb-3 w-100'>
+                    <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
+                  </div>
+                  {
+                    count > 0 && (<div className='mb-3 w-100'>
+                      <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
+                      <Form.Group as={Row}>
+                        <Col sm={12}>
+                          <ProgressBar animated now={count} max={dataFile.length} variant='info' />
+                        </Col>
+                      </Form.Group>
+                    </div>)
+                  }
+                </div>
+              </Col>
+            </Form.Group>)
+          }
           <Form.Group as={Row} className='botones pt-5'>
             <Col>
               <Button
@@ -204,7 +204,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     patrimonio: '',

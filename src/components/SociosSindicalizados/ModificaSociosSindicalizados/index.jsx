@@ -21,7 +21,7 @@ const initialFormData = ({ nombre, tipo, correo, ficha, fechaCreacion }) => ({
   createdAt: fechaToCurrentTimezone(fechaCreacion),
 })
 
-function ModificaSociosSindicalizados (props) {
+function ModificaSociosSindicalizados(props) {
   const { datos, setShowModal, history } = props
   const { id, ficha } = datos
 
@@ -39,15 +39,15 @@ function ModificaSociosSindicalizados (props) {
     defaultValues: initialFormData(datos)
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     // Validation logic can be simplified as we use register with rules
 
     setLoading(true)
     const dataTemp = {
-      ficha: data.ficha,
-      nombre: data.nombre,
-      tipo: data.tipo,
-      correo: data.correo,
+      ficha: dataa.ficha,
+      nombre: dataa.nombre,
+      tipo: dataa.tipo,
+      correo: dataa.correo,
     }
 
     try {

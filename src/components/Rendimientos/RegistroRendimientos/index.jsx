@@ -14,7 +14,7 @@ import queryString from 'query-string'
 import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 
-function RegistroRendimientos ({ setShowModal, history }) {
+function RegistroRendimientos({ setShowModal, history }) {
   // Para controlar el modal de busqueda de socios
   const [showModalBusqueda, setShowModalBusqueda] = useState(false)
   const [contentModalBusqueda, setContentModalBusqueda] = useState(null)
@@ -64,13 +64,10 @@ function RegistroRendimientos ({ setShowModal, history }) {
   useEffect(() => {
     if (fichaSocioElegido) {
       setValue('fichaSocio', fichaSocioElegido)
-      clearErrors('fichaSocio')
-    } else {
-      setValue('fichaSocio', '')
     }
-  }, [fichaSocioElegido, setValue, clearErrors])
+  }, [fichaSocioElegido])
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
     // Realiza registro de la aportación
     obtenerFolioActualRendimientos().then(response => {
@@ -83,19 +80,19 @@ function RegistroRendimientos ({ setShowModal, history }) {
         fichaSocio: fichaSocioElegido,
         tipo: getRazonSocial(),
         periodo: getPeriodo(),
-        rendimiento: data.rendimiento,
-        createdAt: data.fecha
+        rendimiento: dataa.rendimiento,
+        createdAt: dataa.fecha
 
       }
 
       registraRendimientosSocios(dataTemp).then(() => {
         // Registra movimientos
-        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', data.rendimiento, '0', '0', 'Interés')
+        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', dataa.rendimiento, '0', '0', 'Interés')
 
         // Registra Saldos
-        registroSaldoInicial(fichaSocioElegido, '0', '0', data.rendimiento, folio, 'Interés')
+        registroSaldoInicial(fichaSocioElegido, '0', '0', dataa.rendimiento, folio, 'Interés')
 
-        actualizacionSaldosSocios(fichaSocioElegido, '0', '0', data.rendimiento, folio, 'Interés')
+        actualizacionSaldosSocios(fichaSocioElegido, '0', '0', dataa.rendimiento, folio, 'Interés')
 
         history({
           search: queryString.stringify(''),
@@ -159,67 +156,67 @@ function RegistroRendimientos ({ setShowModal, history }) {
             {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
 
             {
-                            fichaSocioElegido
-                              ? (
-                                <>
-                                  <Form.Group as={Col} controlId='formGridFicha'>
-                                    <Form.Label>
-                                      Ficha <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                    </Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='Ficha del socio'
-                                      defaultValue={fichaSocioElegido}
-                                      disabled
-                                    />
-                                  </Form.Group>
+              fichaSocioElegido
+                ? (
+                  <>
+                    <Form.Group as={Col} controlId='formGridFicha'>
+                      <Form.Label>
+                        Ficha <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                      </Form.Label>
+                      <Form.Control
+                        type='text'
+                        placeholder='Ficha del socio'
+                        defaultValue={fichaSocioElegido}
+                        disabled
+                      />
+                    </Form.Group>
 
-                                  <Form.Group as={Row} controlId='formGridFicha'>
-                                    <Form.Label>
-                                      Nombre <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                    </Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='Nombre del socio'
-                                      defaultValue={nombreSocioElegido}
-                                      disabled
-                                    />
-                                  </Form.Group>
-                                </>
-                                )
-                              : (
-                                <>
-                                  <Form.Group as={Col} controlId='formGridBusqueda'>
-                                    <Form.Label>
-                                      Socio
-                                    </Form.Label>
-                                    <Col>
-                                      <Button
-                                        type='button'
-                                        className='busquedaSocio'
-                                        onClick={() => {
-                                          registroRendimiento(
-                                            <BusquedaSocios
-                                              setShowModal={setShowModalBusqueda}
-                                              setIdSocioElegido={setIdSocioElegido}
-                                              setFichaSocioElegido={setFichaSocioElegido}
-                                              setNombreSocioElegido={setNombreSocioElegido}
-                                              idSocioElegido={idSocioElegido}
-                                              fichaSocioElegido={fichaSocioElegido}
-                                              nombreSocioElegido={nombreSocioElegido}
-                                            />
-                                          )
-                                        }}
-                                      >
-                                        Busca el socio
-                                      </Button>
-                                    </Col>
+                    <Form.Group as={Row} controlId='formGridFicha'>
+                      <Form.Label>
+                        Nombre <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                      </Form.Label>
+                      <Form.Control
+                        type='text'
+                        placeholder='Nombre del socio'
+                        defaultValue={nombreSocioElegido}
+                        disabled
+                      />
+                    </Form.Group>
+                  </>
+                )
+                : (
+                  <>
+                    <Form.Group as={Col} controlId='formGridBusqueda'>
+                      <Form.Label>
+                        Socio
+                      </Form.Label>
+                      <Col>
+                        <Button
+                          type='button'
+                          className='busquedaSocio'
+                          onClick={() => {
+                            registroRendimiento(
+                              <BusquedaSocios
+                                setShowModal={setShowModalBusqueda}
+                                setIdSocioElegido={setIdSocioElegido}
+                                setFichaSocioElegido={setFichaSocioElegido}
+                                setNombreSocioElegido={setNombreSocioElegido}
+                                idSocioElegido={idSocioElegido}
+                                fichaSocioElegido={fichaSocioElegido}
+                                nombreSocioElegido={nombreSocioElegido}
+                              />
+                            )
+                          }}
+                        >
+                          Busca el socio
+                        </Button>
+                      </Col>
 
-                                  </Form.Group>
+                    </Form.Group>
 
-                                </>
-                                )
-                        }
+                  </>
+                )
+            }
           </Row>
 
           <Row className='mb-3'>
@@ -310,7 +307,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     aportacion: '',

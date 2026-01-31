@@ -5,6 +5,8 @@ import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
+import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
+import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
 const fechaToCurrentTimezone = (fecha) => {
   const date = new Date(fecha)
@@ -14,7 +16,7 @@ const fechaToCurrentTimezone = (fecha) => {
   return date.toISOString().slice(0, 16)
 }
 
-function EliminaRetiros (props) {
+function EliminaRetiros(props) {
   const { datos, history, setShowModal, } = props
   // console.log(datos)
   const { id, folio, fichaSocio, retiro, fechaCreacion } = datos
@@ -42,7 +44,13 @@ function EliminaRetiros (props) {
         // Registro de movimientos
         registroMovimientosSaldosSocios(fichaSocio, '0', '0', '0', '0', '0', retiro, '0', 'Eliminación Retiro')
 
-        actualizacionSaldosSocios(fichaSocio, retiro, '0', '0', folio, 'Eliminación retiro')
+        if (datos.tipo === 'aportaciones') {
+          actualizacionSaldosSocios(fichaSocio, retiro, '0', '0', folio, 'Eliminación retiro')
+          registroAportacionInicial(fichaSocio, retiro, new Date().toISOString())
+        } else if (datos.tipo === 'intereses') {
+          actualizacionSaldosSocios(fichaSocio, '0', '0', retiro, folio, 'Eliminación retiro')
+          registroRendimientoInicial(fichaSocio, retiro, new Date().toISOString())
+        }
 
         Swal.fire({
           title: data.mensaje,

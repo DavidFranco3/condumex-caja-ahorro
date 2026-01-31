@@ -27,6 +27,7 @@ export const actualizacionSaldosSocios = async (fichaSocio, ingresaAportacion, i
         finalRendimiento = parseFloat(finalRendimiento) + parseFloat(ingresaRendimiento)
       } else if (movimiento === 'Retiro') {
         finalAportacion = parseFloat(finalAportacion) - parseFloat(ingresaAportacion)
+        finalRendimiento = parseFloat(finalRendimiento) - parseFloat(ingresaRendimiento)
       } else if (movimiento === 'Baja Socio') {
         finalAportacion = parseFloat(finalAportacion) - parseFloat(ingresaAportacion)
         finalPatrimonio = parseFloat(finalPatrimonio) - parseFloat(ingresaPatrimonio)
@@ -39,6 +40,7 @@ export const actualizacionSaldosSocios = async (fichaSocio, ingresaAportacion, i
         finalRendimiento = parseFloat(finalRendimiento) - parseFloat(ingresaRendimiento)
       } else if (movimiento === 'Eliminación retiro') {
         finalAportacion = parseFloat(finalAportacion) + parseFloat(ingresaAportacion)
+        finalRendimiento = parseFloat(finalRendimiento) + parseFloat(ingresaRendimiento)
       } else if (movimiento === 'Eliminación Baja Socio') {
         finalAportacion = parseFloat(finalAportacion) + parseFloat(ingresaAportacion)
         finalPatrimonio = parseFloat(finalPatrimonio) + parseFloat(ingresaPatrimonio)

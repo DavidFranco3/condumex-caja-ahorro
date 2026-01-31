@@ -25,7 +25,7 @@ const initialFormData = ({ id, folio, fichaSocio, aportacion, fechaCreacion }) =
   }
 )
 
-function ModificaAportaciones ({ datos, setShowModal, history }) {
+function ModificaAportaciones({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 
@@ -35,18 +35,18 @@ function ModificaAportaciones ({ datos, setShowModal, history }) {
 
   const handleCancel = () => setShowModal(false)
 
-  const handleUpdate = async (data) => {
+  const handleUpdate = async (dataa) => {
     // event.preventDefault();
 
     // Validations handled by react-hook-form
 
     setLoading(true)
 
-    const response = await actualizaAportaciones(data.id, data)
-    registroMovimientosSaldosSocios(parseInt(data.fichaSocio), data.aportacion, '0', '0', '0', '0', '0', '0', 'Modificacion aportación')
+    const response = await actualizaAportaciones(dataa.id, dataa)
+    registroMovimientosSaldosSocios(parseInt(dataa.fichaSocio), dataa.aportacion, '0', '0', '0', '0', '0', '0', 'Modificacion aportación')
 
     // Registra Saldos
-    registroSaldoInicial(parseInt(data.fichaSocio), data.aportacion, '0', '0', data.folio, 'Modificacion aportación')
+    registroSaldoInicial(parseInt(dataa.fichaSocio), dataa.aportacion, '0', '0', dataa.folio, 'Modificacion aportación')
 
     const { status, data: { mensaje } } = response
     console.log(status)

@@ -19,7 +19,7 @@ const initialFormData = ({ correo, password, fechaCreacion }) => ({
   password
 })
 
-function ModificaUsuarioCorreo (props) {
+function ModificaUsuarioCorreo(props) {
   const { datos, setShowModal, history } = props
   const { id } = datos
 
@@ -36,18 +36,18 @@ function ModificaUsuarioCorreo (props) {
     defaultValues: initialFormData(datos)
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     // e.preventDefault() handled by handleSubmit
 
     // Validations handled by react-hook-form
 
     setLoading(true)
     const dataTemp = {
-      nombre: data.nombre,
-      apellidos: data.apellidos,
-      correo: data.correo,
-      password: data.password,
-      createdAt: data.createdAt
+      nombre: dataa.nombre,
+      apellidos: dataa.apellidos,
+      correo: dataa.correo,
+      password: dataa.password,
+      createdAt: dataa.createdAt
     }
 
     try {
@@ -127,8 +127,8 @@ function ModificaUsuarioCorreo (props) {
               </Form.Label>
               <Form.Control
                 type='text' // Wait, should be password type? Old code said text. But standard is password. I'll keep text if user wants visibility or change to password? Old was text.
-                                // Actually line 138 in old code: type="text".
-                                // Ah, ModificaUsuarioCorreo might be for admin resetting?
+                // Actually line 138 in old code: type="text".
+                // Ah, ModificaUsuarioCorreo might be for admin resetting?
                 placeholder='Escribe el password'
                 {...register('password')}
               />

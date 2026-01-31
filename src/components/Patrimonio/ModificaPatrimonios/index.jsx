@@ -26,7 +26,7 @@ const initialFormData = ({ id, folio, fichaSocio, patrimonio, fechaCreacion }) =
   }
 )
 
-function ModificaPatrimonios ({ datos, setShowModal, history }) {
+function ModificaPatrimonios({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 
@@ -36,22 +36,22 @@ function ModificaPatrimonios ({ datos, setShowModal, history }) {
 
   const handleCancel = () => setShowModal(false)
 
-  const handleUpdate = async (data) => {
+  const handleUpdate = async (dataa) => {
     // event.preventDefault();
 
     // Validations handled by react-hook-form
 
     setLoading(true)
 
-    const response = await actualizaPatrimonio(data.id, data)
+    const response = await actualizaPatrimonio(dataa.id, dataa)
     const { status, data: { mensaje } } = response
 
-    registroMovimientosSaldosSocios(data.fichaSocio, '0', '0', '0', data.patrimonio, '0', '0', '0', 'Modificacion patrimonio')
+    registroMovimientosSaldosSocios(dataa.fichaSocio, '0', '0', '0', dataa.patrimonio, '0', '0', '0', 'Modificacion patrimonio')
 
     // Registra Saldos
-    registroSaldoInicial(data.fichaSocio, '0', data.patrimonio, '0', data.folio, 'Modificación patrimonio')
+    registroSaldoInicial(dataa.fichaSocio, '0', dataa.patrimonio, '0', dataa.folio, 'Modificación patrimonio')
 
-    actualizacionSaldosSocios(data.fichaSocio, '0', data.patrimonio, '0', data.folio, 'Modificación patrimonio')
+    actualizacionSaldosSocios(dataa.fichaSocio, '0', dataa.patrimonio, '0', dataa.folio, 'Modificación patrimonio')
 
     setLoading(false)
 

@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { getRazonSocial } from '../../../api/auth'
 import queryString from 'query-string'
 
-function RegistroPeriodos (props) {
+function RegistroPeriodos(props) {
   const { setShowModal, history } = props
 
   // Para controlar la animación
@@ -39,7 +39,7 @@ function RegistroPeriodos (props) {
     defaultValues: initialFormData()
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
     // Realiza registro de la aportación
     obtenerFolioActualPeriodo().then(response => {
@@ -49,10 +49,10 @@ function RegistroPeriodos (props) {
 
       const dataTemp = {
         folio,
-        nombre: data.nombre,
+        nombre: dataa.nombre,
         tipo: getRazonSocial(),
-        fechaInicio: data.fechaInicio,
-        fechaCierre: data.fechaCierre,
+        fechaInicio: dataa.fechaInicio,
+        fechaCierre: dataa.fechaCierre,
       }
 
       registraPeriodos(dataTemp).then(response => {
@@ -178,7 +178,7 @@ function RegistroPeriodos (props) {
   )
 }
 
-function initialFormData () {
+function initialFormData() {
   return {
     nombre: '',
     fechaInicio: '',

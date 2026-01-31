@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { registraUsuarios } from '../../../api/usuarios'
 
-function RegistroUsuarios (props) {
+function RegistroUsuarios(props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -20,15 +20,15 @@ function RegistroUsuarios (props) {
     defaultValues: initialFormData()
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
     const dataTemp = {
-      nombre: data.nombre,
-      apellidos: data.apellidos,
-      correo: data.correo,
-      telefonoCelular: data.telefonoCelular, // Note: telefonoCelular was in dataTemp but not in form inputs explicitly in original? Checking original... it was not in JSX inputs, but in dataTemp. I'll keep it if it's in defaultValues or just undefined.
-      password: data.password,
-      createdAt: data.fecha,
+      nombre: dataa.nombre,
+      apellidos: dataa.apellidos,
+      correo: dataa.correo,
+      telefonoCelular: dataa.telefonoCelular,
+      password: dataa.password,
+      createdAt: dataa.fecha,
       estado: 'true'
     }
 
@@ -208,7 +208,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     nombre: '',
     apellidos: '',

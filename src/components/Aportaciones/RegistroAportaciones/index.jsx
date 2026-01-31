@@ -14,7 +14,7 @@ import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 import queryString from 'query-string'
 
-function RegistroAportaciones (props) {
+function RegistroAportaciones(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -67,14 +67,14 @@ function RegistroAportaciones (props) {
     defaultValues: initialFormData()
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     // e.preventDefault() handled by RHF
 
     // e.preventDefault() handled by RHF
 
     // RHF handles validation for required fields like aportacion via register rules
     // But if we want to keep the manual check structure:
-    if (!data.aportacion) {
+    if (!dataa.aportacion) {
       Swal.fire({
         title: 'Faltan datos',
         icon: 'warning',
@@ -93,20 +93,20 @@ function RegistroAportaciones (props) {
           fichaSocio: fichaSocioElegido,
           tipo: getRazonSocial(),
           periodo: getPeriodo(),
-          aportacion: data.aportacion,
-          createdAt: data.fecha
+          aportacion: dataa.aportacion,
+          createdAt: dataa.fecha
         }
 
         registraAportacionesSocios(dataTemp).then(response => {
           const { data: responseData } = response
 
           // Registra movimientos
-          registroMovimientosSaldosSocios(fichaSocioElegido, data.aportacion, '0', '0', '0', '0', '0', '0', 'Aportación')
+          registroMovimientosSaldosSocios(fichaSocioElegido, dataa.aportacion, '0', '0', '0', '0', '0', '0', 'Aportación')
 
           // Registra Saldos
-          registroSaldoInicial(fichaSocioElegido, data.aportacion, '0', '0', folio, 'Aportación')
+          registroSaldoInicial(fichaSocioElegido, dataa.aportacion, '0', '0', folio, 'Aportación')
 
-          actualizacionSaldosSocios(fichaSocioElegido, data.aportacion, '0', '0', folio, 'Aportación')
+          actualizacionSaldosSocios(fichaSocioElegido, dataa.aportacion, '0', '0', folio, 'Aportación')
 
           setLoading(false)
           history({
@@ -194,7 +194,7 @@ function RegistroAportaciones (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -226,7 +226,7 @@ function RegistroAportaciones (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -318,7 +318,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     aportacion: '',

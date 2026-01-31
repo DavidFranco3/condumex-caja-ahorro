@@ -17,7 +17,7 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
   const [dataFile, setDataFile] = useState([])
   const [count, setCount] = useState(0)
   const handleCancel = () => setShowModal(false)
-  const onSubmit = async (data) => {
+  const onSubmit = async (dataa) => {
     // evt.preventDefault();
     if (dataFile.length === 0) {
       Swal.fire({
@@ -46,12 +46,12 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
         periodo,
         prestamoTotal: prestamo,
         tasaInteres: 0,
-        createdAt: data.fecha,
+        createdAt: dataa.fecha,
       }
       await registraPrestamos(dataPrestamos)
 
-      await actualizacionDeudaSocio(fichaSocio, '0', parseFloat(prestamo), 'Prestamo', data.fecha)
-      await registroDeudaSocioInicial(fichaSocio, '0', parseFloat(prestamo), 'Prestamo', data.fecha)
+      await actualizacionDeudaSocio(fichaSocio, '0', parseFloat(prestamo), 'Prestamo', dataa.fecha)
+      await registroDeudaSocioInicial(fichaSocio, '0', parseFloat(prestamo), 'Prestamo', dataa.fecha)
 
       await registroMovimientosSaldosSocios(fichaSocio, '0', '0', parseFloat(prestamo), '0', '0', '0', '0', 'Prestamo')
 
@@ -138,26 +138,26 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
             </Col>
           </Form.Group>
           {
-                        dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
-                          <Col sm={12}>
-                            <div className='flex flex-col justify-center'>
-                              <div className='mb-3 w-100'>
-                                <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
-                              </div>
-                              {
-                                        count > 0 && (<div className='mb-3 w-100'>
-                                          <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
-                                          <Form.Group as={Row}>
-                                            <Col sm={12}>
-                                              <ProgressBar animated now={count} max={dataFile.length} variant='info' />
-                                            </Col>
-                                          </Form.Group>
-                                                      </div>)
-                                    }
-                            </div>
-                          </Col>
-                                                </Form.Group>)
-                    }
+            dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
+              <Col sm={12}>
+                <div className='flex flex-col justify-center'>
+                  <div className='mb-3 w-100'>
+                    <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
+                  </div>
+                  {
+                    count > 0 && (<div className='mb-3 w-100'>
+                      <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
+                      <Form.Group as={Row}>
+                        <Col sm={12}>
+                          <ProgressBar animated now={count} max={dataFile.length} variant='info' />
+                        </Col>
+                      </Form.Group>
+                    </div>)
+                  }
+                </div>
+              </Col>
+            </Form.Group>)
+          }
           <Form.Group as={Row} className='botones pt-5'>
             <Col>
               <Button
@@ -200,7 +200,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     prestamo: '',

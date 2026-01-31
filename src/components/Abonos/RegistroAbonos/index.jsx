@@ -14,7 +14,7 @@ import { registroDeudaSocioInicial, actualizacionDeudaSocio } from '../../DeudaS
 import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
-function RegistroAbonos (props) {
+function RegistroAbonos(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -74,38 +74,38 @@ function RegistroAbonos (props) {
     }
   }, [fichaSocioElegido, setValue, clearErrors])
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     setLoading(true)
     // Realiza registro de la aportación
     obtenerFolioActualAbono().then(response => {
       const { data: dataFolio } = response
       const { folio } = dataFolio
 
-      const retiro = data.abono * parseInt('-1')
+      const retiro = dataa.abono * parseInt('-1')
 
       const dataTemp = {
         folio,
         fichaSocio: fichaSocioElegido,
         tipo: getRazonSocial(),
         periodo: getPeriodo(),
-        abono: data.abono,
-        createdAt: data.fecha,
+        abono: dataa.abono,
+        createdAt: dataa.fecha,
       }
 
       registraAbonos(dataTemp).then(response => {
         const { data: dataRes } = response
 
         // Registra movimientos
-        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', '0', data.abono, 'Abono')
+        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', '0', dataa.abono, 'Abono')
 
-        registroDeudaSocioInicial(fichaSocioElegido, data.abono, '0', 'Abono', data.fecha)
+        registroDeudaSocioInicial(fichaSocioElegido, dataa.abono, '0', 'Abono', dataa.fecha)
 
-        actualizacionDeudaSocio(fichaSocioElegido, data.abono, '0', 'Abono', data.fecha)
+        actualizacionDeudaSocio(fichaSocioElegido, dataa.abono, '0', 'Abono', dataa.fecha)
 
-        if (data.tipo === 'aportaciones') {
-          registroAportacionInicial(fichaSocioElegido, retiro, data.fecha)
-        } else if (data.tipo === 'intereses') {
-          registroRendimientoInicial(fichaSocioElegido, retiro, data.fecha)
+        if (dataa.tipo === 'aportaciones') {
+          registroAportacionInicial(fichaSocioElegido, retiro, dataa.fecha)
+        } else if (dataa.tipo === 'intereses') {
+          registroRendimientoInicial(fichaSocioElegido, retiro, dataa.fecha)
         }
 
         setLoading(false)
@@ -164,69 +164,69 @@ function RegistroAbonos (props) {
             {/* Hidden input for validation of socio selection - Removed to use Swal in onSubmit */}
 
             {
-                            fichaSocioElegido
-                              ? (
-                                <>
-                                  <Form.Group as={Col} controlId='formGridFicha'>
-                                    <Form.Label>
-                                      Ficha <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                    </Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='Ficha del socio'
-                                      defaultValue={fichaSocioElegido}
-                                      disabled
-                                    />
-                                  </Form.Group>
+              fichaSocioElegido
+                ? (
+                  <>
+                    <Form.Group as={Col} controlId='formGridFicha'>
+                      <Form.Label>
+                        Ficha <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                      </Form.Label>
+                      <Form.Control
+                        type='text'
+                        placeholder='Ficha del socio'
+                        defaultValue={fichaSocioElegido}
+                        disabled
+                      />
+                    </Form.Group>
 
-                                  <Row className='mb-3'>
-                                    <Form.Group as={Col} controlId='formGridFicha'>
-                                      <Form.Label>
-                                        Nombre <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
-                                      </Form.Label>
-                                      <Form.Control
-                                        type='text'
-                                        placeholder='Nombre del socio'
-                                        defaultValue={nombreSocioElegido}
-                                        disabled
-                                      />
-                                    </Form.Group>
-                                  </Row>
-                                </>
-                                )
-                              : (
-                                <>
-                                  <Form.Group as={Col} controlId='formGridBusqueda'>
-                                    <Form.Label>
-                                      Socio
-                                    </Form.Label>
-                                    <Col>
-                                      <Button
-                                        type='button'
-                                        className='busquedaSocio'
-                                        onClick={() => {
-                                          registroAbono(
-                                            <BusquedaSocios
-                                              setShowModal={setShowModalBusqueda}
-                                              setIdSocioElegido={setIdSocioElegido}
-                                              setFichaSocioElegido={setFichaSocioElegido}
-                                              setNombreSocioElegido={setNombreSocioElegido}
-                                              idSocioElegido={idSocioElegido}
-                                              fichaSocioElegido={fichaSocioElegido}
-                                              nombreSocioElegido={nombreSocioElegido}
-                                            />
-                                          )
-                                        }}
-                                      >
-                                        Busca el socio
-                                      </Button>
-                                    </Col>
+                    <Row className='mb-3'>
+                      <Form.Group as={Col} controlId='formGridFicha'>
+                        <Form.Label>
+                          Nombre <FontAwesomeIcon className='eliminaBusqueda' icon={faTrashCan} onClick={() => { eliminaBusqueda() }} />
+                        </Form.Label>
+                        <Form.Control
+                          type='text'
+                          placeholder='Nombre del socio'
+                          defaultValue={nombreSocioElegido}
+                          disabled
+                        />
+                      </Form.Group>
+                    </Row>
+                  </>
+                )
+                : (
+                  <>
+                    <Form.Group as={Col} controlId='formGridBusqueda'>
+                      <Form.Label>
+                        Socio
+                      </Form.Label>
+                      <Col>
+                        <Button
+                          type='button'
+                          className='busquedaSocio'
+                          onClick={() => {
+                            registroAbono(
+                              <BusquedaSocios
+                                setShowModal={setShowModalBusqueda}
+                                setIdSocioElegido={setIdSocioElegido}
+                                setFichaSocioElegido={setFichaSocioElegido}
+                                setNombreSocioElegido={setNombreSocioElegido}
+                                idSocioElegido={idSocioElegido}
+                                fichaSocioElegido={fichaSocioElegido}
+                                nombreSocioElegido={nombreSocioElegido}
+                              />
+                            )
+                          }}
+                        >
+                          Busca el socio
+                        </Button>
+                      </Col>
 
-                                  </Form.Group>
+                    </Form.Group>
 
-                                </>
-                                )
-                        }
+                  </>
+                )
+            }
           </Row>
           {/* Tipo de socio, correo */}
 
@@ -340,7 +340,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     abono: '',

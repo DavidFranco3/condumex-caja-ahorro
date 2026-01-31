@@ -21,7 +21,7 @@ const initialFormData = ({ nombre, tipo, correo, ficha, fechaCreacion }) => ({
   createdAt: fechaToCurrentTimezone(fechaCreacion),
 })
 
-function ModificaSociosEmpleados (props) {
+function ModificaSociosEmpleados(props) {
   const { datos, setShowModal, history } = props
   const { id, ficha } = datos
 
@@ -39,18 +39,18 @@ function ModificaSociosEmpleados (props) {
     defaultValues: initialFormData(datos)
   })
 
-  const onSubmit = (data) => {
+  const onSubmit = (dataa) => {
     // e.preventDefault() -> No needed with handleSubmit
 
     // Validations handled by react-hook-form
 
     setLoading(true)
     const dataTemp = {
-      nombre: data.nombre,
-      tipo: data.tipo,
-      correo: data.correo,
-      ficha: data.ficha,
-      createdAt: data.createdAt
+      nombre: dataa.nombre,
+      tipo: dataa.tipo,
+      correo: dataa.correo,
+      ficha: dataa.ficha,
+      createdAt: dataa.createdAt
     }
 
     try {

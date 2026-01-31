@@ -27,7 +27,7 @@ const initialFormData = ({ id, folio, fichaSocio, prestamo, prestamoTotal, tasaI
   }
 )
 
-function ModificaPrestamos ({ datos, setShowModal, history }) {
+function ModificaPrestamos({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 
@@ -50,34 +50,34 @@ function ModificaPrestamos ({ datos, setShowModal, history }) {
 
   // console.log(formData.createdAt)
 
-  const handleUpdate = async (data) => {
+  const handleUpdate = async (dataa) => {
     // event.preventDefault();
 
     // Validations handled by react-hook-form
 
     setLoading(true)
     // Recalculate based on current data
-    const currentInteres = parseFloat(data.tasaInteres) / 100
-    const currentInteresGenerado = parseFloat(data.prestamo) * currentInteres
-    const currentTotal = parseFloat(data.prestamo) + currentInteresGenerado
+    const currentInteres = parseFloat(dataa.tasaInteres) / 100
+    const currentInteresGenerado = parseFloat(dataa.prestamo) * currentInteres
+    const currentTotal = parseFloat(dataa.prestamo) + currentInteresGenerado
 
     const oldTotal = datos.prestamoTotal
     const diffTotal = currentTotal - oldTotal
 
     const dataTemp = {
-      fichaSocio: data.fichaSocio,
-      prestamo: data.prestamo,
+      fichaSocio: dataa.fichaSocio,
+      prestamo: dataa.prestamo,
       prestamoTotal: currentTotal,
-      tasaInteres: data.tasaInteres,
-      createdAt: data.createdAt
+      tasaInteres: dataa.tasaInteres,
+      createdAt: dataa.createdAt
     }
 
-    const response = await actualizaPrestamos(data.id, dataTemp)
+    const response = await actualizaPrestamos(dataa.id, dataTemp)
     const { status, data: { mensaje } } = response
 
-    registroMovimientosSaldosSocios(data.fichaSocio, '0', '0', data.prestamo, '0', '0', '0', '0', 'Modificación Prestamo')
+    registroMovimientosSaldosSocios(dataa.fichaSocio, '0', '0', dataa.prestamo, '0', '0', '0', '0', 'Modificación Prestamo')
 
-    actualizacionDeudaSocio(data.fichaSocio, '0', diffTotal, 'Modificación prestamo', data.createdAt)
+    actualizacionDeudaSocio(dataa.fichaSocio, '0', diffTotal, 'Modificación prestamo', dataa.createdAt)
 
     if (status === 200) {
       history({
