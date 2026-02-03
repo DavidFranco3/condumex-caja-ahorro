@@ -98,15 +98,16 @@ function RegistroRetiros(props) {
         const { data } = response
 
         // Registra movimientos
-        registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', dataa.retiro, '0', 'Retiro')
 
-        if (data.tipo === 'aportaciones') {
+        if (dataa.tipo === 'aportaciones') {
           console.log(dataa.retiro)
           actualizacionSaldosSocios(fichaSocioElegido, dataa.retiro, '0', '0', folio, 'Retiro')
           registroAportacionInicial(fichaSocioElegido, retiro, dataa.fecha)
+          registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', dataa.retiro, '0', 'Retiro')
         } else if (dataa.tipo === 'intereses') {
           actualizacionSaldosSocios(fichaSocioElegido, '0', '0', dataa.retiro, folio, 'Retiro')
           registroRendimientoInicial(fichaSocioElegido, retiro, dataa.fecha)
+          registroMovimientosSaldosSocios(fichaSocioElegido, '0', '0', '0', '0', '0', dataa.retiro, '0', 'Retiro')
         }
 
         history({
