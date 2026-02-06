@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Col, Row, Spinner, Form } from 'react-bootstrap'
@@ -11,7 +11,10 @@ import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
 function Movimientos (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -199,4 +202,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(Movimientos)
+export default Movimientos

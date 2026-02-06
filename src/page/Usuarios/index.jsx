@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
@@ -14,7 +14,10 @@ import AnimacionLoading from '../../assets/json/loading.json'
 import './Usuarios.scss'
 
 function Usuarios (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
   const [contentModal, setContentModal] = useState(null)
@@ -102,25 +105,25 @@ function Usuarios (props) {
         </Row>
       </Alert>
       {
-                listUsuarios
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListUsuarios
-                          listUsuarios={listUsuarios}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listUsuarios
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListUsuarios
+                  listUsuarios={listUsuarios}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+            )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+            )
+      }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -145,4 +148,4 @@ function formatModelUsuarios (data) {
   return dataTemp
 }
 
-export default withRouter(Usuarios)
+export default Usuarios

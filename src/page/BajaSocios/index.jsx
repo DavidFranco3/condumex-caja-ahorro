@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
@@ -15,7 +15,10 @@ import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
 function BajaSocios (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
@@ -171,25 +174,25 @@ function BajaSocios (props) {
       </Row>
 
       {
-                listBajasSocios
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListBajaSocios
-                          listBajasSocios={listBajasSocios}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listBajasSocios
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListBajaSocios
+                  listBajasSocios={listBajasSocios}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+            )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+            )
+      }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -235,4 +238,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(BajaSocios)
+export default BajaSocios

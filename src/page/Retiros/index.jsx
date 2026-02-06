@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi, getPeriodo, setPeriodo } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
@@ -18,7 +18,10 @@ import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
 function Retiros (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
@@ -240,25 +243,25 @@ function Retiros (props) {
       </Row>
 
       {
-                listRetiros
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListRetiros
-                          listRetiros={listRetiros}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listRetiros
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListRetiros
+                  listRetiros={listRetiros}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+            )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+            )
+      }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -301,4 +304,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(Retiros)
+export default Retiros

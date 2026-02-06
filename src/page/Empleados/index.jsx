@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from 'react'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus, faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { listarSociosEmpleados } from '../../api/sociosEmpleados'
@@ -16,7 +16,10 @@ import AnimacionLoading from '../../assets/json/loading.json'
 import { formatFecha } from '../../components/Generales/FormatFecha'
 
 function Empleados (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Almacena los datos de los abonos
   const [listSociosCSV, setListSociosCSV] = useState(null)
@@ -231,4 +234,4 @@ function formatModelSocios2 (data) {
   return dataTemp
 }
 
-export default withRouter(Empleados)
+export default Empleados

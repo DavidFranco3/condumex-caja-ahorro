@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense, useId } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useLocation } from 'react-router-dom'
 import {
   getRazonSocial,
   getTokenApi,
@@ -38,7 +38,8 @@ import {
   faBuildingColumns
 } from '@fortawesome/free-solid-svg-icons'
 
-function EstadosCuenta ({ setRefreshCheckLogin, location }) {
+function EstadosCuenta ({ setRefreshCheckLogin }) {
+  const location = useLocation()
   const [tab, setTab] = useState('general')
 
   // Almacena los datos de los abonos
@@ -531,18 +532,18 @@ function EstadosCuenta ({ setRefreshCheckLogin, location }) {
           >
             <br />
             {
-                            razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
-                              ? (
-                                <>
-                                  <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
-                                </>
-                                )
-                              : (
-                                <>
-                                  <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
-                                </>
-                                )
-                        }
+              razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
+                ? (
+                  <>
+                    <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
+                  </>
+                  )
+                : (
+                  <>
+                    <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
+                  </>
+                  )
+            }
             {!loading
               ? (
                 <Suspense fallback={<Spinner />}>
@@ -682,36 +683,36 @@ function EstadosCuenta ({ setRefreshCheckLogin, location }) {
                             </Table>
 
                             {
-                                                        razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.' &&
-                                                        (
-                                                          <>
-                                                            <Table title='Patrimonio'>
-                                                              <tbody>
-                                                                {statementsBySocio.patrimony.data.map(
-                                                                  (
-                                                                    {
-                                                                      _id: id,
-                                                                      fechaCreacion: createdAt,
-                                                                      patrimonio: monto,
-                                                                    },
-                                                                    index
-                                                                  ) => (
-                                                                    <Tr
-                                                                      key={id}
-                                                                      createdAt={createdAt}
-                                                                      monto={monto}
-                                                                      index={index}
-                                                                    />
-                                                                  )
-                                                                )}
-                                                                <TrTotal
-                                                                  total={statementsBySocio.patrimony.total}
-                                                                />
-                                                              </tbody>
-                                                            </Table>
-                                                          </>
-                                                        )
-                                                    }
+                              razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.' &&
+                              (
+                                <>
+                                  <Table title='Patrimonio'>
+                                    <tbody>
+                                      {statementsBySocio.patrimony.data.map(
+                                        (
+                                          {
+                                            _id: id,
+                                            fechaCreacion: createdAt,
+                                            patrimonio: monto,
+                                          },
+                                          index
+                                        ) => (
+                                          <Tr
+                                            key={id}
+                                            createdAt={createdAt}
+                                            monto={monto}
+                                            index={index}
+                                          />
+                                        )
+                                      )}
+                                      <TrTotal
+                                        total={statementsBySocio.patrimony.total}
+                                      />
+                                    </tbody>
+                                  </Table>
+                                </>
+                              )
+                            }
                             <Table title='Intereses'>
                               <tbody>
                                 {statementsBySocio.yields.data.map(
@@ -850,11 +851,11 @@ function EstadosCuenta ({ setRefreshCheckLogin, location }) {
                   )
                 : (
                     fichaSocioElegido && (
-                      <Lottie
-                        loop
-                        play
-                        animationData={AnimacionLoading}
-                      />
+                    <Lottie
+                      loop
+                      play
+                      animationData={AnimacionLoading}
+                    />
                     )
                   )}
             </div>
@@ -903,4 +904,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(EstadosCuenta)
+export default EstadosCuenta

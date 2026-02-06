@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { withRouter } from '../../utils/withRouter'
+
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import 'react-tabs/style/react-tabs.css'
 import Swal from 'sweetalert2'
@@ -97,4 +97,4 @@ function Socios (props) {
   )
 }
 
-export default withRouter(Socios)
+export default Socios

@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner } from 'react-bootstrap'
@@ -14,7 +14,10 @@ import AnimacionLoading from '../../assets/json/loading.json'
 import './Periodos.scss'
 
 function Periodos (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
   const [contentModal, setContentModal] = useState(null)
@@ -104,25 +107,25 @@ function Periodos (props) {
       </Alert>
 
       {
-                listPeriodos
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListPeriodos
-                          listPeriodos={listPeriodos}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listPeriodos
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListPeriodos
+                  listPeriodos={listPeriodos}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+            )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+            )
+      }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -148,4 +151,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(Periodos)
+export default Periodos

@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment, Suspense } from 'react'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import Lottie from 'react-lottie-player'
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
@@ -27,7 +27,10 @@ import { registroSaldoInicial } from '../../components/GestionAutomatica/Saldos/
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
-function Rendimientos ({ setRefreshCheckLogin, location, history }) {
+function Rendimientos ({ setRefreshCheckLogin }) {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
   // Dialog headlessui
   const [isOpen, setIsOpen] = useState(false)
 
@@ -481,4 +484,4 @@ function formatModelPeriodos (data) {
   return dataTemp
 }
 
-export default withRouter(Rendimientos)
+export default Rendimientos

@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Alert, Col, Row, Spinner } from 'react-bootstrap'
@@ -10,7 +10,10 @@ import AnimacionLoading from '../../assets/json/loading.json'
 import './UsuarioCorreo.scss'
 
 function UsuarioCorreo (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -68,25 +71,25 @@ function UsuarioCorreo (props) {
         </Row>
       </Alert>
       {
-                listUsuarios
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListUsuarios
-                          listUsuarios={listUsuarios}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listUsuarios
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListUsuarios
+                  listUsuarios={listUsuarios}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+            )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+            )
+      }
     </>
   )
 }
@@ -105,4 +108,4 @@ function formatModelUsuarios (data) {
   return dataTemp
 }
 
-export default withRouter(UsuarioCorreo)
+export default UsuarioCorreo

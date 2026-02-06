@@ -1,5 +1,5 @@
 import { useState, useEffect, Suspense } from 'react'
-import { withRouter } from '../../utils/withRouter'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Spinner } from 'react-bootstrap'
@@ -10,7 +10,10 @@ import { listarPaginacionSaldoSociosxTipo, totalxTipoSaldosSocios } from '../../
 import ListSaldos from '../../components/Saldos/ListSaldos'
 
 function SaldosSindicalizados (props) {
-  const { setRefreshCheckLogin, location, history } = props
+  const { setRefreshCheckLogin } = props
+  const location = useLocation()
+  const navigate = useNavigate()
+  const history = navigate
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -150,4 +153,4 @@ function formatModelSaldosSocios (data) {
   return dataTemp
 }
 
-export default withRouter(SaldosSindicalizados)
+export default SaldosSindicalizados
