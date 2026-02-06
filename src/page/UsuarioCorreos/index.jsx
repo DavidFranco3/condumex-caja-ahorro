@@ -5,8 +5,7 @@ import Swal from 'sweetalert2'
 import { Alert, Col, Row, Spinner } from 'react-bootstrap'
 import { listarUsuarioCorreos } from '../../api/usuarioCorreos'
 import ListUsuarios from '../../components/UsuarioCorreo/ListUsuarioCorreo'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import './UsuarioCorreo.scss'
 
 function UsuarioCorreo (props) {
@@ -86,7 +85,7 @@ function UsuarioCorreo (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

@@ -9,8 +9,7 @@ import { listarBajaSocioPeriodo } from '../../api/bajaSocios'
 import ListBajaSocios from '../../components/BajaSocios/ListBajaSocios'
 import RegistroBajaSocios from '../../components/BajaSocios/RegistroBajaSocios'
 import BasicModal from '../../components/Modal/BasicModal'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
@@ -189,7 +188,7 @@ function BajaSocios (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

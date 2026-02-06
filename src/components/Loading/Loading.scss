@@ -1,0 +1,59 @@
+@use "../../scss/colors" as *;
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 2rem;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: $primary;
+  border-bottom-color: $primary;
+  animation: spin 1.5s linear infinite;
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $primary-light;
+    border-bottom-color: $primary-light;
+    animation: spin 2s linear infinite;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: $primary-dark;
+    border-bottom-color: $primary-dark;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

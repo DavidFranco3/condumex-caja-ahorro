@@ -12,7 +12,7 @@ const Routing = ({ setRefreshCheckLogin }) => (
             <LayoutPrincipal setRefreshCheckLogin={setRefreshCheckLogin}>
               <route.page setRefreshCheckLogin={setRefreshCheckLogin} />
             </LayoutPrincipal>
-}
+          }
         />
       ))}
     </Routes>

@@ -11,8 +11,7 @@ import CargaMasivaSociosEmpleados from '../../components/SociosEmpleados/CargaMa
 import EliminaSociosEmpleadosMasivo from '../../components/SociosEmpleados/EliminaSociosEmpleadosMasivo'
 import BasicModal from '../../components/Modal/BasicModal'
 import { getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { formatFecha } from '../../components/Generales/FormatFecha'
 
 function Empleados (props) {
@@ -192,7 +191,7 @@ function Empleados (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

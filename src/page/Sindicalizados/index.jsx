@@ -9,8 +9,7 @@ import RegistroSociosSindicalizados from '../../components/SociosSindicalizados/
 import CargaMasivaSociosSindicalizados from '../../components/SociosSindicalizados/CargaMasivaSociosSindicalizados'
 import EliminaSociosSindicalizadosMasivo from '../../components/SociosSindicalizados/EliminaSociosSindicalizadosMasivo'
 import BasicModal from '../../components/Modal/BasicModal'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { formatFecha } from '../../components/Generales/FormatFecha'
 
 function Sindicalizados (props) {
@@ -167,7 +166,7 @@ function Sindicalizados (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

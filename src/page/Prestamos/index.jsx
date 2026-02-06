@@ -12,8 +12,7 @@ import BasicModal from '../../components/Modal/BasicModal'
 import CargaMasivaPrestamos from '../../components/Prestamos/CargaMasivaPrestamos'
 import EliminaPrestamoMasivo from '../../components/Prestamos/EliminaPrestamoMasivo'
 import RestaurarPrestamos from '../../components/Prestamos/RestaurarPrestamos'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
@@ -294,7 +293,7 @@ function Prestamos (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

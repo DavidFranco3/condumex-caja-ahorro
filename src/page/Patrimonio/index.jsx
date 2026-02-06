@@ -12,8 +12,7 @@ import BasicModal from '../../components/Modal/BasicModal'
 import CargaMasivaPatrimonio from '../../components/Patrimonio/CargaMasivaPatrimonios'
 import EliminaPatrimonioMasivo from '../../components/Patrimonio/EliminaPatrimoniosMasivo'
 import RestaurarPatrimonios from '../../components/Patrimonio/RestaurarPatrimonios'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
@@ -257,7 +256,7 @@ function Patrimonio (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

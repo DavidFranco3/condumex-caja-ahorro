@@ -5,8 +5,7 @@ import Swal from 'sweetalert2'
 import { Alert, Col, Row, Spinner, Form } from 'react-bootstrap'
 import { listarMovimientoSaldosPeriodo } from '../../api/movimientosSaldos'
 import ListMovimientos from '../../components/Movimientos/ListMovimientos'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
@@ -154,7 +153,7 @@ function Movimientos (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

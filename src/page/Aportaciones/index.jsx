@@ -11,8 +11,7 @@ import ListAportaciones from '../../components/Aportaciones/ListAportaciones'
 import RegistroAportaciones from '../../components/Aportaciones/RegistroAportaciones'
 import CargaMasivaAportaciones from '../../components/Aportaciones/CargaMasivaAportaciones'
 import RestaurarAportaciones from '../../components/Aportaciones/RestaurarAportaciones'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import EliminaAportacionMasivo from '../../components/Aportaciones/EliminaAportacionMasivo'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
@@ -256,7 +255,7 @@ function Aportaciones (props) {
           )
         : (
           <>
-            <Lottie loop play animationData={AnimacionLoading} />
+            <Loading />
           </>
           )}
 

@@ -9,8 +9,7 @@ import { listarUsuarios } from '../../api/usuarios'
 import ListUsuarios from '../../components/Usuarios/ListUsuarios'
 import BasicModal from '../../components/Modal/BasicModal'
 import RegistroUsuarios from '../../components/Usuarios/RegistroUsuarios'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import './Usuarios.scss'
 
 function Usuarios (props) {
@@ -120,7 +119,7 @@ function Usuarios (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

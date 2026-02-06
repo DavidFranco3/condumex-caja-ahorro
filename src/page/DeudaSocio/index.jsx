@@ -6,8 +6,7 @@ import { Alert, Col, Row, Spinner, Form } from 'react-bootstrap'
 import ListDeudaSocio from '../../components/DeudaSocio/ListDeudaSocio'
 import { listarPrestamoPeriodo } from '../../api/prestamos'
 import { listarAbonosPeriodo } from '../../api/abonos'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
@@ -176,7 +175,7 @@ function DeudaSocio (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

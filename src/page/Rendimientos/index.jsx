@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment, Suspense } from 'react'
 import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import Lottie from 'react-lottie-player'
+
 import Swal from 'sweetalert2'
 import { Alert, Button, Col, Row, Spinner, Form } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,7 +14,7 @@ import {
   listarRendimientoPeriodo
 } from '../../api/rendimientos'
 import { registraMovimientoSaldosSocios2 } from '../../components/GestionAutomatica/Saldos/Movimientos'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import BasicModal from '../../components/Modal/BasicModal'
 import ListRendimientos from '../../components/Rendimientos/ListRendimientos'
 import RegistroRendimientos from '../../components/Rendimientos/RegistroRendimientos'
@@ -440,7 +440,7 @@ function Rendimientos ({ setRefreshCheckLogin }) {
           </Suspense>
           )
         : (
-          <Lottie loop play animationData={AnimacionLoading} />
+          <Loading />
           )}
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>

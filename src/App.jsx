@@ -22,22 +22,22 @@ function App () {
     <>
       <AuthContext.Provider value={user}>
         {
-                    user
-                      ? (
-                        <>
-                          <Routing
-                            setRefreshCheckLogin={setRefreshCheckLogin}
-                          />
-                        </>
-                        )
-                      : (
-                        <>
-                          <Login
-                            setRefreshCheckLogin={setRefreshCheckLogin}
-                          />
-                        </>
-                        )
-                }
+          user
+            ? (
+              <>
+                <Routing
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </>
+              )
+            : (
+              <>
+                <Login
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </>
+              )
+        }
       </AuthContext.Provider>
     </>
   )

@@ -12,8 +12,7 @@ import EliminaAbonosMasivo from '../../components/Abonos/EliminaAbonosMasivo'
 import CargaMasivaAbonos from '../../components/Abonos/CargaMasivaAbonos'
 import RegistroAbonos from '../../components/Abonos/RegistroAbonos'
 import RestaurarAbonos from '../../components/Abonos/RestaurarAbonos'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 import './Abonos.scss'
@@ -293,7 +292,7 @@ function Abonos (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { getRazonSocial, getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Swal from 'sweetalert2'
 import { Spinner } from 'react-bootstrap'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import './SaldosEmpleados.scss'
 import { listarPaginacionSaldoSociosxTipo, totalxTipoSaldosSocios } from '../../api/saldosSocios'
 import ListSaldos from '../../components/Saldos/ListSaldos'
@@ -122,11 +121,7 @@ function SaldosEmpleados (props) {
             )
           : (
             <>
-              <Lottie
-                loop
-                play
-                animationData={AnimacionLoading}
-              />
+              <Loading />
             </>
             )
       }

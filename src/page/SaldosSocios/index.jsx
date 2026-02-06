@@ -10,8 +10,7 @@ import { listarPrestamoPeriodo } from '../../api/prestamos'
 import { listarAbonosPeriodo } from '../../api/abonos'
 import { listarBajaSocioPeriodo } from '../../api/bajaSocios'
 import ListSaldosSocios from '../../components/SaldosSocios/ListSaldosSocios'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 import './InteresesSocios.scss'
@@ -280,7 +279,7 @@ function SaldosSocios (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

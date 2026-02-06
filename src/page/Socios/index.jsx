@@ -5,8 +5,7 @@ import 'react-tabs/style/react-tabs.css'
 import Swal from 'sweetalert2'
 import Empleados from '../Empleados'
 import Sindicalizados from '../Sindicalizados'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import './Socios.scss'
 
 function Socios (props) {
@@ -53,11 +52,7 @@ function Socios (props) {
         razonSocialElegida === 'Sin Selección'
           ? (
             <>
-              <Lottie
-                loop
-                play
-                animationData={AnimacionLoading}
-              />
+              <Loading />
             </>
             )
           : (
@@ -82,11 +77,7 @@ function Socios (props) {
                         )
                       : (
                     <>
-                      <Lottie
-                        loop
-                        play
-                        animationData={AnimacionLoading}
-                      />
+                      <Loading />
                     </>
                         )
                   )

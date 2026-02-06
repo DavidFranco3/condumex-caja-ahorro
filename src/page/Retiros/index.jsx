@@ -12,8 +12,7 @@ import CargaMasivaRetiros from '../../components/Retiros/CargaMasivaRetiros'
 import RegistroRetiros from '../../components/Retiros/RegistroRetiros'
 import RestaurarRetiros from '../../components/Retiros/RestaurarRetiros'
 import EliminaRetiroMasivo from '../../components/Retiros/EliminaRetiroMasivo'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
@@ -258,7 +257,7 @@ function Retiros (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }

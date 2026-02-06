@@ -9,8 +9,7 @@ import { listarPeriodo } from '../../api/periodos'
 import ListPeriodos from '../../components/Periodos/ListPeriodos'
 import BasicModal from '../../components/Modal/BasicModal'
 import RegistroPeriodos from '../../components/Periodos/RegistroPeriodos'
-import Lottie from 'react-lottie-player'
-import AnimacionLoading from '../../assets/json/loading.json'
+import Loading from '../../components/Loading'
 import './Periodos.scss'
 
 function Periodos (props) {
@@ -122,7 +121,7 @@ function Periodos (props) {
             )
           : (
             <>
-              <Lottie loop play animationData={AnimacionLoading} />
+              <Loading />
             </>
             )
       }
