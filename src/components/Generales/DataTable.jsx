@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
-import DataTable from 'react-data-table-component'
-import { CSVLink } from 'react-csv'
-import { jsPDF } from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import { useState, useEffect, useMemo, useRef } from "react";
+import DataTable from "react-data-table-component";
+import { CSVLink } from "react-csv";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import DebouncedInput from "./DebouncedInput";
 
 const DataTablecustom = ({
   datos = [],
@@ -14,14 +15,14 @@ const DataTablecustom = ({
   title,
   ...otherProps
 }) => {
-  const [filterValue, setFilterValue] = useState('')
-  const [filteredData, setFilteredData] = useState(datos)
-  const [visibleColumns, setVisibleColumns] = useState(columnas.map((col) => col.name))
-  const [showModal, setShowModal] = useState(false)
-  const [isExporting, setIsExporting] = useState(false)
-  const [stickyColumns, setStickyColumns] = useState([])
-  const [columnWidths, setColumnWidths] = useState({})
-  const tableRef = useRef(null)
+  const [filterValue, setFilterValue] = useState("");
+  const [filteredData, setFilteredData] = useState(datos);
+  const [visibleColumns, setVisibleColumns] = useState(columnas.map((col) => col.name));
+  const [showModal, setShowModal] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [stickyColumns, setStickyColumns] = useState([]);
+  const [columnWidths, setColumnWidths] = useState({});
+  const tableRef = useRef(null);
 
   // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
   const keys = datos.length > 0
@@ -44,34 +45,34 @@ const DataTablecustom = ({
       .join(',')
   }).join('\n')
 
-  const handleFilterChange = (event) => {
-    const searchValue = event.target.value.trim()
-    setFilterValue(searchValue)
+  const handleFilterChange = (searchValue) => {
+    // const searchValue = event.target.value.trim(); // Ya viene como string desde DebouncedInput
+    setFilterValue(searchValue);
 
-    if (searchValue.length === 0) {
-      setFilteredData(datos)
-      return
+    if (!searchValue || searchValue.length === 0) {
+      setFilteredData(datos);
+      return;
     }
 
-    const searchLower = searchValue.toLowerCase()
+    const searchLower = searchValue.toLowerCase();
 
     const filtered = datos.filter((row) =>
       Object.values(row).some((value) => {
-        if (value === null || value === undefined) return false
-        return String(value).toLowerCase().includes(searchLower)
+        if (value === null || value === undefined) return false;
+        return String(value).toLowerCase().includes(searchLower);
       })
-    )
+    );
 
-    setFilteredData(filtered)
-  }
+    setFilteredData(filtered);
+  };
 
   const handleDoubleClick = (row) => {
-    alert(JSON.stringify(row, null, 2))
-  }
+    alert(JSON.stringify(row, null, 2));
+  };
 
   useEffect(() => {
-    setFilteredData(datos)
-  }, [datos])
+    setFilteredData(datos);
+  }, [datos]);
 
   const downloadPDF = () => {
     setIsExporting(true)
@@ -150,10 +151,10 @@ const DataTablecustom = ({
           doc.setFont('helvetica', 'normal')
           doc.setFontSize(10)
           doc.text(
-                        `Página ${data.pageNumber} de ${pageCount}`,
-                        pageWidth / 2,
-                        pageHeight - 10,
-                        { align: 'center' }
+            `Página ${data.pageNumber} de ${pageCount}`,
+            pageWidth / 2,
+            pageHeight - 10,
+            { align: 'center' }
           )
         },
         margin: { top: 30 }, // 👈 margen superior general
@@ -169,98 +170,98 @@ const DataTablecustom = ({
       prevVisibleColumns.includes(columnName)
         ? prevVisibleColumns.filter((name) => name !== columnName)
         : [...prevVisibleColumns, columnName]
-    )
-  }
+    );
+  };
 
   const selectAllColumns = () => {
-    setVisibleColumns(columnas.map((col) => col.name))
-  }
+    setVisibleColumns(columnas.map((col) => col.name));
+  };
 
   const deselectAllColumns = () => {
-    setVisibleColumns([])
-  }
+    setVisibleColumns([]);
+  };
 
   // ✅ Columnas visibles memoizadas
   const filteredColumns = useMemo(
     () => columnas.filter((col) => visibleColumns.includes(col.name)),
     [columnas, visibleColumns]
-  )
+  );
 
   // ✅ Columnas sticky en orden visual
   const orderedStickyColumns = useMemo(
     () => filteredColumns.filter((col) => stickyColumns.includes(col.name)),
     [filteredColumns, stickyColumns]
-  )
+  );
 
   const toggleStickyColumn = (name) => {
     setStickyColumns((prev) => {
-      const isSticky = prev.includes(name)
+      const isSticky = prev.includes(name);
       if (isSticky) {
-        return prev.filter((colName) => colName !== name)
+        return prev.filter((colName) => colName !== name);
       } else {
         if (prev.length < 3) {
-          return [...prev, name]
+          return [...prev, name];
         }
-        return prev // límite de 3 columnas fijas
+        return prev; // límite de 3 columnas fijas
       }
-    })
-  }
+    });
+  };
 
   // ✅ Medir anchos usando la PRIMERA FILA de datos (más real que el header)
   useEffect(() => {
-    if (!tableRef.current) return
+    if (!tableRef.current) return;
 
-    const firstRow = tableRef.current.querySelector('.rdt_TableRow')
-    if (!firstRow) return // si no hay filas, no medimos
+    const firstRow = tableRef.current.querySelector(".rdt_TableRow");
+    if (!firstRow) return; // si no hay filas, no medimos
 
-    const rowCells = firstRow.querySelectorAll('.rdt_TableCell')
-    if (!rowCells.length) return
+    const rowCells = firstRow.querySelectorAll(".rdt_TableCell");
+    if (!rowCells.length) return;
 
-    const newWidths = {}
+    const newWidths = {};
 
     filteredColumns.forEach((col, index) => {
       if (rowCells[index]) {
-        const width = rowCells[index].getBoundingClientRect().width
-        newWidths[col.name] = width
+        const width = rowCells[index].getBoundingClientRect().width;
+        newWidths[col.name] = width;
       }
-    })
+    });
 
-    const oldKeys = Object.keys(columnWidths)
-    const newKeys = Object.keys(newWidths)
+    const oldKeys = Object.keys(columnWidths);
+    const newKeys = Object.keys(newWidths);
 
-    const sameLength = oldKeys.length === newKeys.length
+    const sameLength = oldKeys.length === newKeys.length;
     const sameValues =
-            sameLength &&
-            newKeys.every((key) => columnWidths[key] === newWidths[key])
+      sameLength &&
+      newKeys.every((key) => columnWidths[key] === newWidths[key]);
 
     if (!sameValues) {
-      setColumnWidths(newWidths)
+      setColumnWidths(newWidths);
     }
-  }, [filteredColumns, columnWidths, filteredData.length])
+  }, [filteredColumns, columnWidths, filteredData.length]);
 
   // ✅ Calcular offsets en cadena según el orden visual de las columnas sticky
   const stickyOffsets = useMemo(() => {
-    const offsets = {}
-    let currentOffset = 0
+    const offsets = {};
+    let currentOffset = 0;
 
     orderedStickyColumns.forEach((col) => {
-      offsets[col.name] = currentOffset
-      currentOffset += columnWidths[col.name] || 0
-    })
+      offsets[col.name] = currentOffset;
+      currentOffset += columnWidths[col.name] || 0;
+    });
 
-    return offsets
-  }, [orderedStickyColumns, columnWidths])
+    return offsets;
+  }, [orderedStickyColumns, columnWidths]);
 
   // ✅ Estilos dinámicos de columnas sticky (con z-index por orden)
   const dynamicStyles = useMemo(() => {
     return orderedStickyColumns
       .map((col, orderIndex) => {
-        const index = filteredColumns.findIndex((c) => c.name === col.name)
-        const offset = stickyOffsets[col.name]
+        const index = filteredColumns.findIndex((c) => c.name === col.name);
+        const offset = stickyOffsets[col.name];
 
-        if (index === -1 || offset === undefined) return ''
+        if (index === -1 || offset === undefined) return "";
 
-        const zBase = 20 + orderIndex // más grande para que no se pisen
+        const zBase = 20 + orderIndex; // más grande para que no se pisen
 
         return `
                     .rdt_TableCol:nth-child(${index + 1}),
@@ -274,10 +275,10 @@ const DataTablecustom = ({
                     .rdt_TableCol:nth-child(${index + 1}) {
                         z-index: ${zBase + 1};
                     }
-                `
+                `;
       })
-      .join('')
-  }, [orderedStickyColumns, stickyOffsets, filteredColumns])
+      .join("");
+  }, [orderedStickyColumns, stickyOffsets, filteredColumns]);
 
   const processedColumns = filteredColumns.map((col) => {
     // quitar props internas de react-data-table que NO deben ir al DOM
@@ -292,102 +293,163 @@ const DataTablecustom = ({
       width,
       reorder,   // si existe
       ...safeProps
-    } = col
+    } = col;
 
-    const isSticky = stickyColumns.includes(col.name)
-    const canBeMadeSticky = isSticky || stickyColumns.length < 3
+    const isSticky = stickyColumns.includes(col.name);
+    const canBeMadeSticky = isSticky || stickyColumns.length < 3;
 
     return {
       ...safeProps,
+      sortable: true,
       name: (
-        <div className='custom-header-wrapper'>
-          <label className='custom-checkbox-label'>
+        <div
+          className="custom-header-wrapper"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <label className="custom-checkbox-label">
             <input
-              type='checkbox'
-              className='custom-checkbox-input'
+              type="checkbox"
+              className="custom-checkbox-input"
               checked={isSticky}
               disabled={!canBeMadeSticky}
               onChange={() => toggleStickyColumn(col.name)}
             />
-            <span className='custom-checkbox-checkmark'>
-              <i className='fas fa-thumbtack' />
+            <span className="custom-checkbox-checkmark">
+              <i className="fas fa-thumbtack"></i>
             </span>
           </label>
-          <span className='custom-header-name'>{col.name}</span>
+          <span className="custom-header-name">{col.name}</span>
         </div>
       ),
-    }
-  })
+    };
+  });
+
 
   const customStyles = {
     headRow: {
       style: {
-        backgroundColor: '#f8f9fa',
-        borderBottom: '2px solid #dee2e6',
-        fontWeight: '600',
-        fontSize: '14px',
-        color: '#495057',
-        minHeight: '52px',
+        backgroundColor: "var(--dt-header-bg)",
+        borderBottom: "2px solid var(--dt-border-color)",
+        fontWeight: "600",
+        fontSize: "14px",
+        color: "var(--dt-header-text)",
+        minHeight: "52px",
       },
     },
     headCells: {
       style: {
-        paddingLeft: '16px',
-        paddingRight: '16px',
-        whiteSpace: 'nowrap',
-        justifyContent: 'center',
-        textAlign: 'center',
+        paddingLeft: "16px",
+        paddingRight: "16px",
+        whiteSpace: "nowrap",
       },
     },
     rows: {
       style: {
-        fontSize: '13px',
-        color: '#212529',
-        minHeight: '48px',
-        '&:hover': {
-          backgroundColor: '#f1f3f5',
-          cursor: 'pointer',
-          transition: 'background-color 0.2s ease',
+        fontSize: "13px",
+        color: "var(--dt-row-text)",
+        backgroundColor: "var(--dt-bg)",
+        minHeight: "48px",
+        "&:hover": {
+          backgroundColor: "var(--dt-row-hover-bg)",
+          cursor: "pointer",
+          transition: "background-color 0.2s ease",
+          color: "var(--dt-row-text)",
         },
       },
       stripedStyle: {
-        backgroundColor: '#f8f9fa',
+        backgroundColor: "var(--dt-row-stripe-bg)",
+        color: "var(--dt-row-text)",
       },
     },
     cells: {
       style: {
-        paddingLeft: '16px',
-        paddingRight: '16px',
-        justifyContent: 'center',
-        textAlign: 'center',
+        paddingLeft: "16px",
+        paddingRight: "16px",
       },
     },
     pagination: {
       style: {
-        borderTop: '1px solid #dee2e6',
-        fontSize: '13px',
-        minHeight: '56px',
-        backgroundColor: '#ffffff',
+        borderTop: "1px solid var(--dt-border-color)",
+        fontSize: "13px",
+        minHeight: "56px",
+        backgroundColor: "var(--dt-bg)",
+        color: "var(--dt-row-text)",
+      },
+      pageButtonsStyle: {
+        color: "var(--dt-row-text)",
+        fill: "var(--dt-row-text)",
+        "&:disabled": {
+          color: "var(--dt-disabled-text)",
+          fill: "var(--dt-disabled-text)",
+        },
+        "&:hover:not(:disabled)": {
+          backgroundColor: "var(--dt-row-hover-bg)",
+        },
+        "&:focus": {
+          outline: "none",
+          backgroundColor: "var(--dt-row-hover-bg)",
+        },
       },
     },
-  }
+  };
 
   return (
-    <section className='datatable-container' ref={tableRef}>
+    <section className="datatable-container" ref={tableRef}>
       <style>{`
+                :root {
+                    --dt-bg: #ffffff;
+                    --dt-header-bg: #f8f9fa;
+                    --dt-header-text: #495057;
+                    --dt-row-text: #212529;
+                    --dt-row-hover-bg: #f1f3f5;
+                    --dt-row-stripe-bg: #f8f9fa;
+                    --dt-border-color: #dee2e6;
+                    --dt-disabled-text: #adb5bd;
+                    --dt-input-bg: #ffffff;
+                    --dt-input-border: #ced4da;
+                    --dt-input-text: #495057;
+                    --dt-badge-bg: #e7f5ff;
+                    --dt-badge-text: #0d6efd;
+                    --dt-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+
+                html.dark {
+                    --dt-bg: #1e293b;
+                    --dt-header-bg: #0f172a;
+                    --dt-header-text: #e2e8f0;
+                    --dt-row-text: #f1f5f9;
+                    --dt-row-hover-bg: #334155;
+                    --dt-row-stripe-bg: #1e293b;
+                    --dt-border-color: #334155;
+                    --dt-disabled-text: #64748b;
+                    --dt-input-bg: #1e293b;
+                    --dt-input-border: #334155;
+                    --dt-input-text: #f1f5f9;
+                    --dt-badge-bg: #1e293b; // azul oscuro o transparente
+                    --dt-badge-text: #60a5fa;
+                    --dt-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+                }
+
                 .datatable-container {
-                    background: #ffffff;
+                    background: var(--dt-bg);
                     border-radius: 8px;
-                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    box-shadow: var(--dt-shadow);
                     padding: 20px;
-                    overflow-x: auto; /* Necesario para sticky */
+                    overflow-x: auto;
+                    color: var(--dt-row-text);
+                    transition: all 0.2s ease;
+                }
+                
+                :global(html.dark) .datatable-container {
+                     background-color: #1e293b !important;
+                     color: #f1f5f9 !important;
                 }
 
                 ${dynamicStyles}
 
                 .sticky-info-label {
                     font-size: 12px;
-                    color: #6c757d;
+                    color: var(--dt-header-text);
                     margin-bottom: 12px;
                     display: flex;
                     align-items: center;
@@ -421,17 +483,17 @@ const DataTablecustom = ({
                     left: 0;
                     height: 18px;
                     width: 18px;
-                    background-color: #e9ecef;
+                    background-color: var(--dt-input-border);
                     border-radius: 4px;
                     transition: all 0.2s ease;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #adb5bd;
+                    color: var(--dt-disabled-text);
                 }
 
                 .custom-checkbox-label:hover .custom-checkbox-checkmark {
-                    background-color: #dee2e6;
+                    background-color: var(--dt-border-color);
                 }
 
                 .custom-checkbox-input:checked ~ .custom-checkbox-checkmark {
@@ -440,7 +502,7 @@ const DataTablecustom = ({
                 }
 
                 .custom-checkbox-input:disabled ~ .custom-checkbox-checkmark {
-                    background-color: #f8f9fa;
+                    background-color: var(--dt-header-bg);
                     cursor: not-allowed;
                     opacity: 0.7;
                 }
@@ -457,10 +519,11 @@ const DataTablecustom = ({
                 }
 
                 .search-bar-container {
-                    background: #f8f9fa;
+                    background: var(--dt-header-bg);
                     border-radius: 8px;
                     padding: 16px;
                     margin-bottom: 20px;
+                    border: 1px solid var(--dt-border-color);
                 }
 
                 .search-input-wrapper {
@@ -474,18 +537,20 @@ const DataTablecustom = ({
                     left: 12px;
                     top: 50%;
                     transform: translateY(-50%);
-                    color: #6c757d;
+                    color: var(--dt-header-text);
                     pointer-events: none;
                 }
 
                 .search-input {
                     padding-left: 40px !important;
-                    border: 1px solid #ced4da;
+                    border: 1px solid var(--dt-input-border);
                     border-radius: 6px;
                     padding: 10px 12px;
                     font-size: 14px;
                     width: 100%;
                     transition: all 0.2s ease;
+                    background-color: var(--dt-input-bg);
+                    color: var(--dt-input-text);
                 }
 
                 .search-input:focus {
@@ -559,8 +624,8 @@ const DataTablecustom = ({
                     display: inline-flex;
                     align-items: center;
                     padding: 4px 12px;
-                    background: #e7f5ff;
-                    color: #0d6efd;
+                    background: var(--dt-badge-bg);
+                    color: var(--dt-badge-text);
                     border-radius: 20px;
                     font-size: 12px;
                     font-weight: 600;
@@ -587,15 +652,17 @@ const DataTablecustom = ({
                 }
 
                 .modal-content-custom {
-                    background: white;
+                    background: var(--dt-bg);
+                    color: var(--dt-row-text);
                     border-radius: 12px;
-                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+                    box-shadow: var(--dt-shadow);
                     width: 90%;
                     max-width: 500px;
                     max-height: 80vh;
                     display: flex;
                     flex-direction: column;
                     animation: slideUp 0.3s ease;
+                    border: 1px solid var(--dt-border-color);
                 }
 
                 @keyframes slideUp {
@@ -654,7 +721,7 @@ const DataTablecustom = ({
 
                 .modal-footer-custom {
                     padding: 16px 24px;
-                    border-top: 1px solid #dee2e6;
+                    border-top: 1px solid var(--dt-border-color);
                     display: flex;
                     justify-content: flex-end;
                     gap: 8px;
@@ -665,7 +732,7 @@ const DataTablecustom = ({
                     gap: 8px;
                     margin-bottom: 16px;
                     padding-bottom: 16px;
-                    border-bottom: 1px solid #dee2e6;
+                    border-bottom: 1px solid var(--dt-border-color);
                 }
 
                 .btn-column-action {
@@ -673,9 +740,9 @@ const DataTablecustom = ({
                     padding: 8px 12px;
                     font-size: 13px;
                     border-radius: 6px;
-                    border: 1px solid #dee2e6;
-                    background: white;
-                    color: #495057;
+                    border: 1px solid var(--dt-border-color);
+                    background: var(--dt-input-bg);
+                    color: var(--dt-row-text);
                     cursor: pointer;
                     transition: all 0.2s ease;
                     display: flex;
@@ -685,7 +752,7 @@ const DataTablecustom = ({
                 }
 
                 .btn-column-action:hover {
-                    background: #f8f9fa;
+                    background: var(--dt-row-hover-bg);
                     border-color: #adb5bd;
                 }
 
@@ -768,73 +835,74 @@ const DataTablecustom = ({
                         margin: 10px;
                     }
                 }
-            `}
-      </style>
+            `}</style>
 
-      <div className='search-bar-container' hidden={hiddenOptions}>
+      <div className="search-bar-container" hidden={hiddenOptions}>
         <div
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '16px',
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
           }}
         >
           <div
             style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '16px',
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: "16px",
             }}
           >
-            <div className='search-input-wrapper'>
-              <i className='fa fa-search search-icon' />
-              <input
-                type='search'
+            <div className="search-input-wrapper">
+              <DebouncedInput
                 value={filterValue}
                 onChange={handleFilterChange}
-                className='search-input'
-                placeholder='Buscar en todos los campos...'
+                placeholder="Buscar en todos los campos..."
+                className="w-full"
               />
             </div>
 
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                flexWrap: 'wrap',
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                flexWrap: "wrap",
               }}
             >
-              <div className='action-buttons'>
+              <span className="stats-badge">
+                {filteredData.length} de {datos.length} registros
+              </span>
+
+              <div className="action-buttons">
                 <CSVLink
                   data={csvContent}
                   filename={`${title || 'data'}.csv`}
-                  style={{ textDecoration: 'none' }}
+                  style={{ textDecoration: "none" }}
                 >
-                  <button className='btn-action btn-csv'>
-                    <i className='fas fa-file-csv' />
+                  <button className="btn-action btn-csv">
+                    <i className="fas fa-file-csv" />
                     <span>CSV</span>
                   </button>
                 </CSVLink>
 
                 <button
                   onClick={downloadPDF}
-                  className='btn-action btn-pdf'
+                  className="btn-action btn-pdf"
                   disabled={isExporting}
                 >
-                  <i className='fas fa-file-pdf' />
+                  <i className="fas fa-file-pdf" />
                   <span>
-                    {isExporting ? 'Exportando...' : 'PDF'}
+                    {isExporting ? "Exportando..." : "PDF"}
                   </span>
                 </button>
 
                 <button
-                  className='btn-action btn-columns'
+                  className="btn-action btn-columns"
                   onClick={() => setShowModal(true)}
                 >
-                  <i className='fas fa-columns' />
+                  <i className="fas fa-columns" />
                   <span>Columnas</span>
                 </button>
               </div>
@@ -843,10 +911,10 @@ const DataTablecustom = ({
         </div>
       </div>
 
-      <div className='sticky-info-label'>
-        <i className='fas fa-info-circle' />
+      <div className="sticky-info-label">
+        <i className="fas fa-info-circle"></i>
         <span>
-          Use la chincheta (<i className='fas fa-thumbtack' />) en el
+          Use la chincheta (<i className="fas fa-thumbtack"></i>) en el
           encabezado de una columna para fijarla. Puede fijar hasta 3
           columnas.
         </span>
@@ -862,6 +930,8 @@ const DataTablecustom = ({
         highlightOnHover
         pointerOnHover
         responsive
+        fixedHeader
+        fixedHeaderScrollHeight="calc(100vh - 250px)"
         onRowDoubleClicked={handleDoubleClick}
         customStyles={customStyles}
         expandableRows={expandableRows}
@@ -871,63 +941,63 @@ const DataTablecustom = ({
         noDataComponent={
           <div
             style={{
-              padding: '40px',
-              textAlign: 'center',
-              color: '#6c757d',
+              padding: "40px",
+              textAlign: "center",
+              color: "#6c757d",
             }}
           >
             <i
-              className='fas fa-inbox'
+              className="fas fa-inbox"
               style={{
-                fontSize: '48px',
-                marginBottom: '16px',
+                fontSize: "48px",
+                marginBottom: "16px",
                 opacity: 0.5,
               }}
             />
-            <p style={{ margin: 0, fontSize: '14px' }}>
+            <p style={{ margin: 0, fontSize: "14px" }}>
               No se encontraron registros
             </p>
           </div>
-                }
+        }
       />
 
       {/* Modal personalizado */}
       {showModal && (
         <div
-          className='modal-overlay'
+          className="modal-overlay"
           onClick={() => setShowModal(false)}
         >
           <div
-            className='modal-content-custom'
+            className="modal-content-custom"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className='modal-header-custom'>
-              <h5 className='modal-title-custom'>
-                <i className='fas fa-columns' />
+            <div className="modal-header-custom">
+              <h5 className="modal-title-custom">
+                <i className="fas fa-columns" />
                 Gestionar Columnas
               </h5>
               <button
-                className='modal-close-btn'
+                className="modal-close-btn"
                 onClick={() => setShowModal(false)}
               >
-                <i className='fas fa-times' />
+                <i className="fas fa-times" />
               </button>
             </div>
 
-            <div className='modal-body-custom'>
-              <div className='column-actions'>
+            <div className="modal-body-custom">
+              <div className="column-actions">
                 <button
-                  className='btn-column-action'
+                  className="btn-column-action"
                   onClick={selectAllColumns}
                 >
-                  <i className='fas fa-check-double' />
+                  <i className="fas fa-check-double" />
                   Seleccionar Todo
                 </button>
                 <button
-                  className='btn-column-action'
+                  className="btn-column-action"
                   onClick={deselectAllColumns}
                 >
-                  <i className='fas fa-times' />
+                  <i className="fas fa-times" />
                   Deseleccionar Todo
                 </button>
               </div>
@@ -935,18 +1005,19 @@ const DataTablecustom = ({
               {columnas.map((col) => (
                 <div
                   key={col.name}
-                  className='column-checkbox-wrapper'
+                  className="column-checkbox-wrapper"
                 >
-                  <label className='column-checkbox'>
+                  <label className="column-checkbox">
                     <input
-                      type='checkbox'
+                      type="checkbox"
                       checked={visibleColumns.includes(
                         col.name
                       )}
                       onChange={() =>
                         handleColumnVisibilityChange(
                           col.name
-                        )}
+                        )
+                      }
                     />
                     {col.name}
                   </label>
@@ -954,18 +1025,18 @@ const DataTablecustom = ({
               ))}
             </div>
 
-            <div className='modal-footer-custom'>
+            <div className="modal-footer-custom">
               <button
-                className='btn-modal btn-modal-light'
+                className="btn-modal btn-modal-light"
                 onClick={() => setShowModal(false)}
               >
                 Cerrar
               </button>
               <button
-                className='btn-modal btn-modal-primary'
+                className="btn-modal btn-modal-primary"
                 onClick={() => setShowModal(false)}
               >
-                <i className='fas fa-check' />
+                <i className="fas fa-check" />
                 Aplicar
               </button>
             </div>
@@ -973,7 +1044,7 @@ const DataTablecustom = ({
         </div>
       )}
     </section>
-  )
-}
+  );
+};
 
-export default DataTablecustom
+export default DataTablecustom;

@@ -13,9 +13,9 @@ import BasicModal from '../../components/Modal/BasicModal'
 import { getTokenApi, isExpiredToken, logoutApi } from '../../api/auth'
 import Lottie from 'react-lottie-player'
 import AnimacionLoading from '../../assets/json/loading.json'
-import moment from 'moment'
+import { formatFecha } from '../../components/Generales/FormatFecha'
 
-function Empleados (props) {
+function Empleados(props) {
   const { setRefreshCheckLogin, location, history } = props
 
   // Almacena los datos de los abonos
@@ -174,25 +174,25 @@ function Empleados (props) {
       </Alert>
 
       {
-                listSociosEmpleados
-                  ? (
-                    <>
-                      <Suspense fallback={<Spinner />}>
-                        <ListSociosEmpleados
-                          listSocios={listSociosEmpleados}
-                          history={history}
-                          location={location}
-                          setRefreshCheckLogin={setRefreshCheckLogin}
-                        />
-                      </Suspense>
-                    </>
-                    )
-                  : (
-                    <>
-                      <Lottie loop play animationData={AnimacionLoading} />
-                    </>
-                    )
-            }
+        listSociosEmpleados
+          ? (
+            <>
+              <Suspense fallback={<Spinner />}>
+                <ListSociosEmpleados
+                  listSocios={listSociosEmpleados}
+                  history={history}
+                  location={location}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              </Suspense>
+            </>
+          )
+          : (
+            <>
+              <Lottie loop play animationData={AnimacionLoading} />
+            </>
+          )
+      }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -201,7 +201,7 @@ function Empleados (props) {
   )
 }
 
-function formatModelSocios (data) {
+function formatModelSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -218,14 +218,14 @@ function formatModelSocios (data) {
   return dataTemp
 }
 
-function formatModelSocios2 (data) {
+function formatModelSocios2(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
       ficha: parseInt(data.ficha),
       nombre: data.nombre,
       correo: data.correo ? data.correo : 'No especificado',
-      fechaCreacion: moment(data.createdAt).format('LL')
+      fechaCreacion: formatFecha(data.createdAt)
     })
   })
   return dataTemp

@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import BasicModal from '../../Modal/BasicModal'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare, faTrashCan, faBars } from '@fortawesome/free-solid-svg-icons'
-import { Dropdown } from 'react-bootstrap'
 import EliminaPeriodos from '../EliminaPeriodos'
 import ModificaPeriodos from '../ModificaPeriodos'
 import DataTablecustom from '../../Generales/DataTable'
 import { formatFecha } from '../../Generales/FormatFecha'
+import DropdownActions from '../../Generales/DropdownActions'
 
-function ListPeriodos (props) {
+function ListPeriodos(props) {
   const { listPeriodos, history, location, setRefreshCheckLogin } = props
 
   // Para hacer uso del modal
@@ -62,51 +60,44 @@ function ListPeriodos (props) {
     {
       name: 'Acciones',
       cell: row => (
-        <>
-          <div className='flex justify-end items-center space-x-4'>
-            <Dropdown>
-              <Dropdown.Toggle className='botonDropdown' id='dropdown-basic'>
-                <FontAwesomeIcon icon={faBars} />
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  className='editarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2'
-                  onClick={() => {
-                    modificacionPeriodos(
-                      <ModificaPeriodos
-                        datos={row}
-                        location={location}
-                        history={history}
-                        setShowModal={setShowModal}
-                        setRefreshCheckLogin={setRefreshCheckLogin}
-                      />
-                    )
-                  }}
-                >
-                  <span style={{ color: '#007bff' }}><FontAwesomeIcon icon={faPenToSquare} className='text-lg' /> Editar</span>
-                </Dropdown.Item>
-                <Dropdown.Item
-                  className='eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2'
-                  onClick={() => {
-                    eliminacionPeriodos(
-                      <EliminaPeriodos
-                        datos={row}
-                        location={location}
-                        history={history}
-                        setShowModal={setShowModal}
-                        setRefreshCheckLogin={setRefreshCheckLogin}
-                      />
-                    )
-                  }}
-                >
-                  <span className='text-red-600' style={{ color: 'red' }}><FontAwesomeIcon icon={faTrashCan} className='text-lg' /> Eliminar</span>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-        </>
+        <DropdownActions buttonColor='minimal' icon='fas fa-ellipsis-v'>
+          <DropdownActions.Button
+            icon='fa-solid fa-pen-to-square'
+            onClick={() => {
+              modificacionPeriodos(
+                <ModificaPeriodos
+                  datos={row}
+                  location={location}
+                  history={history}
+                  setShowModal={setShowModal}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              )
+            }}
+          >
+            Editar
+          </DropdownActions.Button>
+          <DropdownActions.Button
+            icon='fa-solid fa-trash-can'
+            color='text-red-600'
+            onClick={() => {
+              eliminacionPeriodos(
+                <EliminaPeriodos
+                  datos={row}
+                  location={location}
+                  history={history}
+                  setShowModal={setShowModal}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              )
+            }}
+          >
+            <span className='text-red-600'>Eliminar</span>
+          </DropdownActions.Button>
+        </DropdownActions>
       ),
       sortable: false,
+      button: true,
       center: true,
       reorder: false
     },

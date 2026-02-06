@@ -1,20 +1,13 @@
 import { useState } from 'react'
-import moment from 'moment'
-import 'moment/locale/es'
 import BasicModal from '../../Modal/BasicModal'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashCan, faBars } from '@fortawesome/free-solid-svg-icons'
-import { Dropdown } from 'react-bootstrap'
 import DataTablecustom from '../../Generales/DataTable'
 import EliminaBajaSocios from '../EliminarBajaSocios'
 import { formatMoneda } from '../../Generales/FormatMoneda'
 import { formatFecha } from '../../Generales/FormatFecha'
+import DropdownActions from '../../Generales/DropdownActions'
 
-function ListBajaSocios (props) {
+function ListBajaSocios(props) {
   const { listBajasSocios, history, location, setRefreshCheckLogin } = props
-
-  // Configura el idioma a español
-  moment.locale('es')
 
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
@@ -67,35 +60,28 @@ function ListBajaSocios (props) {
     {
       name: 'Acciones',
       cell: row => (
-        <>
-          <div className='flex justify-end items-center space-x-4'>
-            <Dropdown>
-              <Dropdown.Toggle className='botonDropdown' id='dropdown-basic'>
-                <FontAwesomeIcon icon={faBars} />
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  className='eliminarInformacion hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out p-2'
-                  onClick={() => {
-                    eliminacionBajaSocios(
-                      <EliminaBajaSocios
-                        datos={row}
-                        location={location}
-                        history={history}
-                        setShowModal={setShowModal}
-                        setRefreshCheckLogin={setRefreshCheckLogin}
-                      />
-                    )
-                  }}
-                >
-                  <span className='text-red-600' style={{ color: 'red' }}><FontAwesomeIcon icon={faTrashCan} className='text-lg' /> Eliminar</span>
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-        </>
+        <DropdownActions buttonColor='minimal' icon='fas fa-ellipsis-v'>
+          <DropdownActions.Button
+            icon='fa-solid fa-trash-can'
+            color='text-red-600'
+            onClick={() => {
+              eliminacionBajaSocios(
+                <EliminaBajaSocios
+                  datos={row}
+                  location={location}
+                  history={history}
+                  setShowModal={setShowModal}
+                  setRefreshCheckLogin={setRefreshCheckLogin}
+                />
+              )
+            }}
+          >
+            <span className='text-red-600'>Eliminar</span>
+          </DropdownActions.Button>
+        </DropdownActions>
       ),
       sortable: false,
+      button: true,
       center: true,
       reorder: false
     },
