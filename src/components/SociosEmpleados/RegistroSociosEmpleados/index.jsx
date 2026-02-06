@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { registraSociosEmpleados } from '../../../api/sociosEmpleados'
 
-function RegistroSociosEmpleados(props) {
+function RegistroSociosEmpleados (props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -208,7 +208,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData() {
+function initialFormData () {
   return {
     ficha: '',
     nombre: '',

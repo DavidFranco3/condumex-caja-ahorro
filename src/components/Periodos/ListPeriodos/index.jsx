@@ -6,7 +6,7 @@ import DataTablecustom from '../../Generales/DataTable'
 import { formatFecha } from '../../Generales/FormatFecha'
 import DropdownActions from '../../Generales/DropdownActions'
 
-function ListPeriodos(props) {
+function ListPeriodos (props) {
   const { listPeriodos, history, location, setRefreshCheckLogin } = props
 
   // Para hacer uso del modal

@@ -25,7 +25,7 @@ const initialFormData = ({ id, folio, fichaSocio, aportacion, fechaCreacion }) =
   }
 )
 
-function ModificaAportaciones({ datos, setShowModal, history }) {
+function ModificaAportaciones ({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 

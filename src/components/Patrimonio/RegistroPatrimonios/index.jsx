@@ -11,7 +11,7 @@ import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import queryString from 'query-string'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 
-function RegistroPatrimonios(props) {
+function RegistroPatrimonios (props) {
   const { setShowModal, history } = props
   // Para controlar el modal de busqueda de socios
   // Para hacer uso del modal
@@ -185,7 +185,7 @@ function RegistroPatrimonios(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -217,7 +217,7 @@ function RegistroPatrimonios(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -313,7 +313,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData() {
+function initialFormData () {
   return {
     patrimonio: '',
     fecha: `${fecha}T${hora}`,

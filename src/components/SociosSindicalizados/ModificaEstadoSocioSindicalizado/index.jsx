@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { cambiaEstadoSocioSindicalizado } from '../../../api/sociosSindicalizados'
 
-function ModificaEstadoSocioSindicalizado(props) {
+function ModificaEstadoSocioSindicalizado (props) {
   const { datos, setShowModal, history } = props
   const { id, ficha, nombre, tipo, correo, estado } = datos
 

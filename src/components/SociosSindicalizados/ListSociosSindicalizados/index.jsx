@@ -6,7 +6,7 @@ import DataTablecustom from '../../Generales/DataTable'
 import { formatFecha } from '../../Generales/FormatFecha'
 import DropdownActions from '../../Generales/DropdownActions'
 
-function ListSociosSindicalizados(props) {
+function ListSociosSindicalizados (props) {
   const { listSocios, history, location, setRefreshCheckLogin } = props
 
   // Para hacer uso del modal

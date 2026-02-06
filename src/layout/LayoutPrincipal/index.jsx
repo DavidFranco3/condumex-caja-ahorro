@@ -41,7 +41,7 @@ function LayoutPrincipal (props) {
   const almacenaRazonSocial = (razonSocial) => {
     if (
       razonSocial === 'Asociación de Empleados Sector Cables A.C.' ||
-            razonSocial === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
+      razonSocial === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
     ) {
       setRazonSocial(razonSocial)
       setRazonSocialElegida(razonSocial) // ✅ actualiza el estado también
@@ -88,13 +88,13 @@ function LayoutPrincipal (props) {
       <Disclosure
         as='nav'
         className={
-                    razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
-                      ? 'bg-black'
-                      : razonSocialElegida ===
-                            'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
-                        ? 'bg-red-700'
-                        : 'bg-black'
-                }
+          razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'
+            ? 'bg-black'
+            : razonSocialElegida ===
+              'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'
+              ? 'bg-red-700'
+              : 'bg-black'
+        }
       >
         {({ open }) => (
           <>
@@ -168,7 +168,7 @@ function LayoutPrincipal (props) {
                     >
                       <MenuItems className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'>
                         <MenuItem>
-                          {({ active }) => (
+                          {({ focus }) => (
                             <button
                               onClick={() => {
                                 cerrarSesion()

@@ -26,7 +26,7 @@ const initialFormData = ({ id, folio, fichaSocio, patrimonio, fechaCreacion }) =
   }
 )
 
-function ModificaPatrimonios({ datos, setShowModal, history }) {
+function ModificaPatrimonios ({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 

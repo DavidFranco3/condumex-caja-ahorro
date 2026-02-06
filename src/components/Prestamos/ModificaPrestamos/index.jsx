@@ -27,7 +27,7 @@ const initialFormData = ({ id, folio, fichaSocio, prestamo, prestamoTotal, tasaI
   }
 )
 
-function ModificaPrestamos({ datos, setShowModal, history }) {
+function ModificaPrestamos ({ datos, setShowModal, history }) {
   // const [formData, setFormData] = useState(initialFormData(datos));
   const [loading, setLoading] = useState(false)
 

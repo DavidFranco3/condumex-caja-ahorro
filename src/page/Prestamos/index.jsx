@@ -17,7 +17,7 @@ import AnimacionLoading from '../../assets/json/loading.json'
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
-function Prestamos(props) {
+function Prestamos (props) {
   const { setRefreshCheckLogin, location, history } = props
   // Para hacer uso del modal
   const [showModal, setShowModal] = useState(false)
@@ -288,12 +288,12 @@ function Prestamos(props) {
                 />
               </Suspense>
             </>
-          )
+            )
           : (
             <>
               <Lottie loop play animationData={AnimacionLoading} />
             </>
-          )
+            )
       }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
@@ -303,7 +303,7 @@ function Prestamos(props) {
   )
 }
 
-function formatModelPrestamos(data) {
+function formatModelPrestamos (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -323,7 +323,7 @@ function formatModelPrestamos(data) {
   return dataTemp
 }
 
-function formatModelPeriodos(data) {
+function formatModelPeriodos (data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

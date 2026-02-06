@@ -21,7 +21,7 @@ const initialFormData = ({ nombre, apellidos, correo, fechaCreacion }) => ({
   password: ''
 })
 
-function ModificaUsuarios(props) {
+function ModificaUsuarios (props) {
   const { datos, setShowModal, history, } = props
   const { id } = datos
 

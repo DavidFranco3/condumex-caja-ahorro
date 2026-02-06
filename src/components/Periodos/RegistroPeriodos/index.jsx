@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 import { getRazonSocial } from '../../../api/auth'
 import queryString from 'query-string'
 
-function RegistroPeriodos(props) {
+function RegistroPeriodos (props) {
   const { setShowModal, history } = props
 
   // Para controlar la animación
@@ -178,7 +178,7 @@ function RegistroPeriodos(props) {
   )
 }
 
-function initialFormData() {
+function initialFormData () {
   return {
     nombre: '',
     fechaInicio: '',

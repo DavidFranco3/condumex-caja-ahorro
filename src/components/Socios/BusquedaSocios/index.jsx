@@ -16,7 +16,7 @@ import { getRazonSocial } from '../../../api/auth'
 import { formatFecha } from '../../Generales/FormatFecha'
 import DataTablecustom from '../../Generales/DataTable'
 
-function BusquedaSocios(props) {
+function BusquedaSocios (props) {
   const {
     setShowModal,
     setFichaSocioElegido,
@@ -310,7 +310,7 @@ function BusquedaSocios(props) {
               </Row>
             </div>
           </>
-        )
+          )
         : (
           <>
             <div className='contenidoFormularioPrincipal'>
@@ -401,12 +401,12 @@ function BusquedaSocios(props) {
               </Form>
             </div>
           </>
-        )}
+          )}
     </>
   )
 }
 
-function formatModelSocios(data) {
+function formatModelSocios (data) {
   return data.map(
     ({
       _id: id,
@@ -430,7 +430,7 @@ function formatModelSocios(data) {
   )
 }
 
-function initialFormValue() {
+function initialFormValue () {
   return {
     nombre: '',
     tipo: '',

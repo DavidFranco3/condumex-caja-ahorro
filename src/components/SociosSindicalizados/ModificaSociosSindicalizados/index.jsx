@@ -21,7 +21,7 @@ const initialFormData = ({ nombre, tipo, correo, ficha, fechaCreacion }) => ({
   createdAt: fechaToCurrentTimezone(fechaCreacion),
 })
 
-function ModificaSociosSindicalizados(props) {
+function ModificaSociosSindicalizados (props) {
   const { datos, setShowModal, history } = props
   const { id, ficha } = datos
 

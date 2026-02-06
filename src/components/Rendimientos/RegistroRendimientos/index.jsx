@@ -14,7 +14,7 @@ import queryString from 'query-string'
 import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 
-function RegistroRendimientos({ setShowModal, history }) {
+function RegistroRendimientos ({ setShowModal, history }) {
   // Para controlar el modal de busqueda de socios
   const [showModalBusqueda, setShowModalBusqueda] = useState(false)
   const [contentModalBusqueda, setContentModalBusqueda] = useState(null)
@@ -56,7 +56,7 @@ function RegistroRendimientos({ setShowModal, history }) {
   const [fichaSocioElegido, setFichaSocioElegido] = useState('')
   const [nombreSocioElegido, setNombreSocioElegido] = useState('')
 
-  const { register, handleSubmit, setValue, formState: { errors }, clearErrors } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: initialFormData()
   })
 
@@ -183,7 +183,7 @@ function RegistroRendimientos({ setShowModal, history }) {
                       />
                     </Form.Group>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -215,7 +215,7 @@ function RegistroRendimientos({ setShowModal, history }) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -307,7 +307,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     aportacion: '',

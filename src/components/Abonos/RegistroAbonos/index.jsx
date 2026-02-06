@@ -14,7 +14,7 @@ import { registroDeudaSocioInicial, actualizacionDeudaSocio } from '../../DeudaS
 import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
-function RegistroAbonos(props) {
+function RegistroAbonos (props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -193,7 +193,7 @@ function RegistroAbonos(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -225,7 +225,7 @@ function RegistroAbonos(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -340,7 +340,7 @@ const hora = [
   String(hoy.getMinutes()).padStart(2, '0'),
 ].join(':')
 
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     abono: '',

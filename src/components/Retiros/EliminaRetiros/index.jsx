@@ -16,7 +16,7 @@ const fechaToCurrentTimezone = (fecha) => {
   return date.toISOString().slice(0, 16)
 }
 
-function EliminaRetiros(props) {
+function EliminaRetiros (props) {
   const { datos, history, setShowModal, } = props
   // console.log(datos)
   const { id, folio, fichaSocio, retiro, fechaCreacion } = datos

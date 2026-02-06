@@ -7,7 +7,7 @@ import { formatMoneda } from '../../Generales/FormatMoneda'
 import { formatFecha } from '../../Generales/FormatFecha'
 import DropdownActions from '../../Generales/DropdownActions'
 
-function ListPrestamos(props) {
+function ListPrestamos (props) {
   const { listPrestamos, history, location, setRefreshCheckLogin } = props
 
   // Para hacer uso del modal
