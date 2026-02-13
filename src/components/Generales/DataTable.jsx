@@ -340,6 +340,7 @@ const DataTablecustom = ({
         paddingLeft: '16px',
         paddingRight: '16px',
         whiteSpace: 'nowrap',
+        justifyContent: 'center',
       },
     },
     rows: {
@@ -364,6 +365,7 @@ const DataTablecustom = ({
       style: {
         paddingLeft: '16px',
         paddingRight: '16px',
+        justifyContent: 'center',
       },
     },
     pagination: {
@@ -458,8 +460,11 @@ const DataTablecustom = ({
                 .custom-header-wrapper {
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     gap: 8px;
+                    width: 100%;
                 }
+
 
                 .custom-checkbox-label {
                     position: relative;
