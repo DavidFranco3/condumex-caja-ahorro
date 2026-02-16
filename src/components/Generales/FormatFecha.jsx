@@ -12,3 +12,7 @@ export const formatFecha = (fecha) => {
   if (!fecha) return 'No disponible'
   return dayjs.utc(fecha).local().format('LL')
 }
+
+export const getCurrentDate = () => {
+  return dayjs().format('YYYY-MM-DDTHH:mm')
+}

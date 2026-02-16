@@ -12,9 +12,10 @@ import Swal from 'sweetalert2'
 import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
-function RegistroRetiros (props) {
+function RegistroRetiros(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -193,7 +194,7 @@ function RegistroRetiros (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -225,7 +226,7 @@ function RegistroRetiros (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
 
@@ -327,24 +328,13 @@ function RegistroRetiros (props) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     retiro: '',
-    fecha: `${fecha}T${hora}`,
+    fecha: getCurrentDate(),
     tipo: ''
   }
 }

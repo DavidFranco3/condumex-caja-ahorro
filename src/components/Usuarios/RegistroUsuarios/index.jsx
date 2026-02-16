@@ -4,8 +4,9 @@ import { Button, Col, Form, Row, Spinner } from 'react-bootstrap'
 import Swal from 'sweetalert2'
 import queryString from 'query-string'
 import { registraUsuarios } from '../../../api/usuarios'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroUsuarios (props) {
+function RegistroUsuarios(props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -195,25 +196,14 @@ function RegistroUsuarios (props) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     nombre: '',
     apellidos: '',
     correo: '',
-    fecha: `${fecha}T${hora}`,
+    fecha: getCurrentDate(),
   }
 }
 

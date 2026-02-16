@@ -8,6 +8,7 @@ import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
 const CargaMasivaAportaciones = ({ setShowModal, history }) => {
   // const [formData, setFormData] = useState(initialFormData());
@@ -169,11 +170,11 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
                           <ProgressBar animated now={count} max={dataFile.length} variant='info' />
                         </Col>
                       </Form.Group>
-                                  </div>)
+                    </div>)
                   }
                 </div>
               </Col>
-                                    </Form.Group>)
+            </Form.Group>)
           }
 
           <Form.Group as={Row} className='botones pt-5'>
@@ -205,24 +206,13 @@ const CargaMasivaAportaciones = ({ setShowModal, history }) => {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     aportacion: '',
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

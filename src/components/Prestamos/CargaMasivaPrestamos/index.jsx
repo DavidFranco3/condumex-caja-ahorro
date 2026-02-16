@@ -7,6 +7,7 @@ import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 import { obtenerFolioActualPrestamo, registraPrestamos } from '../../../api/prestamos'
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from '../../DeudaSocio/RegistroActualizacionDeudaSocio'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
 const CargaMasivaPrestamos = ({ setShowModal, history }) => {
   const { register, handleSubmit, formState: { errors } } = useForm({
@@ -152,11 +153,11 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                           <ProgressBar animated now={count} max={dataFile.length} variant='info' />
                         </Col>
                       </Form.Group>
-                                  </div>)
+                    </div>)
                   }
                 </div>
               </Col>
-                                    </Form.Group>)
+            </Form.Group>)
           }
           <Form.Group as={Row} className='botones pt-5'>
             <Col>
@@ -187,24 +188,13 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     prestamo: '',
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

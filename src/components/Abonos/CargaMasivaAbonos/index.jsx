@@ -6,6 +6,7 @@ import { getRazonSocial, getPeriodo } from '../../../api/auth'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 import { obtenerFolioActualAbono, registraAbonos } from '../../../api/abonos'
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from '../../DeudaSocio/RegistroActualizacionDeudaSocio'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
 const CargaMasivaAbonos = ({ setShowModal, history }) => {
   // Para almacenar los datos del formulario
@@ -132,26 +133,26 @@ const CargaMasivaAbonos = ({ setShowModal, history }) => {
             </Col>
           </Form.Group>
           {
-                        dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
-                          <Col sm={12}>
-                            <div className='flex flex-col justify-center'>
-                              <div className='mb-3 w-100'>
-                                <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
-                              </div>
-                              {
-                                        count > 0 && (<div className='mb-3 w-100'>
-                                          <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
-                                          <Form.Group as={Row}>
-                                            <Col sm={12}>
-                                              <ProgressBar animated now={count} max={dataFile.length} variant='info' />
-                                            </Col>
-                                          </Form.Group>
-                                                      </div>)
-                                    }
-                            </div>
-                          </Col>
-                                                </Form.Group>)
-                    }
+            dataFile.length > 0 && (<Form.Group as={Row} className='botones pt-4'>
+              <Col sm={12}>
+                <div className='flex flex-col justify-center'>
+                  <div className='mb-3 w-100'>
+                    <span className='inline-block mb-2 text-gray-700'>Total de registros a cargar: {dataFile.length}</span>
+                  </div>
+                  {
+                    count > 0 && (<div className='mb-3 w-100'>
+                      <span className='flex justify-center mb-2 text-gray-700'>{count} de {dataFile.length}</span>
+                      <Form.Group as={Row}>
+                        <Col sm={12}>
+                          <ProgressBar animated now={count} max={dataFile.length} variant='info' />
+                        </Col>
+                      </Form.Group>
+                    </div>)
+                  }
+                </div>
+              </Col>
+            </Form.Group>)
+          }
           <Form.Group as={Row} className='botones pt-5'>
             <Col>
               <Button
@@ -176,30 +177,20 @@ const CargaMasivaAbonos = ({ setShowModal, history }) => {
             </Col>
           </Form.Group>
 
+
         </Form>
       </div>
     </>
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     abono: '',
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

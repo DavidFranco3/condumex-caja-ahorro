@@ -37,7 +37,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import BusquedaSocios from '../../components/Socios/BusquedaSocios'
 
-function EstadosCuenta ({ setRefreshCheckLogin }) {
+function EstadosCuenta({ setRefreshCheckLogin }) {
   const location = useLocation()
   const [tab, setTab] = useState('general')
 
@@ -331,10 +331,10 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
 
   const Card = ({ title, value, icon }) => {
     return (
-      <div className='bg-zinc-900 p-5 rounded-2xl shadow-md flex flex-col items-center justify-center border border-zinc-800 hover:scale-105 transition-transform duration-200'>
+      <div className='bg-white p-5 rounded-2xl shadow-lg flex flex-col items-center justify-center border border-gray-200 hover:scale-105 transition-transform duration-200'>
         {icon && <div className='mb-2 text-2xl'>{icon}</div>}
-        <h2 className='text-zinc-400 text-sm font-medium'>{title}</h2>
-        <p className='text-zinc-900 dark:text-white text-xl font-bold'>{formatMoneda(value)}</p>
+        <h2 className='text-gray-500 text-sm font-medium'>{title}</h2>
+        <p className='text-gray-900 text-xl font-bold'>{formatMoneda(value)}</p>
       </div>
     )
   }
@@ -536,12 +536,12 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                   <>
                     <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
                   </>
-                  )
+                )
             }
             {!loading
               ? (
@@ -601,10 +601,10 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                   </div>
 
                 </Suspense>
-                )
+              )
               : (
                 <Loading />
-                )}
+              )}
           </Tab>
           <Tab
             key={1}
@@ -625,10 +625,10 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                     {correoSocioElegido
                       ? (
                         <Button onClick={handleSendEmail}>Enviar por correo</Button>
-                        )
+                      )
                       : (
                         <ButtonDisabled>Enviar por correo</ButtonDisabled>
-                        )}
+                      )}
                   </div>
                 )}
               </div>
@@ -843,12 +843,12 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                       </div>
                     </div>
                   </Suspense>
-                  )
+                )
                 : (
-                    fichaSocioElegido && (
+                  fichaSocioElegido && (
                     <Loading />
-                    )
-                  )}
+                  )
+                )}
             </div>
           </Tab>
         </Tabs>
@@ -860,7 +860,7 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
   )
 }
 
-function formatModelSocios (data) {
+function formatModelSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -877,7 +877,7 @@ function formatModelSocios (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

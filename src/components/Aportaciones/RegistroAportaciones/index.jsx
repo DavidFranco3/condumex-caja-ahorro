@@ -13,8 +13,9 @@ import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/
 import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 import queryString from 'query-string'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroAportaciones (props) {
+function RegistroAportaciones(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -194,7 +195,7 @@ function RegistroAportaciones (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -226,7 +227,7 @@ function RegistroAportaciones (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -305,24 +306,13 @@ function RegistroAportaciones (props) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     aportacion: '',
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

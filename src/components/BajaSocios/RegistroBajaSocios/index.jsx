@@ -17,8 +17,9 @@ import { getPatrimonioBySocio } from '../../../api/patrimonio'
 import { getRendimientosBySocio } from '../../../api/rendimientos'
 import { getAportacionesBySocio } from '../../../api/aportaciones'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroBajaSocios (props) {
+function RegistroBajaSocios(props) {
   const { setShowModal, history, periodoElegido } = props
 
   // Almacena la razón social, si ya fue elegida
@@ -357,7 +358,7 @@ function RegistroBajaSocios (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -395,7 +396,7 @@ function RegistroBajaSocios (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
 
@@ -452,22 +453,11 @@ function RegistroBajaSocios (props) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

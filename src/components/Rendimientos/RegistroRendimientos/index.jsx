@@ -13,8 +13,9 @@ import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/
 import queryString from 'query-string'
 import { registroSaldoInicial } from '../../GestionAutomatica/Saldos/Saldos'
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroRendimientos ({ setShowModal, history }) {
+function RegistroRendimientos({ setShowModal, history }) {
   // Para controlar el modal de busqueda de socios
   const [showModalBusqueda, setShowModalBusqueda] = useState(false)
   const [contentModalBusqueda, setContentModalBusqueda] = useState(null)
@@ -183,7 +184,7 @@ function RegistroRendimientos ({ setShowModal, history }) {
                       />
                     </Form.Group>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -215,7 +216,7 @@ function RegistroRendimientos ({ setShowModal, history }) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
 
@@ -294,24 +295,13 @@ function RegistroRendimientos ({ setShowModal, history }) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     aportacion: '',
-    fecha: `${fecha}T${hora}`
+    fecha: getCurrentDate()
   }
 }
 

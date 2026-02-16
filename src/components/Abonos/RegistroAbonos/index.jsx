@@ -13,8 +13,9 @@ import queryString from 'query-string'
 import { registroDeudaSocioInicial, actualizacionDeudaSocio } from '../../DeudaSocio/RegistroActualizacionDeudaSocio'
 import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioAportacion'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
+import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroAbonos (props) {
+function RegistroAbonos(props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -193,7 +194,7 @@ function RegistroAbonos (props) {
                       </Form.Group>
                     </Row>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -225,7 +226,7 @@ function RegistroAbonos (props) {
                     </Form.Group>
 
                   </>
-                  )
+                )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -327,24 +328,13 @@ function RegistroAbonos (props) {
   )
 }
 
-const hoy = new Date()
 
-const fecha = [
-  hoy.getFullYear(),
-  String(hoy.getMonth() + 1).padStart(2, '0'),
-  String(hoy.getDate()).padStart(2, '0'),
-].join('-')
 
-const hora = [
-  String(hoy.getHours()).padStart(2, '0'),
-  String(hoy.getMinutes()).padStart(2, '0'),
-].join(':')
-
-function initialFormData () {
+function initialFormData() {
   return {
     fichaSocio: '',
     abono: '',
-    fecha: `${fecha}T${hora}`,
+    fecha: getCurrentDate(),
     tipo: ''
   }
 }
