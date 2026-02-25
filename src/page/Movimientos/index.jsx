@@ -9,7 +9,7 @@ import Loading from '../../components/Loading'
 import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 
-function Movimientos (props) {
+function Movimientos(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -59,7 +59,7 @@ function Movimientos (props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Para almacenar las sucursales registradas
   const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
@@ -83,25 +83,16 @@ function Movimientos (props) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
+  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
-    }
-    window.location.reload()
-  }
-
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo())
+      setPeriodoElegido(periodo)
     }
   }
 
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -124,14 +115,14 @@ function Movimientos (props) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
@@ -150,18 +141,18 @@ function Movimientos (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
     </>
   )
 }
 
-function formatModelMovimientosSocio (data) {
+function formatModelMovimientosSocio(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -183,7 +174,7 @@ function formatModelMovimientosSocio (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

@@ -17,7 +17,7 @@ import ImagenPerfil from '../../assets/png/user-avatar.png'
 import { Row, Container, Form } from 'react-bootstrap'
 import './LayoutPrincipal.scss'
 
-function LayoutPrincipal (props) {
+function LayoutPrincipal(props) {
   const { setRefreshCheckLogin, children } = props
 
   const redirecciona = useNavigate()
@@ -45,7 +45,6 @@ function LayoutPrincipal (props) {
     ) {
       setRazonSocial(razonSocial)
       setRazonSocialElegida(razonSocial) // ✅ actualiza el estado también
-      window.location.reload() // si realmente necesitas recargar
     }
   }
 
@@ -107,10 +106,10 @@ function LayoutPrincipal (props) {
                     {open
                       ? (
                         <XMarkIcon className='block h-6 w-6' aria-hidden='true' />
-                        )
+                      )
                       : (
                         <Bars3Icon className='block h-6 w-6' aria-hidden='true' />
-                        )}
+                      )}
                   </DisclosureButton>
                 </div>
                 <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>
@@ -133,14 +132,14 @@ function LayoutPrincipal (props) {
                       as='select'
                       aria-label='indicadorRazonSocial'
                       name='razonSocial'
-                      defaultValue={razonSocialElegida}
+                      value={razonSocialElegida}
                       onChange={(e) => {
                         almacenaRazonSocial(e.target.value)
                       }}
                     >
-                      <option value='' selected>Selecciona la razón social</option>
-                      <option value='Asociación de Empleados Sector Cables A.C.' selected={razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'}>Asociación de Empleados Sector Cables A.C.</option>
-                      <option value='Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.' selected={razonSocialElegida === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'}>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
+                      <option value=''>Selecciona la razón social</option>
+                      <option value='Asociación de Empleados Sector Cables A.C.'>Asociación de Empleados Sector Cables A.C.</option>
+                      <option value='Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
                     </Form.Control>
                   </div>
                 </div>
@@ -194,14 +193,14 @@ function LayoutPrincipal (props) {
                   as='select'
                   aria-label='indicadorRazonSocial'
                   name='razonSocial'
-                  defaultValue={razonSocialElegida}
+                  value={razonSocialElegida}
                   onChange={(e) => {
                     almacenaRazonSocial(e.target.value)
                   }}
                 >
-                  <option value='' selected>Selecciona la razón social</option>
-                  <option value='Asociación de Empleados Sector Cables A.C.' selected={razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.'}>Asociación de Empleados Sector Cables A.C.</option>
-                  <option value='Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.' selected={razonSocialElegida === 'Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'}>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
+                  <option value=''>Selecciona la razón social</option>
+                  <option value='Asociación de Empleados Sector Cables A.C.'>Asociación de Empleados Sector Cables A.C.</option>
+                  <option value='Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.'>Asociación de Trabajadores Sindicalizados en Telecomunicaciones A.C.</option>
                 </Form.Control>
               </div>
             </DisclosurePanel>
@@ -209,7 +208,7 @@ function LayoutPrincipal (props) {
         )}
       </Disclosure>
       <Container fluid>
-        <Row>
+        <Row key={razonSocialElegida}>
           {children}
         </Row>
       </Container>

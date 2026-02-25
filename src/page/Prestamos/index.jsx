@@ -26,6 +26,17 @@ function Prestamos(props) {
   const [contentModal, setContentModal] = useState(null)
   const [titulosModal, setTitulosModal] = useState(null)
 
+  // Almacena la razón social, si ya fue elegida
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
+
+  // Para almacenar en localstorage el periodo
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
+
   // Cerrado de sesión automatico
   useEffect(() => {
     if (getTokenApi()) {
@@ -96,7 +107,7 @@ function Prestamos(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   const [listaFichas, setListaFichas] = useState([])
 
@@ -151,17 +162,6 @@ function Prestamos(props) {
   useEffect(() => {
     cargarListaPeriodos()
   }, [])
-
-  // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
-
-  // Para almacenar en localstorage el periodo
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-    }
-    window.location.reload()
-  }
 
 
   return (
@@ -259,9 +259,9 @@ function Prestamos(props) {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>

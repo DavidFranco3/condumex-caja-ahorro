@@ -93,7 +93,7 @@ function Rendimientos({ setRefreshCheckLogin }) {
 
   useEffect(() => {
     getRendimientos()
-  }, [location])
+  }, [location, periodoElegido])
 
   const closeModal = () => {
     setIsOpen(false)
@@ -239,8 +239,8 @@ function Rendimientos({ setRefreshCheckLogin }) {
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
+      setPeriodoElegido(periodo)
     }
-    window.location.reload()
   }
 
 
@@ -411,9 +411,9 @@ function Rendimientos({ setRefreshCheckLogin }) {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>

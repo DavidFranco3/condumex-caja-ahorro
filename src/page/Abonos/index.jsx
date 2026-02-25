@@ -17,7 +17,7 @@ import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 import './Abonos.scss'
 
-function Abonos (props) {
+function Abonos(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -97,7 +97,7 @@ function Abonos (props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   const [listaFichas, setListaFichas] = useState([])
 
@@ -154,25 +154,16 @@ function Abonos (props) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
+  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
-    }
-    window.location.reload()
-  }
-
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo())
+      setPeriodoElegido(periodo)
     }
   }
 
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -263,14 +254,14 @@ function Abonos (props) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
@@ -289,12 +280,12 @@ function Abonos (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
@@ -304,7 +295,7 @@ function Abonos (props) {
   )
 }
 
-function formatModelAbonos (data) {
+function formatModelAbonos(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -320,7 +311,7 @@ function formatModelAbonos (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

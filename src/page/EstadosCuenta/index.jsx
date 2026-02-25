@@ -37,7 +37,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import BusquedaSocios from '../../components/Socios/BusquedaSocios'
 
-function EstadosCuenta ({ setRefreshCheckLogin }) {
+function EstadosCuenta({ setRefreshCheckLogin }) {
   const location = useLocation()
   const [tab, setTab] = useState('general')
 
@@ -157,7 +157,7 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
     if (getRazonSocial()) {
       setRazonSocialElegida(getRazonSocial())
     }
-  }, [])
+  }, [location])
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -230,14 +230,14 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
 
   useEffect(() => {
     tab === 'socio' && fichaSocioElegido && loadTotalesSocio()
-  }, [fichaSocioElegido])
+  }, [fichaSocioElegido, periodoElegido])
 
   useEffect(() => {
     if (tab === 'general') {
       loadTotales()
       setFichaSocioElegido('')
     }
-  }, [tab])
+  }, [tab, periodoElegido])
 
   const handleDownloadPDF = async () => {
     setLoading(true)
@@ -465,25 +465,16 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
+  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
-    }
-    window.location.reload()
-  }
-
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo())
+      setPeriodoElegido(periodo)
     }
   }
 
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -503,14 +494,14 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
@@ -536,12 +527,12 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                   <>
                     <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
                   </>
-                  )
+                )
                 : (
                   <>
                     <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
                   </>
-                  )
+                )
             }
             {!loading
               ? (
@@ -601,10 +592,10 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                   </div>
 
                 </Suspense>
-                )
+              )
               : (
                 <Loading />
-                )}
+              )}
           </Tab>
           <Tab
             key={1}
@@ -625,10 +616,10 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                     {correoSocioElegido
                       ? (
                         <Button onClick={handleSendEmail}>Enviar por correo</Button>
-                        )
+                      )
                       : (
                         <ButtonDisabled>Enviar por correo</ButtonDisabled>
-                        )}
+                      )}
                   </div>
                 )}
               </div>
@@ -843,12 +834,12 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
                       </div>
                     </div>
                   </Suspense>
-                  )
+                )
                 : (
-                    fichaSocioElegido && (
+                  fichaSocioElegido && (
                     <Loading />
-                    )
-                  )}
+                  )
+                )}
             </div>
           </Tab>
         </Tabs>
@@ -860,7 +851,7 @@ function EstadosCuenta ({ setRefreshCheckLogin }) {
   )
 }
 
-function formatModelSocios (data) {
+function formatModelSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -877,7 +868,7 @@ function formatModelSocios (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

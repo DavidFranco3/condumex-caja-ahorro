@@ -3,7 +3,7 @@ import { ENDPOINTLoginAdministrador } from './endpoints'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
 
-export async function login (data) {
+export async function login(data) {
   const config = {
     headers: {
       Accept: 'application/json',
@@ -18,45 +18,57 @@ export async function login (data) {
   return await axios.post(API_HOST + ENDPOINTLoginAdministrador, dataTemp, config)
 }
 
-export function setPeriodo (periodo) {
+export function setPeriodo(periodo) {
+  const razonSocial = getRazonSocial()
+  if (razonSocial) {
+    localStorage.setItem(`${PERIODO}_${razonSocial}`, periodo)
+  }
   localStorage.setItem(PERIODO, periodo)
 }
 
-export function getPeriodo () {
+export function getPeriodo() {
+  const razonSocial = getRazonSocial()
+  if (razonSocial) {
+    return localStorage.getItem(`${PERIODO}_${razonSocial}`)
+  }
   return localStorage.getItem(PERIODO)
 }
 
-function eliminaPeriodo () {
+function eliminaPeriodo() {
+  const razonSocial = getRazonSocial()
+  if (razonSocial) {
+    localStorage.removeItem(`${PERIODO}_${razonSocial}`)
+  }
   return localStorage.removeItem(PERIODO)
 }
 
-export function setRazonSocial (razonSocial) {
+export function setRazonSocial(razonSocial) {
   localStorage.setItem(RAZON_SOCIAL, razonSocial)
 }
 
-export function setTokenApi (token) {
+export function setTokenApi(token) {
   localStorage.setItem(TOKEN, token)
 }
 
-export function getRazonSocial () {
+export function getRazonSocial() {
   return localStorage.getItem(RAZON_SOCIAL)
 }
 
-export function getTokenApi () {
+export function getTokenApi() {
   return localStorage.getItem(TOKEN)
 }
 
-function eliminaRazonSocial () {
+function eliminaRazonSocial() {
   return localStorage.removeItem(RAZON_SOCIAL)
 }
 
-export function logoutApi () {
-  eliminaRazonSocial()
+export function logoutApi() {
   eliminaPeriodo()
+  eliminaRazonSocial()
   return localStorage.removeItem(TOKEN)
 }
 
-export function isUserLogedApi () {
+export function isUserLogedApi() {
   const token = getTokenApi()
   if (!token) {
     logoutApi()
@@ -68,7 +80,7 @@ export function isUserLogedApi () {
   return jwtDecode(token)
 }
 
-function isExpired (token) {
+function isExpired(token) {
   const { exp } = jwtDecode(token)
   const expire = exp * 1000
   const timeout = expire - Date.now()
@@ -79,7 +91,7 @@ function isExpired (token) {
   return false
 }
 
-export function isExpiredToken (token) {
+export function isExpiredToken(token) {
   const { exp } = jwtDecode(token)
   const expire = exp * 1000
   const timeout = expire - Date.now()
@@ -90,7 +102,7 @@ export function isExpiredToken (token) {
   return false
 }
 
-export function obtenidusuarioLogueado (token) {
+export function obtenidusuarioLogueado(token) {
   const { _ } = jwtDecode(token)
 
   return _

@@ -21,6 +21,17 @@ function SaldosSocios(props) {
   const navigate = useNavigate()
   const history = navigate
 
+  // Almacena la razón social, si ya fue elegida
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
+
+  // Para almacenar en localstorage la razon social
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
+
   // Cerrado de sesión automatico
   useEffect(() => {
     if (getTokenApi()) {
@@ -65,7 +76,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   console.log(listBajasSocios)
 
@@ -90,7 +101,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listPatrimoniosSocios, setListPatrimoniosSocios] = useState(null)
@@ -113,7 +124,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listAportacionesSocios, setListAportacionesSocios] = useState(null)
@@ -136,7 +147,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listPrestamosSocios, setListPrestamosSocios] = useState(null)
@@ -159,7 +170,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listAbonosSocios, setListAbonosSocios] = useState(null)
@@ -182,7 +193,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
-  }, [location])
+  }, [location, periodoElegido])
 
   // Para almacenar las sucursales registradas
   const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
@@ -204,17 +215,6 @@ function SaldosSocios(props) {
   useEffect(() => {
     cargarListaPeriodos()
   }, [])
-
-  // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
-
-  // Para almacenar en localstorage la razon social
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-    }
-    window.location.reload()
-  }
 
 
   return (
@@ -241,9 +241,9 @@ function SaldosSocios(props) {
               almacenaPeriodo(e.target.value)
             }}
           >
-            <option>Elige una opción</option>
+            <option value=''>Elige una opción</option>
             {map(periodosRegistrados, (periodo, index) => (
-              <option key={index} value={periodo?.folio} selected={parseInt(periodoElegido) === parseInt(periodo?.folio)}>{periodo?.nombre}</option>
+              <option key={index} value={periodo?.folio}>{periodo?.nombre}</option>
             ))}
           </Form.Control>
         </Col>
