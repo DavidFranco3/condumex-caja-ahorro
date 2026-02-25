@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import LogoCajadeAhorro from '../../assets/png/caja-de-ahorro-login.png'
 
-function Login ({ setRefreshCheckLogin }) {
+function Login({ setRefreshCheckLogin }) {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [signInLoading, setSignInLoading] = useState(false)
 
@@ -87,7 +87,7 @@ function Login ({ setRefreshCheckLogin }) {
 
   return (
     <section className='h-screen'>
-      <div className='container px-6 py-12 h-full'>
+      <div className='container px-6 py-10 h-full'>
         <div className='flex justify-center items-center flex-wrap h-full g-6 text-gray-800'>
           <div className='md:w-8/12 lg:w-6/12 mb-12 md:mb-0 space-y-4'>
             <img
@@ -100,7 +100,7 @@ function Login ({ setRefreshCheckLogin }) {
               <div className='mb-6'>
                 <input
                   type='text'
-                  className={`form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.correo ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.correo ? 'border-red-500' : 'border-gray-300'}`}
                   placeholder='Correo electrónico'
                   {...register('correo', {
                     required: 'El correo es obligatorio',
@@ -117,7 +117,7 @@ function Login ({ setRefreshCheckLogin }) {
                 <div className='flex items-center'>
                   <input
                     type={mostrarPassword ? 'text' : 'password'}
-                    className={`form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                    className={`form-control block w-full px-4 py-2 text-lg font-normal text-gray-700 bg-white bg-clip-padding border border-solid rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
                     placeholder='Contraseña'
                     {...register('password', { required: 'La contraseña es obligatoria' })}
                   />
@@ -139,11 +139,11 @@ function Login ({ setRefreshCheckLogin }) {
                 >
                   {!signInLoading
                     ? (
-                        'Iniciar Sesión'
-                      )
+                      'Iniciar Sesión'
+                    )
                     : (
                       <Spinner animation='border' />
-                      )}
+                    )}
                 </button>
               </div>
             </form>

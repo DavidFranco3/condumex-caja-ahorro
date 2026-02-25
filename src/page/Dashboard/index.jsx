@@ -21,7 +21,7 @@ import LogoUsuarios from '../../assets/png/usuarios.png'
 import LogoUsuarioCorreos from '../../assets/png/usuarioCorreos.png'
 import './Dashboard.scss'
 
-function Dashboard (props) {
+function Dashboard(props) {
   const { setRefreshCheckLogin } = props
 
   const enrutamiento = useNavigate()
@@ -63,9 +63,9 @@ function Dashboard (props) {
   const ItemCard = ({ path, logo, title }) => (
     <Card>
       <Card.Body onClick={() => goTo(path)}>
-        <div className='flex flex-col items-center justify-center'>
-          <Image src={logo} style={{ width: '95px' }} />
-          <span className='inline-block text-lg font-normal'>{title}</span>
+        <div className='flex flex-col items-center justify-center py-1'>
+          <Image src={logo} style={{ width: '90px' }} />
+          <span className='inline-block text-lg font-normal mt-1'>{title}</span>
         </div>
       </Card.Body>
     </Card>
@@ -73,7 +73,7 @@ function Dashboard (props) {
 
   return (
     <>
-      <div className='grid grid-cols-4 gap-4'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
         <ItemCard
           path='/socios'
           logo={LogoUsuarios}

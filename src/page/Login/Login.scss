@@ -20,7 +20,7 @@
 
   p {
     margin: 0;
-    font-size: 18px !important;
+    font-size: 16px !important;
     color: $font-light !important;
   }
 
@@ -37,7 +37,7 @@
   }
 
   .card1 {
-    margin-top: 60px !important;
+    margin-top: 50px !important;
     margin-left: 0px !important;
     //width: 100%;
     border-radius: 30px;
@@ -58,20 +58,23 @@
 
     .card-body {
       text-align: left !important;
-      font-size: larger;
+      font-size: 18px;
+
       .rounded {
         width: 100px;
         height: 100px;
       }
 
-      .sign-in-form{
-        margin-top: 35px !important;
+      .sign-in-form {
+        margin-top: 30px !important;
 
         .form-label {
           color: $font-dark !important;
           font-weight: bold !important;
         }
-        input.form-control, textarea.form-control{
+
+        input.form-control,
+        textarea.form-control {
           margin-top: -5px !important;
           background-color: $background-light !important;
 
@@ -81,7 +84,7 @@
           //border-bottom: 1px solid $border-dark;
           color: $font-dark !important;
 
-          &:focus{
+          &:focus {
             background-color: $marron_suave4 !important;
             border-color: $border-dark;
             color: $font-dark !important;
@@ -90,6 +93,7 @@
 
         .campoPassword {
           margin-top: 10px !important;
+
           svg {
             position: absolute !important;
             top: 67% !important;
@@ -98,12 +102,13 @@
             font-weight: bold !important;
           }
         }
-        h2{
+
+        h2 {
           font-weight: bold;
           padding-bottom: 30px;
         }
 
-        .form-group{
+        .form-group {
           padding-bottom: 20px;
         }
 
@@ -111,30 +116,30 @@
           margin-top: -20px !important;
         }
 
-        input{
-          font-size: 25px;
+        input {
+          font-size: 22px;
         }
 
         .botonLogin {
-          margin-top: 45px !important;
+          margin-top: 40px !important;
           display: flex;
           justify-content: center;
           align-items: center;
 
-          button{
+          button {
             width: 50%;
             color: $font-light !important;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 30px !important;
 
-            .spinner-border{
+            .spinner-border {
               width: 25px;
               height: 25px;
             }
 
 
-            &:hover{
+            &:hover {
               color: $font-light;
             }
           }
@@ -156,10 +161,12 @@
     top: -160px !important;
     background-color: $background-transparente2;
     border: $background-transparente;
+
     .datosAtencion1 {
       font-size: 20px !important;
       color: $font-dark !important;
     }
+
     .datosAtencion2 {
       font-size: 20px !important;
       color: $font-dark !important;
@@ -198,6 +205,7 @@
     transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;*/
   }
+
   /* END FOOTER PINNING CODE */
 
   /*nav {
@@ -245,7 +253,7 @@
 
   p {
     margin: 0;
-    font-size: 20px;
+    font-size: 16px;
     color: $font-light !important;
   }
 
