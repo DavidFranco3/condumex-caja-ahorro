@@ -37,7 +37,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import BusquedaSocios from '../../components/Socios/BusquedaSocios'
 
-function EstadosCuenta({ setRefreshCheckLogin }) {
+function EstadosCuenta ({ setRefreshCheckLogin }) {
   const location = useLocation()
   const [tab, setTab] = useState('general')
 
@@ -155,7 +155,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     }
   }, [])
 
@@ -477,7 +477,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
 
   const guardarPeriodoElegido = () => {
     if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo)
+      setPeriodoElegido(getPeriodo())
     }
   }
 
@@ -536,12 +536,12 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
                   <>
                     <Button onClick={handleSendEmailMasiveEmpleados}>Enviar por correo</Button>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Button onClick={handleSendEmailMasiveSindicalizados}>Enviar por correo</Button>
                   </>
-                )
+                  )
             }
             {!loading
               ? (
@@ -601,10 +601,10 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
                   </div>
 
                 </Suspense>
-              )
+                )
               : (
                 <Loading />
-              )}
+                )}
           </Tab>
           <Tab
             key={1}
@@ -625,10 +625,10 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
                     {correoSocioElegido
                       ? (
                         <Button onClick={handleSendEmail}>Enviar por correo</Button>
-                      )
+                        )
                       : (
                         <ButtonDisabled>Enviar por correo</ButtonDisabled>
-                      )}
+                        )}
                   </div>
                 )}
               </div>
@@ -843,12 +843,12 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
                       </div>
                     </div>
                   </Suspense>
-                )
-                : (
-                  fichaSocioElegido && (
-                    <Loading />
                   )
-                )}
+                : (
+                    fichaSocioElegido && (
+                    <Loading />
+                    )
+                  )}
             </div>
           </Tab>
         </Tabs>
@@ -860,7 +860,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   )
 }
 
-function formatModelSocios(data) {
+function formatModelSocios (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -877,7 +877,7 @@ function formatModelSocios(data) {
   return dataTemp
 }
 
-function formatModelPeriodos(data) {
+function formatModelPeriodos (data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

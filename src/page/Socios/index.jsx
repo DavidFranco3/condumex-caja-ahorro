@@ -39,7 +39,7 @@ function Socios (props) {
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     } else {
       setRazonSocialElegida('Sin Selección')
     }

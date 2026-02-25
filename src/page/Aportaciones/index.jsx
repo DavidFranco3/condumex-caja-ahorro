@@ -133,7 +133,7 @@ function Aportaciones (props) {
 
   const guardarPeriodoElegido = () => {
     if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo)
+      setPeriodoElegido(getPeriodo())
     }
   }
 

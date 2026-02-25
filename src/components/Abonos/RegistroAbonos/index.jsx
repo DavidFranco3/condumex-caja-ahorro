@@ -15,7 +15,7 @@ import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioA
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroAbonos(props) {
+function RegistroAbonos (props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -194,7 +194,7 @@ function RegistroAbonos(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -226,7 +226,7 @@ function RegistroAbonos(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -328,9 +328,7 @@ function RegistroAbonos(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     abono: '',

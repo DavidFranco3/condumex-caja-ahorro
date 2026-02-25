@@ -13,7 +13,7 @@ import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/
 import { actualizacionDeudaSocio, registroDeudaSocioInicial } from '../../DeudaSocio/RegistroActualizacionDeudaSocio'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroPrestamos(props) {
+function RegistroPrestamos (props) {
   const { setShowModal, history } = props
   // Para controlar el modal de busqueda de socios
   // Para hacer uso del modal
@@ -196,7 +196,7 @@ function RegistroPrestamos(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -228,7 +228,7 @@ function RegistroPrestamos(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -351,9 +351,7 @@ function RegistroPrestamos(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     prestamo: '',
     fecha: getCurrentDate()

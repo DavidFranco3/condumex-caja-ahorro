@@ -22,7 +22,7 @@ function EliminaRetiroMasivo (props) {
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     }
   }, [])
 

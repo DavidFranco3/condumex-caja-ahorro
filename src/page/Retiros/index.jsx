@@ -16,7 +16,7 @@ import Loading from '../../components/Loading'
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
-function Retiros (props) {
+function Retiros(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -121,9 +121,9 @@ function Retiros (props) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
+  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
@@ -131,15 +131,6 @@ function Retiros (props) {
     window.location.reload()
   }
 
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo)
-    }
-  }
-
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -228,7 +219,7 @@ function Retiros (props) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
@@ -254,12 +245,12 @@ function Retiros (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
@@ -269,7 +260,7 @@ function Retiros (props) {
   )
 }
 
-function formatModelRetiros (data) {
+function formatModelRetiros(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -285,7 +276,7 @@ function formatModelRetiros (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

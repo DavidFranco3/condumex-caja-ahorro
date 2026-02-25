@@ -15,7 +15,7 @@ import { listarPeriodo } from '../../api/periodos'
 import { map } from 'lodash'
 import './InteresesSocios.scss'
 
-function SaldosSocios (props) {
+function SaldosSocios(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -206,7 +206,7 @@ function SaldosSocios (props) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
   // Para almacenar en localstorage la razon social
   const almacenaPeriodo = (periodo) => {
@@ -216,15 +216,6 @@ function SaldosSocios (props) {
     window.location.reload()
   }
 
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo)
-    }
-  }
-
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -245,7 +236,7 @@ function SaldosSocios (props) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
@@ -276,18 +267,18 @@ function SaldosSocios (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
     </>
   )
 }
 
-function formatModelBajaSocios (data) {
+function formatModelBajaSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -306,7 +297,7 @@ function formatModelBajaSocios (data) {
   return dataTemp
 }
 
-function formatModelInteresesSocios (data) {
+function formatModelInteresesSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -322,7 +313,7 @@ function formatModelInteresesSocios (data) {
   return dataTemp
 }
 
-function formatModelPatrimonioSocios (data) {
+function formatModelPatrimonioSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -338,7 +329,7 @@ function formatModelPatrimonioSocios (data) {
   return dataTemp
 }
 
-function formatModelAportacionesSocios (data) {
+function formatModelAportacionesSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -354,7 +345,7 @@ function formatModelAportacionesSocios (data) {
   return dataTemp
 }
 
-function formatModelPrestamosSocios (data) {
+function formatModelPrestamosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -370,7 +361,7 @@ function formatModelPrestamosSocios (data) {
   return dataTemp
 }
 
-function formatModelAbonosSocios (data) {
+function formatModelAbonosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -386,7 +377,7 @@ function formatModelAbonosSocios (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

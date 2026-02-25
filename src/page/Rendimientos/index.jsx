@@ -27,7 +27,7 @@ import { registroSaldoInicial } from '../../components/GestionAutomatica/Saldos/
 import { map } from 'lodash'
 import { listarPeriodo } from '../../api/periodos'
 
-function Rendimientos ({ setRefreshCheckLogin }) {
+function Rendimientos({ setRefreshCheckLogin }) {
   const location = useLocation()
   const navigate = useNavigate()
   const history = navigate
@@ -233,9 +233,9 @@ function Rendimientos ({ setRefreshCheckLogin }) {
   }, [])
 
   // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState('')
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
+  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
       setPeriodo(periodo)
@@ -243,15 +243,6 @@ function Rendimientos ({ setRefreshCheckLogin }) {
     window.location.reload()
   }
 
-  const guardarPeriodoElegido = () => {
-    if (getPeriodo()) {
-      setPeriodoElegido(getPeriodo)
-    }
-  }
-
-  useEffect(() => {
-    guardarPeriodoElegido()
-  }, [])
 
   return (
     <>
@@ -415,7 +406,7 @@ function Rendimientos ({ setRefreshCheckLogin }) {
             aria-label='indicadorPeriodo'
             name='periodo'
             className='periodo'
-            defaultValue={periodoElegido}
+            value={periodoElegido}
             onChange={(e) => {
               almacenaPeriodo(e.target.value)
             }}
@@ -438,10 +429,10 @@ function Rendimientos ({ setRefreshCheckLogin }) {
               location={location}
             />
           </Suspense>
-          )
+        )
         : (
           <Loading />
-          )}
+        )}
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
         {contentModal}
@@ -450,7 +441,7 @@ function Rendimientos ({ setRefreshCheckLogin }) {
   )
 }
 
-function formatModelRendimientos (data) {
+function formatModelRendimientos(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -466,7 +457,7 @@ function formatModelRendimientos (data) {
   return dataTemp
 }
 
-function formatModelPeriodos (data) {
+function formatModelPeriodos(data) {
   // console.log(data)
   const dataTemp = []
   data.forEach(data => {

@@ -15,7 +15,7 @@ import { registroAportacionInicial } from '../../Aportaciones/RegistroBajaSocioA
 import { getCurrentDate } from '../../Generales/FormatFecha'
 import { registroRendimientoInicial } from '../../Rendimientos/RegistroBajaSocioRendimiento'
 
-function RegistroRetiros(props) {
+function RegistroRetiros (props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -194,7 +194,7 @@ function RegistroRetiros(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -226,7 +226,7 @@ function RegistroRetiros(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -328,9 +328,7 @@ function RegistroRetiros(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     retiro: '',

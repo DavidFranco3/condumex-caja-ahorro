@@ -153,11 +153,11 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
                           <ProgressBar animated now={count} max={dataFile.length} variant='info' />
                         </Col>
                       </Form.Group>
-                    </div>)
+                                  </div>)
                   }
                 </div>
               </Col>
-            </Form.Group>)
+                                    </Form.Group>)
           }
           <Form.Group as={Row} className='botones pt-5'>
             <Col>
@@ -188,9 +188,7 @@ const CargaMasivaPrestamos = ({ setShowModal, history }) => {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     prestamo: '',

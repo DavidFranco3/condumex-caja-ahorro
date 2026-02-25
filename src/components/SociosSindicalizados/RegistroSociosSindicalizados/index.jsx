@@ -6,7 +6,7 @@ import queryString from 'query-string'
 import { registraSocioSindicalizado } from '../../../api/sociosSindicalizados'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroSociosSindicalizados(props) {
+function RegistroSociosSindicalizados (props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -195,9 +195,7 @@ function RegistroSociosSindicalizados(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     ficha: '',
     nombre: '',

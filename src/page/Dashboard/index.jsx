@@ -54,7 +54,7 @@ function Dashboard (props) {
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     }
   }, [])
 
@@ -105,17 +105,17 @@ function Dashboard (props) {
           title='Intereses'
         />
         {
-            razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.' &&
-                (
-                  <>
-                    <ItemCard
-                      path='/patrimonio'
-                      logo={LogoPatrimonio}
-                      title='Patrimonio'
-                    />
-                  </>
-                )
-                                                }
+          razonSocialElegida === 'Asociación de Empleados Sector Cables A.C.' &&
+          (
+            <>
+              <ItemCard
+                path='/patrimonio'
+                logo={LogoPatrimonio}
+                title='Patrimonio'
+              />
+            </>
+          )
+        }
         <ItemCard
           path='/abonos'
           logo={LogoAbonos}

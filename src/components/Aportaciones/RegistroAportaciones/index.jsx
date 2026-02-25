@@ -15,7 +15,7 @@ import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/Actual
 import queryString from 'query-string'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroAportaciones(props) {
+function RegistroAportaciones (props) {
   const { setShowModal, history } = props
 
   // Para controlar el modal de busqueda de socios
@@ -195,7 +195,7 @@ function RegistroAportaciones(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -227,7 +227,7 @@ function RegistroAportaciones(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
           {/* Tipo de socio, correo */}
@@ -306,9 +306,7 @@ function RegistroAportaciones(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     fichaSocio: '',
     aportacion: '',

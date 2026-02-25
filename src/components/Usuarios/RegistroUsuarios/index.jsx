@@ -6,7 +6,7 @@ import queryString from 'query-string'
 import { registraUsuarios } from '../../../api/usuarios'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroUsuarios(props) {
+function RegistroUsuarios (props) {
   const { setShowModal, history } = props
 
   const cancelarRegistro = () => {
@@ -196,9 +196,7 @@ function RegistroUsuarios(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     nombre: '',
     apellidos: '',

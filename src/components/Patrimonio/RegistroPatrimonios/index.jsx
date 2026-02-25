@@ -13,7 +13,7 @@ import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/
 import { actualizacionSaldosSocios } from '../../GestionAutomatica/Saldos/ActualizacionSaldos'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroPatrimonios(props) {
+function RegistroPatrimonios (props) {
   const { setShowModal, history } = props
   // Para controlar el modal de busqueda de socios
   // Para hacer uso del modal
@@ -187,7 +187,7 @@ function RegistroPatrimonios(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -219,7 +219,7 @@ function RegistroPatrimonios(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -302,9 +302,7 @@ function RegistroPatrimonios(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     patrimonio: '',
     fecha: getCurrentDate(),

@@ -19,7 +19,7 @@ import { getAportacionesBySocio } from '../../../api/aportaciones'
 import { registroMovimientosSaldosSocios } from '../../GestionAutomatica/Saldos/Movimientos'
 import { getCurrentDate } from '../../Generales/FormatFecha'
 
-function RegistroBajaSocios(props) {
+function RegistroBajaSocios (props) {
   const { setShowModal, history, periodoElegido } = props
 
   // Almacena la razón social, si ya fue elegida
@@ -27,7 +27,7 @@ function RegistroBajaSocios(props) {
 
   useEffect(() => {
     if (getRazonSocial()) {
-      setRazonSocialElegida(getRazonSocial)
+      setRazonSocialElegida(getRazonSocial())
     }
   }, [])
 
@@ -358,7 +358,7 @@ function RegistroBajaSocios(props) {
                       </Form.Group>
                     </Row>
                   </>
-                )
+                  )
                 : (
                   <>
                     <Form.Group as={Col} controlId='formGridBusqueda'>
@@ -396,7 +396,7 @@ function RegistroBajaSocios(props) {
                     </Form.Group>
 
                   </>
-                )
+                  )
             }
           </Row>
 
@@ -453,9 +453,7 @@ function RegistroBajaSocios(props) {
   )
 }
 
-
-
-function initialFormData() {
+function initialFormData () {
   return {
     fecha: getCurrentDate()
   }
