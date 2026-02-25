@@ -61,7 +61,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarBajaSocioPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarBajaSocioPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listBajasSocios && data) {
@@ -86,7 +86,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarRendimientoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarRendimientoPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listInteresesSocios && data) {
@@ -109,7 +109,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarPatrimoniosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarPatrimoniosPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listPatrimoniosSocios && data) {
@@ -132,7 +132,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarAportacionesPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarAportacionesPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listAportacionesSocios && data) {
@@ -155,7 +155,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarPrestamoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarPrestamoPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listPrestamosSocios && data) {
@@ -178,7 +178,7 @@ function SaldosSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarAbonosPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listAbonosSocios && data) {

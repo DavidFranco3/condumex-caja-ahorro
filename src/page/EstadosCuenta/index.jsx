@@ -99,7 +99,36 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const [loading, setLoading] = useState(false)
 
   const [razonSocial] = useState(getRazonSocial())
-  const [periodo] = useState(getPeriodo())
+
+  // Para almacenar las sucursales registradas
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
+
+  const cargarListaPeriodos = () => {
+    try {
+      listarPeriodo(getRazonSocial()).then(response => {
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    cargarListaPeriodos()
+  }, [])
+
+  // Para almacenar en localstorage el periodo
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
 
   const [statementsByRazon, setStatementsByRazon] = useState({
     contributions: 0,
@@ -213,7 +242,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const loadTotales = async () => {
     setLoading(true)
 
-    const response = await getStatementsByRazon(razonSocial, periodo)
+    const response = await getStatementsByRazon(razonSocial, periodoElegido)
     setStatementsByRazon(response.data)
 
     setLoading(false)
@@ -222,7 +251,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const loadTotalesSocio = async () => {
     setLoading(true)
 
-    const response = await getStatementsBySocio(fichaSocioElegido, periodo)
+    const response = await getStatementsBySocio(fichaSocioElegido, periodoElegido)
     setStatementsBySocio(response.data)
 
     setLoading(false)
@@ -242,7 +271,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const handleDownloadPDF = async () => {
     setLoading(true)
 
-    const fileURL = urlDownloadPDF(fichaSocioElegido, periodo)
+    const fileURL = urlDownloadPDF(fichaSocioElegido, periodoElegido)
     const fileLink = document.createElement('a')
     fileLink.href = fileURL
 
@@ -257,7 +286,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const handleSendEmail = async () => {
     setLoading(true)
 
-    const response = await sendEmail(fichaSocioElegido, periodo)
+    const response = await sendEmail(fichaSocioElegido, periodoElegido)
 
     if (response.status === 200) {
       Swal.fire({
@@ -282,7 +311,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
     setLoading(true)
 
     for (let i = 0; i < listaFichasSindicalizados.length; i++) {
-      const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodo)
+      const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodoElegido)
 
       if (response.status === 200) {
         Swal.fire({
@@ -308,7 +337,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
     setLoading(true)
 
     for (let i = 0; i < listaFichasEmpleados.length; i++) {
-      const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodo)
+      const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodoElegido)
       if (response.status === 200) {
         Swal.fire({
           title: 'Correo enviado',
@@ -443,37 +472,7 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
     </table>
   )
 
-  // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
-  const cargarListaPeriodos = () => {
-    try {
-      listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response
-        // console.log(data)
-        const dataTemp = formatModelPeriodos(data)
-        // console.log(data)
-        setPeriodosRegistrados(dataTemp)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    cargarListaPeriodos()
-  }, [])
-
-  // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
-
-  // Para almacenar en localstorage el periodo
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-      setPeriodoElegido(periodo)
-    }
-  }
 
 
   return (

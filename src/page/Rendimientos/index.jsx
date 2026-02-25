@@ -42,13 +42,42 @@ function Rendimientos({ setRefreshCheckLogin }) {
   const [listRendimientos, setListRendimientos] = useState(null)
   const [contribuitors, setContribuitors] = useState([])
   const [razon] = useState(getRazonSocial())
-  const [periodo] = useState(getPeriodo())
+
+  // Para almacenar las sucursales registradas
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
+
+  const cargarListaPeriodos = () => {
+    try {
+      listarPeriodo(getRazonSocial()).then(response => {
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    cargarListaPeriodos()
+  }, [])
+
+  // Para almacenar en localstorage el periodo
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
   const [countSave, setCountSave] = useState(0)
 
   const [reloadRendimientos, setReloadRendimientos] = useState(false)
 
   const getRendimientos = () => {
-    listarRendimientoPeriodo(razon, getPeriodo())
+    listarRendimientoPeriodo(razon, periodoElegido)
       .then((response) => {
         const { data } = response
         if (listRendimientos && data) {
@@ -147,7 +176,7 @@ function Rendimientos({ setRefreshCheckLogin }) {
 
     const rendimientoMes = earningsLocalNumber / totalGeneralLocalNumber
 
-    const response = await totalGeneralBySocios(earningsDate, razon, periodo)
+    const response = await totalGeneralBySocios(earningsDate, razon, periodoElegido)
 
     const {
       data: { data },
@@ -171,7 +200,7 @@ function Rendimientos({ setRefreshCheckLogin }) {
         folio,
         fichaSocio,
         rendimiento,
-        periodo,
+        periodo: periodoElegido,
         tipo: razon,
         createdAt: earningsDate,
       }
@@ -211,37 +240,7 @@ function Rendimientos({ setRefreshCheckLogin }) {
     }
   }
 
-  // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
-  const cargarListaPeriodos = () => {
-    try {
-      listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response
-        // console.log(data)
-        const dataTemp = formatModelPeriodos(data)
-        // console.log(data)
-        setPeriodosRegistrados(dataTemp)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    cargarListaPeriodos()
-  }, [])
-
-  // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
-
-  // Para almacenar en localstorage el periodo
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-      setPeriodoElegido(periodo)
-    }
-  }
 
 
   return (

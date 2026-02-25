@@ -27,6 +27,36 @@ function Patrimonio(props) {
   const [contentModal, setContentModal] = useState(null)
   const [titulosModal, setTitulosModal] = useState(null)
 
+  // Para almacenar las sucursales registradas
+  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
+  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
+
+  const cargarListaPeriodos = () => {
+    try {
+      listarPeriodo(getRazonSocial()).then(response => {
+        const { data } = response
+        // console.log(data)
+        const dataTemp = formatModelPeriodos(data)
+        // console.log(data)
+        setPeriodosRegistrados(dataTemp)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    cargarListaPeriodos()
+  }, [])
+
+  // Para almacenar en localstorage el periodo
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
+
   // Cerrado de sesión automatico
   useEffect(() => {
     if (getTokenApi()) {
@@ -82,7 +112,7 @@ function Patrimonio(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarPatrimoniosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarPatrimoniosPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listPatrimonios && data) {
@@ -99,37 +129,7 @@ function Patrimonio(props) {
     }
   }, [location, periodoElegido])
 
-  // Para almacenar las sucursales registradas
-  const [periodosRegistrados, setPeriodosRegistrados] = useState(null)
 
-  const cargarListaPeriodos = () => {
-    try {
-      listarPeriodo(getRazonSocial()).then(response => {
-        const { data } = response
-        // console.log(data)
-        const dataTemp = formatModelPeriodos(data)
-        // console.log(data)
-        setPeriodosRegistrados(dataTemp)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    cargarListaPeriodos()
-  }, [])
-
-  // Almacena la razón social, si ya fue elegida
-  const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
-
-  // Para almacenar en localstorage el periodo
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-      setPeriodoElegido(periodo)
-    }
-  }
 
 
   return (

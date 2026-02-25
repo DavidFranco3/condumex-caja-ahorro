@@ -92,7 +92,7 @@ function Prestamos(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarPrestamoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarPrestamoPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listPrestamos && data) {

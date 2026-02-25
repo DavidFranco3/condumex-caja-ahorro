@@ -67,7 +67,7 @@ function Aportaciones(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarAportacionesPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarAportacionesPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listAportaciones && data) {

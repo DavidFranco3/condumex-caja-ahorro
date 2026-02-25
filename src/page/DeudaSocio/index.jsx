@@ -56,7 +56,7 @@ function DeudaSocio(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarPrestamoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarPrestamoPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listPrestamosSocios && data) {
@@ -79,7 +79,7 @@ function DeudaSocio(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarAbonosPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarAbonosPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listAbonosSocios && data) {

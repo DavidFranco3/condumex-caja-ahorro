@@ -71,7 +71,7 @@ function BajaSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarBajaSocioPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarBajaSocioPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listBajasSocios && data) {

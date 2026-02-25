@@ -56,7 +56,7 @@ function InteresesSocios(props) {
   useEffect(() => {
     try {
       // Inicia listado de detalles de los articulos vendidos
-      listarRendimientoPeriodo(getRazonSocial(), getPeriodo()).then(response => {
+      listarRendimientoPeriodo(getRazonSocial(), periodoElegido).then(response => {
         const { data } = response
         // console.log(data)
         if (!listInteresesSocios && data) {
