@@ -12,7 +12,7 @@ import BasicModal from '../../components/Modal/BasicModal'
 import Loading from '../../components/Loading'
 import { formatFecha } from '../../components/Generales/FormatFecha'
 
-function Sindicalizados (props) {
+function Sindicalizados(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -22,7 +22,6 @@ function Sindicalizados (props) {
   const [listSociosCSV, setListSociosCSV] = useState(null)
 
   useEffect(() => {
-    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarSocioSindicalizado().then(response => {
@@ -72,7 +71,6 @@ function Sindicalizados (props) {
   const [listSociosSindicalizados, setListSociosSindicalizados] = useState(null)
 
   useEffect(() => {
-    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarSocioSindicalizado().then(response => {
@@ -165,12 +163,12 @@ function Sindicalizados (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
 
       <BasicModal show={showModal} setShow={setShowModal} title={titulosModal}>
@@ -180,7 +178,7 @@ function Sindicalizados (props) {
   )
 }
 
-function formatModelSocios (data) {
+function formatModelSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
@@ -197,7 +195,7 @@ function formatModelSocios (data) {
   return dataTemp
 }
 
-function formatModelSocios2 (data) {
+function formatModelSocios2(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({

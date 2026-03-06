@@ -24,7 +24,7 @@ function Empleados (props) {
   const [listSociosCSV, setListSociosCSV] = useState(null)
 
   useEffect(() => {
-    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+    
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarSociosEmpleados().then(response => {
@@ -97,7 +97,7 @@ function Empleados (props) {
   const [listSociosEmpleados, setListSociosEmpleados] = useState(null)
 
   useEffect(() => {
-    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+    
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarSociosEmpleados().then(response => {

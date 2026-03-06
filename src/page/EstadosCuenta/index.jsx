@@ -268,8 +268,21 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const loadTotalesSocio = async () => {
     setLoading(true)
 
-    const response = await getStatementsBySocio(fichaSocioElegido, periodoElegido)
-    setStatementsBySocio(response.data)
+    try {
+      const response = await getStatementsBySocio(fichaSocioElegido, periodoElegido)
+      setStatementsBySocio(response.data)
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        Swal.fire({
+          title: 'Atención',
+          text: error.response.data.message || 'El socio se encuentra dado de baja.',
+          icon: 'warning',
+          showConfirmButton: true,
+        })
+      } else {
+        console.error("Error al cargar estado de cuenta de socio", error)
+      }
+    }
 
     setLoading(false)
   }
@@ -303,32 +316,8 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
   const handleSendEmail = async () => {
     setLoading(true)
 
-    const response = await sendEmail(fichaSocioElegido, periodoElegido)
-
-    if (response.status === 200) {
-      Swal.fire({
-        title: 'Correo enviado',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1600,
-      })
-    } else {
-      Swal.fire({
-        title: 'Error al enviar el correo',
-        icon: 'error',
-        showConfirmButton: false,
-        timer: 1600,
-      })
-    }
-
-    setLoading(false)
-  }
-
-  const handleSendEmailMasiveSindicalizados = async () => {
-    setLoading(true)
-
-    for (let i = 0; i < listaFichasSindicalizados.length; i++) {
-      const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodoElegido)
+    try {
+      const response = await sendEmail(fichaSocioElegido, periodoElegido)
 
       if (response.status === 200) {
         Swal.fire({
@@ -345,6 +334,50 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
           timer: 1600,
         })
       }
+    } catch (error) {
+      console.error(error)
+      Swal.fire({
+        title: 'Error al enviar el correo',
+        icon: 'error',
+        showConfirmButton: false,
+        timer: 1600,
+      })
+    }
+
+    setLoading(false)
+  }
+
+  const handleSendEmailMasiveSindicalizados = async () => {
+    setLoading(true)
+
+    for (let i = 0; i < listaFichasSindicalizados.length; i++) {
+      try {
+        const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodoElegido)
+
+        if (response.status === 200) {
+          Swal.fire({
+            title: 'Correo enviado',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1600,
+          })
+        } else {
+          Swal.fire({
+            title: 'Error al enviar el correo',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1600,
+          })
+        }
+      } catch (error) {
+        console.error("Error al enviar masivo:", error)
+        Swal.fire({
+          title: 'Error al enviar el correo',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 1600,
+        })
+      }
 
       setLoading(false)
     }
@@ -354,15 +387,25 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
     setLoading(true)
 
     for (let i = 0; i < listaFichasEmpleados.length; i++) {
-      const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodoElegido)
-      if (response.status === 200) {
-        Swal.fire({
-          title: 'Correo enviado',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1600,
-        })
-      } else {
+      try {
+        const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodoElegido)
+        if (response.status === 200) {
+          Swal.fire({
+            title: 'Correo enviado',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1600,
+          })
+        } else {
+          Swal.fire({
+            title: 'Error al enviar el correo',
+            icon: 'error',
+            showConfirmButton: false,
+            timer: 1600,
+          })
+        }
+      } catch (error) {
+        console.error("Error al enviar masivo:", error)
         Swal.fire({
           title: 'Error al enviar el correo',
           icon: 'error',

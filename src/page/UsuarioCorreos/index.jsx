@@ -8,7 +8,7 @@ import ListUsuarios from '../../components/UsuarioCorreo/ListUsuarioCorreo'
 import Loading from '../../components/Loading'
 import './UsuarioCorreo.scss'
 
-function UsuarioCorreo (props) {
+function UsuarioCorreo(props) {
   const { setRefreshCheckLogin } = props
   const location = useLocation()
   const navigate = useNavigate()
@@ -41,7 +41,6 @@ function UsuarioCorreo (props) {
   const [listUsuarios, setListUsuarios] = useState(null)
 
   useEffect(() => {
-    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarUsuarioCorreos().then(response => {
@@ -83,18 +82,18 @@ function UsuarioCorreo (props) {
                 />
               </Suspense>
             </>
-            )
+          )
           : (
             <>
               <Loading />
             </>
-            )
+          )
       }
     </>
   )
 }
 
-function formatModelUsuarios (data) {
+function formatModelUsuarios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
