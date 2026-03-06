@@ -24,13 +24,7 @@ function SaldosSocios(props) {
   // Almacena la razón social, si ya fue elegida
   const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage la razon social
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-      setPeriodoElegido(periodo)
-    }
-  }
+
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -59,9 +53,13 @@ function SaldosSocios(props) {
   const [listBajasSocios, setListBajasSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarBajaSocioPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listBajasSocios && data) {
@@ -76,6 +74,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   console.log(listBajasSocios)
@@ -84,9 +83,13 @@ function SaldosSocios(props) {
   const [listInteresesSocios, setListInteresesSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarRendimientoPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listInteresesSocios && data) {
@@ -101,15 +104,20 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listPatrimoniosSocios, setListPatrimoniosSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarPatrimoniosPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listPatrimoniosSocios && data) {
@@ -124,15 +132,20 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listAportacionesSocios, setListAportacionesSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarAportacionesPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listAportacionesSocios && data) {
@@ -147,15 +160,20 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listPrestamosSocios, setListPrestamosSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarPrestamoPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listPrestamosSocios && data) {
@@ -170,15 +188,20 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Almacena los datos de los abonos
   const [listAbonosSocios, setListAbonosSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarAbonosPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listAbonosSocios && data) {
@@ -193,6 +216,7 @@ function SaldosSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Para almacenar las sucursales registradas
@@ -216,6 +240,29 @@ function SaldosSocios(props) {
     cargarListaPeriodos()
   }, [])
 
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      const p = periodosRegistrados?.find(x => String(x.folio) === String(periodo))
+      if (p) {
+        localStorage.setItem('PERIODO_NOMBRE', p.nombre)
+      }
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
+
+  useEffect(() => {
+    if (periodosRegistrados && periodosRegistrados.length > 0) {
+      const storedNombre = localStorage.getItem('PERIODO_NOMBRE')
+      if (storedNombre) {
+        const found = periodosRegistrados.find(p => p.nombre === storedNombre)
+        if (found) {
+          setPeriodoElegido(found.folio)
+          setPeriodo(found.folio)
+        }
+      }
+    }
+  }, [periodosRegistrados])
 
   return (
     <>

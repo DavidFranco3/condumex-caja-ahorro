@@ -19,26 +19,15 @@ export async function login(data) {
 }
 
 export function setPeriodo(periodo) {
-  const razonSocial = getRazonSocial()
-  if (razonSocial) {
-    localStorage.setItem(`${PERIODO}_${razonSocial}`, periodo)
-  }
   localStorage.setItem(PERIODO, periodo)
 }
 
 export function getPeriodo() {
-  const razonSocial = getRazonSocial()
-  if (razonSocial) {
-    return localStorage.getItem(`${PERIODO}_${razonSocial}`)
-  }
   return localStorage.getItem(PERIODO)
 }
 
 function eliminaPeriodo() {
-  const razonSocial = getRazonSocial()
-  if (razonSocial) {
-    localStorage.removeItem(`${PERIODO}_${razonSocial}`)
-  }
+  localStorage.removeItem('PERIODO_NOMBRE')
   return localStorage.removeItem(PERIODO)
 }
 

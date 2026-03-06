@@ -41,6 +41,7 @@ function UsuarioCorreo (props) {
   const [listUsuarios, setListUsuarios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarUsuarioCorreos().then(response => {

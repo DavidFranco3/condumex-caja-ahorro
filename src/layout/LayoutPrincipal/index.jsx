@@ -17,7 +17,7 @@ import ImagenPerfil from '../../assets/png/user-avatar.png'
 import { Row, Container, Form } from 'react-bootstrap'
 import './LayoutPrincipal.scss'
 
-function LayoutPrincipal(props) {
+function LayoutPrincipal (props) {
   const { setRefreshCheckLogin, children } = props
 
   const redirecciona = useNavigate()
@@ -106,10 +106,10 @@ function LayoutPrincipal(props) {
                     {open
                       ? (
                         <XMarkIcon className='block h-6 w-6' aria-hidden='true' />
-                      )
+                        )
                       : (
                         <Bars3Icon className='block h-6 w-6' aria-hidden='true' />
-                      )}
+                        )}
                   </DisclosureButton>
                 </div>
                 <div className='flex-1 flex items-center justify-center sm:items-stretch sm:justify-start'>

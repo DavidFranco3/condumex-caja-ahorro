@@ -37,13 +37,29 @@ function Movimientos(props) {
     cargarListaPeriodos()
   }, [])
 
-  // Para almacenar en localstorage el periodo
   const almacenaPeriodo = (periodo) => {
     if (periodo !== 'Elige una opción') {
+      const p = periodosRegistrados?.find(x => String(x.folio) === String(periodo))
+      if (p) {
+        localStorage.setItem('PERIODO_NOMBRE', p.nombre)
+      }
       setPeriodo(periodo)
       setPeriodoElegido(periodo)
     }
   }
+
+  useEffect(() => {
+    if (periodosRegistrados && periodosRegistrados.length > 0) {
+      const storedNombre = localStorage.getItem('PERIODO_NOMBRE')
+      if (storedNombre) {
+        const found = periodosRegistrados.find(p => p.nombre === storedNombre)
+        if (found) {
+          setPeriodoElegido(found.folio)
+          setPeriodo(found.folio)
+        }
+      }
+    }
+  }, [periodosRegistrados])
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -72,9 +88,13 @@ function Movimientos(props) {
   const [listMovimientos, setListMovimientos] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarMovimientoSaldosPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listMovimientos && data) {
@@ -89,10 +109,8 @@ function Movimientos(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
-
-
-
 
   return (
     <>

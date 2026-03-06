@@ -19,13 +19,7 @@ function InteresesSocios(props) {
   // Almacena la razón social, si ya fue elegida
   const [periodoElegido, setPeriodoElegido] = useState(getPeriodo() || '')
 
-  // Para almacenar en localstorage el periodo
-  const almacenaPeriodo = (periodo) => {
-    if (periodo !== 'Elige una opción') {
-      setPeriodo(periodo)
-      setPeriodoElegido(periodo)
-    }
-  }
+
 
   // Cerrado de sesión automatico
   useEffect(() => {
@@ -54,9 +48,13 @@ function InteresesSocios(props) {
   const [listInteresesSocios, setListInteresesSocios] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
+
+    let isMounted = true;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarRendimientoPeriodo(getRazonSocial(), periodoElegido).then(response => {
+        if (!isMounted) return;
         const { data } = response
         // console.log(data)
         if (!listInteresesSocios && data) {
@@ -71,6 +69,7 @@ function InteresesSocios(props) {
     } catch (e) {
       console.log(e)
     }
+    return () => { isMounted = false; };
   }, [location, periodoElegido])
 
   // Para almacenar las sucursales registradas
@@ -94,6 +93,29 @@ function InteresesSocios(props) {
     cargarListaPeriodos()
   }, [])
 
+  const almacenaPeriodo = (periodo) => {
+    if (periodo !== 'Elige una opción') {
+      const p = periodosRegistrados?.find(x => String(x.folio) === String(periodo))
+      if (p) {
+        localStorage.setItem('PERIODO_NOMBRE', p.nombre)
+      }
+      setPeriodo(periodo)
+      setPeriodoElegido(periodo)
+    }
+  }
+
+  useEffect(() => {
+    if (periodosRegistrados && periodosRegistrados.length > 0) {
+      const storedNombre = localStorage.getItem('PERIODO_NOMBRE')
+      if (storedNombre) {
+        const found = periodosRegistrados.find(p => p.nombre === storedNombre)
+        if (found) {
+          setPeriodoElegido(found.folio)
+          setPeriodo(found.folio)
+        }
+      }
+    }
+  }, [periodosRegistrados])
 
   return (
     <>

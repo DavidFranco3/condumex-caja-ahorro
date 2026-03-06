@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import './BasicModal.scss'
 
-function BasicModal({
+function BasicModal ({
   show,
   setShow,
   title,

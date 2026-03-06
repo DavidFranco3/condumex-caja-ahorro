@@ -21,7 +21,7 @@ import LogoUsuarios from '../../assets/png/usuarios.png'
 import LogoUsuarioCorreos from '../../assets/png/usuarioCorreos.png'
 import './Dashboard.scss'
 
-function Dashboard(props) {
+function Dashboard (props) {
   const { setRefreshCheckLogin } = props
 
   const enrutamiento = useNavigate()

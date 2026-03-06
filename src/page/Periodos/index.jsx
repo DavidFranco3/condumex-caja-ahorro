@@ -56,6 +56,7 @@ function Periodos (props) {
   const [listPeriodos, setListPeriodos] = useState(null)
 
   useEffect(() => {
+    if (periodosRegistrados && !periodosRegistrados.find(p => String(p.folio) === String(periodoElegido))) return;
     try {
       // Inicia listado de detalles de los articulos vendidos
       listarPeriodo(getRazonSocial()).then(response => {

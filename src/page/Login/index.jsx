@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import LogoCajadeAhorro from '../../assets/png/caja-de-ahorro-login.png'
 
-function Login({ setRefreshCheckLogin }) {
+function Login ({ setRefreshCheckLogin }) {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [signInLoading, setSignInLoading] = useState(false)
 
@@ -139,11 +139,11 @@ function Login({ setRefreshCheckLogin }) {
                 >
                   {!signInLoading
                     ? (
-                      'Iniciar Sesión'
-                    )
+                        'Iniciar Sesión'
+                      )
                     : (
                       <Spinner animation='border' />
-                    )}
+                      )}
                 </button>
               </div>
             </form>
