@@ -27,7 +27,7 @@ const DataTablecustom = ({
   // 🔹 Detecta dinámicamente las claves, omitiendo "id" y "tipo"
   const keys = datos.length > 0
     ? Object.keys(datos[0]).filter(
-      k => k !== 'id' && k !== 'tipo' && k !== 'folio' && k !== 'fechaActualizacion'
+      k => k !== 'id' && k !== '_id' && k !== 'tipo' && k !== 'nombre' && k !== 'nombreSocio' && k !== 'folio' && k !== 'fechaActualizacion' && k !== 'updatedAt' && k !== 'createdAt' && k !== '__v'
     )
     : []
 
@@ -280,27 +280,58 @@ const DataTablecustom = ({
       .join('')
   }, [orderedStickyColumns, stickyOffsets, filteredColumns])
 
+  const calculateEstimatedWidth = (colName, selector, data) => {
+    // 1. Ancho del header (aproximado: chars * px + margen para iconos/sticky)
+    const headerWidth = String(colName).length * 10 + 60
+
+    // 2. Ancho de los datos (estimado sobre los registros existentes)
+    let maxDataWidth = 0
+    if (data && data.length > 0) {
+      // Tomamos una muestra de hasta 100 filas para no impactar el rendimiento
+      const sample = data.slice(0, 100)
+      sample.forEach(row => {
+        let value = ''
+        if (typeof selector === 'function') {
+          try { value = selector(row) } catch { value = '' }
+        } else {
+          value = row[selector]
+        }
+
+        // Si es un componente (objeto React), asignamos un ancho base
+        if (value && typeof value === 'object') {
+          maxDataWidth = Math.max(maxDataWidth, 80)
+        } else {
+          // Heurística de ~8.5px por carácter
+          const len = String(value || '').length * 8.5
+          maxDataWidth = Math.max(maxDataWidth, len)
+        }
+      })
+    }
+
+    // Retornamos el máximo entre header y data, con un padding extra
+    return `${Math.max(headerWidth, maxDataWidth) + 20}px`
+  }
+
   const processedColumns = filteredColumns.map((col) => {
     // quitar props internas de react-data-table que NO deben ir al DOM
     const {
-      right,
-      center,
-      compact,
-      wrap,
-      grow,
-      maxWidth,
-      minWidth,
-      width,
-      reorder,   // si existe
+      reorder, // si existe
       ...safeProps
     } = col
+
+    // 🔹 Calcular ancho dinámico basado en el dato más ancho (header vs data)
+    // Solo si no se ha definido manualmente un minWidth o width
+    const dynamicMinWidth = (!safeProps.minWidth && !safeProps.width)
+      ? calculateEstimatedWidth(col.name, col.selector, datos)
+      : undefined
 
     const isSticky = stickyColumns.includes(col.name)
     const canBeMadeSticky = isSticky || stickyColumns.length < 3
 
     return {
-      ...safeProps,
       sortable: true,
+      minWidth: dynamicMinWidth,
+      ...safeProps,
       name: (
         <div
           className='custom-header-wrapper'
@@ -366,6 +397,7 @@ const DataTablecustom = ({
         paddingLeft: '16px',
         paddingRight: '16px',
         justifyContent: 'center',
+        whiteSpace: 'nowrap',
       },
     },
     pagination: {
