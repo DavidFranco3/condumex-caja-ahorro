@@ -21,6 +21,13 @@ function ListMovimientos (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Aportación',
       selector: row => formatMoneda(row.aportacion),
       sortable: false,

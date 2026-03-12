@@ -205,6 +205,7 @@ function formatModelPrestamosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       prestamo: data.prestamo,
       abono: 0,
@@ -219,6 +220,7 @@ function formatModelAbonosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       prestamo: 0,
       abono: data.abono,

@@ -133,14 +133,8 @@ function formatModelSaldosSocios (data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      folio: data.folio,
-      fichaSocio: data.fichaSocio,
-      capital: data.capital,
-      prestamo: data.prestamo,
-      patrimonio: data.patrimonio,
-      folioMovimiento: data.folioMovimiento,
-      movimiento: data.movimiento,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
     })

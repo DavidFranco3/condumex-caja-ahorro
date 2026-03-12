@@ -49,6 +49,13 @@ function ListDeudaSocio (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Total préstamo',
       selector: row => formatMoneda(row.prestamo),
       sortable: false,

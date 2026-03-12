@@ -30,6 +30,13 @@ function ListAbonos (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Abono',
       selector: row => formatMoneda(row.abono),
       sortable: false,

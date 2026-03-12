@@ -31,6 +31,13 @@ function ListRendimientos (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Interés',
       selector: row => formatMoneda(row.rendimiento),
       sortable: false,

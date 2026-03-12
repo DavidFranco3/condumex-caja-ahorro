@@ -31,6 +31,13 @@ function ListRetiros (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Retiro',
       selector: row => formatMoneda(row.retiro),
       sortable: false,

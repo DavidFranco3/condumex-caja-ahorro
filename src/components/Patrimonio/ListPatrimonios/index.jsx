@@ -31,6 +31,13 @@ function ListPatrimonios (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Patrimonio',
       selector: row => formatMoneda(row.patrimonio),
       sortable: false,

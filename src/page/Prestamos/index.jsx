@@ -322,15 +322,11 @@ function formatModelPrestamos(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      cantidadPagos: data.cantidadPagos,
-      abonoPorPago: data.abonoPorPago,
-      folio: data.folio,
       fichaSocio: String(data.fichaSocio),
-      tipo: data.tipo,
       prestamo: String(data.prestamo),
       prestamoTotal: String(data.prestamoTotal),
-      tasaInteres: data.tasaInteres,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
     })

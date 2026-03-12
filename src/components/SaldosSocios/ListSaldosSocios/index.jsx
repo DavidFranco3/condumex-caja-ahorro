@@ -56,6 +56,13 @@ function ListSaldosSocios (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Ahorro',
       selector: row => formatMoneda(row.monto),
       sortable: false,

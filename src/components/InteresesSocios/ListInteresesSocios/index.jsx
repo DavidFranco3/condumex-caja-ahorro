@@ -32,6 +32,13 @@ function ListInteresesSocios (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Monto',
       selector: row => formatMoneda(row.monto),
       sortable: false,

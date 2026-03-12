@@ -174,17 +174,9 @@ function formatModelMovimientosSocio(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      folio: data.folio,
       fichaSocio: String(data.fichaSocio),
-      tipo: data.tipo,
-      movimiento: data.movimiento,
-      aportacion: data.aportacion,
-      prestamo: data.prestamo,
-      patrimonio: data.patrimonio,
-      rendimiento: data.rendimiento,
-      retiro: data.retiro,
-      abono: data.abono,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
     })

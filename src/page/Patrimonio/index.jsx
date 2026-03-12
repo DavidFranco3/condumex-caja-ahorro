@@ -281,11 +281,9 @@ function formatModelPatrimonio(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      folio: data.folio,
       fichaSocio: String(data.fichaSocio),
-      tipo: data.tipo,
-      patrimonio: data.patrimonio,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
     })

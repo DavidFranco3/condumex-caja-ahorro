@@ -31,6 +31,13 @@ function ListPrestamos (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Préstamo',
       selector: row => formatMoneda(row.prestamo),
       sortable: false,

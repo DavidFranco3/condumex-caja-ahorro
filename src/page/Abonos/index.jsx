@@ -317,10 +317,9 @@ function formatModelAbonos(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      folio: data.folio,
       fichaSocio: String(data.fichaSocio),
-      tipo: data.tipo,
       abono: String(data.abono),
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt

@@ -177,6 +177,7 @@ function formatModelInteresesSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: parseFloat(data.rendimiento).toFixed(2),
       fechaCreacion: data.createdAt,

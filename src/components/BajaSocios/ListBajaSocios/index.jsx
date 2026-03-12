@@ -37,6 +37,13 @@ function ListBajaSocios (props) {
       reorder: false
     },
     {
+      name: 'Nombre',
+      selector: row => row.nombreSocio,
+      sortable: false,
+      center: true,
+      reorder: false
+    },
+    {
       name: 'Total',
       selector: row => formatMoneda(row.total),
       sortable: false,

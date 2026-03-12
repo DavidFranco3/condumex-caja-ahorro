@@ -329,14 +329,9 @@ function formatModelBajaSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       id: data._id,
-      folio: data.folio,
       fichaSocio: String(data.fichaSocio),
-      tipo: data.tipo,
-      total: data.total,
-      aportacion: data.aportacion,
-      rendimiento: data.rendimiento,
-      patrimonio: data.patrimonio,
       fechaCreacion: data.createdAt,
       fechaActualizacion: data.updatedAt
     })
@@ -348,6 +343,7 @@ function formatModelInteresesSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: data.rendimiento,
       patrimonio: 0,
@@ -364,6 +360,7 @@ function formatModelPatrimonioSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: 0,
       patrimonio: data.patrimonio,
@@ -380,6 +377,7 @@ function formatModelAportacionesSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: data.aportacion,
       patrimonio: 0,
@@ -396,6 +394,7 @@ function formatModelPrestamosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: 0,
       patrimonio: 0,
@@ -412,6 +411,7 @@ function formatModelAbonosSocios(data) {
   const dataTemp = []
   data.forEach(data => {
     dataTemp.push({
+      ...data,
       fichaSocio: String(data.fichaSocio),
       monto: 0,
       patrimonio: 0,
