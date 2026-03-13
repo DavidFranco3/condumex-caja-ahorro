@@ -320,12 +320,22 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
       const response = await sendEmail(fichaSocioElegido, periodoElegido)
 
       if (response.status === 200) {
-        Swal.fire({
-          title: 'Correo enviado',
-          icon: 'success',
-          showConfirmButton: false,
-          timer: 1600,
-        })
+        if (response.data.skip) {
+          Swal.fire({
+            title: 'Socio inactivo',
+            text: 'No se puede enviar el correo',
+            icon: 'warning',
+            showConfirmButton: false,
+            timer: 2000,
+          })
+        } else {
+          Swal.fire({
+            title: 'Correo enviado',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1600,
+          })
+        }
       } else {
         Swal.fire({
           title: 'Error al enviar el correo',
@@ -355,12 +365,14 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
         const response = await sendEmail(parseInt(listaFichasSindicalizados[i]), periodoElegido)
 
         if (response.status === 200) {
-          Swal.fire({
-            title: 'Correo enviado',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1600,
-          })
+          if (!response.data.skip) {
+            Swal.fire({
+              title: 'Correo enviado',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1600,
+            })
+          }
         } else {
           Swal.fire({
             title: 'Error al enviar el correo',
@@ -390,12 +402,14 @@ function EstadosCuenta({ setRefreshCheckLogin }) {
       try {
         const response = await sendEmail(parseInt(listaFichasEmpleados[i]), periodoElegido)
         if (response.status === 200) {
-          Swal.fire({
-            title: 'Correo enviado',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1600,
-          })
+          if (!response.data.skip) {
+            Swal.fire({
+              title: 'Correo enviado',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1600,
+            })
+          }
         } else {
           Swal.fire({
             title: 'Error al enviar el correo',
